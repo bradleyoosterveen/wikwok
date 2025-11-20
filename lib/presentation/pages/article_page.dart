@@ -9,7 +9,7 @@ import 'package:wikwok/domain/models/settings.dart';
 import 'package:wikwok/presentation/cubits/article_cubit.dart';
 import 'package:wikwok/presentation/cubits/connectivity_cubit.dart';
 import 'package:wikwok/presentation/cubits/save_article_cubit.dart';
-import 'package:wikwok/presentation/cubits/saved_articles_cubit.dart';
+import 'package:wikwok/presentation/cubits/saved_articles_list_cubit.dart';
 import 'package:wikwok/presentation/cubits/settings_cubit.dart';
 import 'package:wikwok/presentation/widgets/banner.dart';
 import 'package:wikwok/presentation/widgets/circular_progress.dart';
@@ -115,11 +115,11 @@ class _ViewState extends State<_View> with TickerProviderStateMixin {
 
   Widget _content(Article article) => MultiBlocListener(
         listeners: [
-          BlocListener<SavedArticlesCubit, SavedArticlesState>(
+          BlocListener<SavedArticlesListCubit, SavedArticlesListState>(
             listener: (context, state) => switch (state) {
-              SavedArticlesLoadedState _ =>
+              SavedArticlesListLoadedState _ =>
                 context.read<SaveArticleCubit>().get(article.title),
-              SavedArticlesEmptyState _ =>
+              SavedArticlesListEmptyState _ =>
                 context.read<SaveArticleCubit>().get(article.title),
               _ => {},
             },

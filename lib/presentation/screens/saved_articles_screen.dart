@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
-import 'package:wikwok/domain/models/article.dart';
-import 'package:wikwok/presentation/cubits/saved_articles_cubit.dart';
+import 'package:wikwok/presentation/cubits/saved_articles_list_cubit.dart';
+import 'package:wikwok/presentation/cubits/saved_articles_list_item_cubit.dart';
 import 'package:wikwok/presentation/screens/article_screen.dart';
 import 'package:wikwok/presentation/widgets/banner.dart';
 import 'package:wikwok/presentation/widgets/border.dart';
 import 'package:wikwok/presentation/widgets/circular_progress.dart';
 import 'package:wikwok/presentation/widgets/error_retry_widget.dart';
+import 'package:wikwok/presentation/widgets/shimmer.dart';
 
 class SavedArticlesScreen extends StatefulWidget {
   const SavedArticlesScreen({super.key});
@@ -30,15 +31,15 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
   void initState() {
     super.initState();
 
-    context.read<SavedArticlesCubit>().get();
+    context.read<SavedArticlesListCubit>().get();
   }
 
   @override
   Widget build(BuildContext context) {
     return FScaffold(
       header: Builder(builder: (context) {
-        final hasArticles = context.watch<SavedArticlesCubit>().state
-            is SavedArticlesLoadedState;
+        final hasArticles = context.watch<SavedArticlesListCubit>().state
+            is SavedArticlesListLoadedState;
 
         return FHeader.nested(
           prefixes: [
@@ -69,7 +70,7 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
 
                           if (!context.mounted) return;
 
-                          context.read<SavedArticlesCubit>().deleteAll();
+                          context.read<SavedArticlesListCubit>().deleteAll();
                         },
                       ),
                     ],
@@ -93,19 +94,25 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              BlocBuilder<SavedArticlesCubit, SavedArticlesState>(
-                builder: (context, state) => switch (state) {
-                  SavedArticlesLoadedState state => Expanded(
+              Builder(builder: (context) {
+                final savedArticlesListState =
+                    context.watch<SavedArticlesListCubit>().state;
+
+                return switch (savedArticlesListState) {
+                  SavedArticlesListLoadedState state => Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
-                        itemCount: state.articles.length,
-                        itemBuilder: (context, index) => _ListItem(
-                          article: state.articles[index],
+                        itemCount: state.articleTitles.length,
+                        itemBuilder: (context, index) => BlocProvider(
+                          create: (context) => SavedArticlesListItemCubit(),
+                          child: _ListItem(
+                            title: state.articleTitles[index],
+                          ),
                         ),
                       ),
                     ),
-                  SavedArticlesEmptyState _ => FCard(
+                  SavedArticlesListEmptyState _ => FCard(
                       style: (style) => style.copyWith(
                         decoration: style.decoration.copyWith(
                           border: WBorder.zero,
@@ -117,14 +124,14 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
                         'Add some articles to your library.',
                       ),
                     ),
-                  SavedArticlesErrorState _ => WErrorRetryWidget(
+                  SavedArticlesListErrorState _ => WErrorRetryWidget(
                       title: 'Something went wrong fetching your library.',
-                      onRetry: () => context.read<SavedArticlesCubit>().get(),
+                      onRetry: () =>
+                          context.read<SavedArticlesListCubit>().get(),
                     ),
-                  SavedArticlesLoadingState _ => const WCircularProgress(),
                   _ => const SizedBox.shrink(),
-                },
-              ),
+                };
+              }),
             ],
           ),
         ),
@@ -133,32 +140,89 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
   }
 }
 
-class _ListItem extends StatelessWidget {
+class _ListItem extends StatefulWidget {
   const _ListItem({
-    required this.article,
+    required this.title,
   });
 
-  final Article article;
+  final String title;
+
+  @override
+  State<_ListItem> createState() => _ListItemState();
+}
+
+class _ListItemState extends State<_ListItem> {
+  static const _titleWidthMultiplier = 0.5;
+
+  static const _subtitleWidthMultiplier = 0.3;
+
+  double _titleWidth(BoxConstraints constraints) =>
+      constraints.maxWidth * _titleWidthMultiplier;
+
+  double _subtitleWidth(BoxConstraints constraints) =>
+      constraints.maxWidth * _subtitleWidthMultiplier;
+
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<SavedArticlesListItemCubit>().get(widget.title);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final savedArticleListItemState =
+        context.watch<SavedArticlesListItemCubit>().state;
+
     return FItem(
       prefix: SizedBox(
         width: 64,
         child: AspectRatio(
           aspectRatio: 1,
-          child: WBanner(
-            src: article.thumbnailUrl,
-            fill: true,
-            showGradient: false,
-            showBackground: false,
-            shouldWrapInSafeArea: false,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: switch (savedArticleListItemState) {
+              SavedArticlesListItemLoadedState state => WBanner(
+                  src: state.article.thumbnailUrl,
+                  fill: true,
+                  showGradient: false,
+                  showBackground: false,
+                  shouldWrapInSafeArea: false,
+                ),
+              SavedArticlesListItemLoadingState _ => const WCircularProgress(),
+              _ => const Icon(FIcons.circleSlash),
+            },
           ),
         ),
       ),
-      title: Text(article.title),
-      subtitle: Text(article.subtitle),
-      onPress: () => ArticleScreen.push(context, article: article),
+      title: LayoutBuilder(
+        builder: (context, constraints) => AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: switch (savedArticleListItemState) {
+            SavedArticlesListItemLoadedState state => Text(state.article.title),
+            SavedArticlesListItemLoadingState _ =>
+              WShimmer(width: _titleWidth(constraints)),
+            _ => const SizedBox.shrink(),
+          },
+        ),
+      ),
+      subtitle: LayoutBuilder(
+        builder: (context, constraints) => AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: switch (savedArticleListItemState) {
+            SavedArticlesListItemLoadedState state =>
+              Text(state.article.subtitle),
+            SavedArticlesListItemLoadingState _ =>
+              WShimmer(width: _subtitleWidth(constraints)),
+            _ => const SizedBox.shrink(),
+          },
+        ),
+      ),
+      onPress: () => switch (savedArticleListItemState) {
+        SavedArticlesListItemLoadedState state =>
+          ArticleScreen.push(context, article: state.article),
+        _ => {}
+      },
     );
   }
 }

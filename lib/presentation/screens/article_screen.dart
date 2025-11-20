@@ -7,7 +7,7 @@ import 'package:wikwok/domain/models/article.dart';
 import 'package:wikwok/domain/models/settings.dart';
 import 'package:wikwok/presentation/cubits/connectivity_cubit.dart';
 import 'package:wikwok/presentation/cubits/save_article_cubit.dart';
-import 'package:wikwok/presentation/cubits/saved_articles_cubit.dart';
+import 'package:wikwok/presentation/cubits/saved_articles_list_cubit.dart';
 import 'package:wikwok/presentation/cubits/settings_cubit.dart';
 import 'package:wikwok/presentation/widgets/banner.dart';
 import 'package:wikwok/presentation/widgets/border.dart';
@@ -51,7 +51,7 @@ class _ArticleScreenState extends State<ArticleScreen>
         BlocListener<SaveArticleCubit, SaveArticleState>(
           listener: (context, state) => switch (state) {
             SaveArticleLoadedState _ =>
-              context.read<SavedArticlesCubit>().get(),
+              context.read<SavedArticlesListCubit>().get(),
             _ => {},
           },
         ),

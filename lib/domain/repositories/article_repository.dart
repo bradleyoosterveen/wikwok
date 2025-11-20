@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wikwok/data/services/wikipedia_service.dart';
 import 'package:wikwok/domain/models/article.dart';
@@ -24,12 +23,6 @@ class ArticleRepository {
   final _articles = <int, Article>{};
 
   final String _key = 'saved';
-
-  Article? getArticleByIndex(int index) => _articles[index];
-
-  Article? getArticleByTitle(String title) => _articles.values.firstWhereOrNull(
-        (article) => article.title == title,
-      );
 
   Future<Article?> fetch(int currentIndex) async {
     Article? article = _articles[currentIndex];

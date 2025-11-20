@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
 import 'package:wikwok/presentation/cubits/connectivity_cubit.dart';
 import 'package:wikwok/presentation/cubits/current_version_cubit.dart';
-import 'package:wikwok/presentation/cubits/saved_articles_cubit.dart';
+import 'package:wikwok/presentation/cubits/saved_articles_list_cubit.dart';
 import 'package:wikwok/presentation/cubits/settings_cubit.dart';
 import 'package:wikwok/presentation/cubits/update_cubit.dart';
 import 'package:wikwok/presentation/screens/articles_screen.dart';
@@ -27,7 +27,7 @@ class _AppState extends State<App> {
       providers: [
         BlocProvider(
           lazy: false,
-          create: (context) => SavedArticlesCubit(),
+          create: (context) => SavedArticlesListCubit(),
         ),
         BlocProvider(
           lazy: false,
