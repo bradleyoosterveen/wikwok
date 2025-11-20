@@ -15,18 +15,15 @@ import 'package:wikwok/presentation/widgets/shimmer.dart';
 class SavedArticlesScreen extends StatefulWidget {
   const SavedArticlesScreen({super.key});
 
-  static push(BuildContext context) =>
-      Navigator.of(context).push(SavedArticlesScreen._route());
+  static push(BuildContext context) => Navigator.of(context).push(SavedArticlesScreen._route());
 
-  static MaterialPageRoute _route() =>
-      MaterialPageRoute(builder: (context) => const SavedArticlesScreen());
+  static MaterialPageRoute _route() => MaterialPageRoute(builder: (context) => const SavedArticlesScreen());
 
   @override
   State<SavedArticlesScreen> createState() => _SavedArticlesScreenState();
 }
 
-class _SavedArticlesScreenState extends State<SavedArticlesScreen>
-    with TickerProviderStateMixin {
+class _SavedArticlesScreenState extends State<SavedArticlesScreen> with TickerProviderStateMixin {
   late final _popoverController = FPopoverController(vsync: this);
 
   @override
@@ -40,8 +37,7 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
   Widget build(BuildContext context) {
     return FScaffold(
       header: Builder(builder: (context) {
-        final hasArticles = context.watch<SavedArticlesListCubit>().state
-            is SavedArticlesListLoadedState;
+        final hasArticles = context.watch<SavedArticlesListCubit>().state is SavedArticlesListLoadedState;
 
         return FHeader.nested(
           prefixes: [
@@ -97,8 +93,7 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Builder(builder: (context) {
-                final savedArticlesListState =
-                    context.watch<SavedArticlesListCubit>().state;
+                final savedArticlesListState = context.watch<SavedArticlesListCubit>().state;
 
                 return switch (savedArticlesListState) {
                   SavedArticlesListLoadedState state => Expanded(
@@ -128,8 +123,7 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
                     ),
                   SavedArticlesListErrorState _ => WErrorRetryWidget(
                       title: 'Something went wrong fetching your library.',
-                      onRetry: () =>
-                          context.read<SavedArticlesListCubit>().get(),
+                      onRetry: () => context.read<SavedArticlesListCubit>().get(),
                     ),
                   _ => const SizedBox.shrink(),
                 };
@@ -154,6 +148,8 @@ class _ListItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<_ListItem> {
+  static final _random = Random();
+
   @override
   void initState() {
     super.initState();
@@ -163,8 +159,7 @@ class _ListItemState extends State<_ListItem> {
 
   @override
   Widget build(BuildContext context) {
-    final savedArticleListItemState =
-        context.watch<SavedArticlesListItemCubit>().state;
+    final savedArticleListItemState = context.watch<SavedArticlesListItemCubit>().state;
 
     return FItem(
       prefix: SizedBox(
@@ -193,7 +188,7 @@ class _ListItemState extends State<_ListItem> {
           child: switch (savedArticleListItemState) {
             SavedArticlesListItemLoadedState state => Text(state.article.title),
             SavedArticlesListItemLoadingState _ => WShimmer(
-                width: constraints.maxWidth * 0.3 * Random().nextDouble() + 32,
+                width: constraints.maxWidth * 0.3 * _random.nextDouble() + 32,
               ),
             _ => const SizedBox.shrink(),
           },
@@ -203,18 +198,16 @@ class _ListItemState extends State<_ListItem> {
         builder: (context, constraints) => AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           child: switch (savedArticleListItemState) {
-            SavedArticlesListItemLoadedState state =>
-              Text(state.article.subtitle),
+            SavedArticlesListItemLoadedState state => Text(state.article.subtitle),
             SavedArticlesListItemLoadingState _ => WShimmer(
-                width: constraints.maxWidth * 0.5 * Random().nextDouble() + 32,
+                width: constraints.maxWidth * 0.5 * _random.nextDouble() + 32,
               ),
             _ => const SizedBox.shrink(),
           },
         ),
       ),
       onPress: () => switch (savedArticleListItemState) {
-        SavedArticlesListItemLoadedState state =>
-          ArticleScreen.push(context, article: state.article),
+        SavedArticlesListItemLoadedState state => ArticleScreen.push(context, article: state.article),
         _ => {}
       },
     );
