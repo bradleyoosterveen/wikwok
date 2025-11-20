@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:wikwok/core/exception_handler.dart';
 import 'package:wikwok/domain/models/article.dart';
 import 'package:wikwok/domain/repositories/article_repository.dart';
@@ -13,8 +11,6 @@ class SavedArticlesListItemCubit extends WCubit<SavedArticlesListItemState> {
 
   Future<void> get(String title) async {
     emit(const SavedArticlesListItemLoadingState());
-
-    await Future.delayed(Duration(milliseconds: Random().nextInt(500) + 500));
 
     try {
       final article = await _articleRepository.fetchArticleByTitle(title);
