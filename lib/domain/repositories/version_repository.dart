@@ -1,15 +1,16 @@
+import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:wikwok/data/services/github_service.dart';
 import 'package:wikwok/domain/models/version.dart';
 
+@singleton
+@injectable
 class VersionRepository {
-  static final VersionRepository _instance = VersionRepository._internal();
+  VersionRepository(
+    this._githubService,
+  );
 
-  factory VersionRepository() => _instance;
-
-  VersionRepository._internal();
-
-  final _githubService = GithubService();
+  final GithubService _githubService;
 
   Future<Version> getCurrentVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();

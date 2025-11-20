@@ -1,4 +1,5 @@
 import 'package:wikwok/core/exception_handler.dart';
+import 'package:wikwok/core/inject.dart';
 import 'package:wikwok/domain/models/article.dart';
 import 'package:wikwok/domain/repositories/article_repository.dart';
 import 'package:wikwok/presentation/cubits/cubit.dart';
@@ -6,7 +7,7 @@ import 'package:wikwok/presentation/cubits/cubit.dart';
 class ArticleCubit extends WCubit<ArticleState> {
   ArticleCubit() : super(const ArticleLoadingState());
 
-  final _articleRepository = ArticleRepository();
+  final _articleRepository = inject<ArticleRepository>();
 
   Future<void> fetch(int currentIndex) async {
     emit(const ArticleLoadingState());

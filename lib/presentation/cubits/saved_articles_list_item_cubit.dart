@@ -1,4 +1,5 @@
 import 'package:wikwok/core/exception_handler.dart';
+import 'package:wikwok/core/inject.dart';
 import 'package:wikwok/domain/models/article.dart';
 import 'package:wikwok/domain/repositories/article_repository.dart';
 import 'package:wikwok/presentation/cubits/cubit.dart';
@@ -7,7 +8,7 @@ class SavedArticlesListItemCubit extends WCubit<SavedArticlesListItemState> {
   SavedArticlesListItemCubit()
       : super(const SavedArticlesListItemLoadingState());
 
-  final _articleRepository = ArticleRepository();
+  final _articleRepository = inject<ArticleRepository>();
 
   Future<void> get(String title) async {
     emit(const SavedArticlesListItemLoadingState());

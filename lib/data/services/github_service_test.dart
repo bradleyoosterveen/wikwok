@@ -1,11 +1,17 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wikwok/core/inject.dart';
 import 'package:wikwok/data/services/github_service.dart';
 
 final _tags = ['integration'];
 
-void main() {
-  final service = GithubService();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await initInject();
+
+  final service = inject<GithubService>();
 
   group('GithubService', () {
     group('fetchLatestRelease()', () {

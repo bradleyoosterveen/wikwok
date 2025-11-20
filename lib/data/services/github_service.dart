@@ -1,16 +1,19 @@
+import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'package:wikwok/core/exception_handler.dart';
-import 'package:wikwok/core/http_client.dart';
 import 'package:wikwok/shared/utils/async_cache.dart';
 
+@singleton
+@injectable
 class GithubService {
-  static final GithubService _instance = GithubService._internal();
+  GithubService(
+    Dio dio,
+  ) : _dio = dio
+          ..options = dio.options.copyWith(
+            baseUrl: 'https://api.github.com/',
+          );
 
-  factory GithubService() => _instance;
-
-  GithubService._internal();
-
-  final _httpClient =
-      WHttpClient().getClient(baseUrl: 'https://api.github.com/');
+  final Dio _dio;
 
   final _asyncCache = AsyncCache();
 
@@ -18,7 +21,7 @@ class GithubService {
       key: 'GithubService.fetchLatestRelease',
       action: () async {
         try {
-          final response = await _httpClient.get(
+          final response = await _dio.get(
             'repos/bradleyoosterveen/wikwok/releases/latest',
           );
 

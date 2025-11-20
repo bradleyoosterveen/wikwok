@@ -6,9 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:wikwok/app.dart';
 import 'package:wikwok/core/exception_handler.dart';
+import 'package:wikwok/core/inject.dart';
 
-void main() {
+Future<void> main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
+
+  await initInject();
 
   FlutterNativeSplash.preserve(widgetsBinding: binding);
 
