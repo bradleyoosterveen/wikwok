@@ -17,6 +17,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ needs.get-flutter-sdk-version.outputs.version }}
+          cache: true
 
       - run: flutter pub get
 
@@ -34,6 +35,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ needs.get-flutter-sdk-version.outputs.version }}
+          cache: true
 
       - run: flutter pub get
 
@@ -51,6 +53,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ needs.get-flutter-sdk-version.outputs.version }}
+          cache: true
 
       - run: flutter pub get
 
