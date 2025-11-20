@@ -27,7 +27,7 @@ class _AppState extends State<App> {
       providers: [
         BlocProvider(
           lazy: false,
-          create: (context) => SavedArticlesListCubit()..get(),
+          create: (context) => SavedArticlesListCubit(),
         ),
         BlocProvider(
           lazy: false,
