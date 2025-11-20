@@ -8,6 +8,7 @@ import 'package:wikwok/presentation/cubits/saved_articles_list_cubit.dart';
 import 'package:wikwok/presentation/cubits/settings_cubit.dart';
 import 'package:wikwok/presentation/cubits/update_cubit.dart';
 import 'package:wikwok/presentation/screens/articles_screen.dart';
+import 'package:wikwok/presentation/widgets/open_forwards_page_transition.dart';
 
 import 'domain/models/settings.dart';
 
@@ -68,7 +69,7 @@ class _AppState extends State<App> {
                   pageTransitionsTheme: PageTransitionsTheme(
                     builders: {
                       for (var platform in TargetPlatform.values)
-                        platform: const CupertinoPageTransitionsBuilder(),
+                        platform: const WOpenForwardsPageTransitionsBuilder(),
                     },
                   ),
                 ),
