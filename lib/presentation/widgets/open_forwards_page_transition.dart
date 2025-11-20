@@ -94,53 +94,51 @@ class _OpenForwardsPageTransitionState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final Size size = constraints.biggest;
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final Size size = constraints.biggest;
 
-        final Animation<double> clipAnimation = Tween<double>(
-          begin: 0.0,
-          end: size.width,
-        ).animate(_primaryAnimation);
+          final Animation<double> clipAnimation = Tween<double>(
+            begin: .0,
+            end: size.width,
+          ).animate(_primaryAnimation);
 
-        final Animation<Offset> primaryTranslationAnimation =
-            _OpenForwardsPageTransition._primaryTranslationTween
-                .animate(_primaryAnimation);
+          final Animation<Offset> primaryTranslationAnimation =
+              _OpenForwardsPageTransition._primaryTranslationTween
+                  .animate(_primaryAnimation);
 
-        final Animation<Offset> secondaryTranslationAnimation =
-            _OpenForwardsPageTransition._secondaryTranslationTween
-                .animate(_secondaryTranslationCurvedAnimation);
+          final Animation<Offset> secondaryTranslationAnimation =
+              _OpenForwardsPageTransition._secondaryTranslationTween
+                  .animate(_secondaryTranslationCurvedAnimation);
 
-        return AnimatedBuilder(
-          animation: widget.animation,
-          builder: (BuildContext context, Widget? child) => Align(
-            alignment: Alignment.centerRight,
-            child: ClipRect(
-              child: SizedBox(
-                width: clipAnimation.value,
-                child: OverflowBox(
-                  alignment: Alignment.centerRight,
-                  maxWidth: size.width,
-                  child: child,
+          return AnimatedBuilder(
+            animation: widget.animation,
+            builder: (BuildContext context, Widget? child) => Align(
+              alignment: Alignment.centerRight,
+              child: ClipRect(
+                child: SizedBox(
+                  width: clipAnimation.value,
+                  child: OverflowBox(
+                    alignment: Alignment.centerRight,
+                    maxWidth: size.width,
+                    child: child,
+                  ),
                 ),
               ),
             ),
-          ),
-          child: AnimatedBuilder(
-            animation: widget.secondaryAnimation,
-            child: FractionalTranslation(
-              translation: primaryTranslationAnimation.value,
-              child: widget.child,
+            child: AnimatedBuilder(
+              animation: widget.secondaryAnimation,
+              child: FractionalTranslation(
+                translation: primaryTranslationAnimation.value,
+                child: widget.child,
+              ),
+              builder: (BuildContext context, Widget? child) =>
+                  FractionalTranslation(
+                translation: secondaryTranslationAnimation.value,
+                child: child,
+              ),
             ),
-            builder: (BuildContext context, Widget? child) =>
-                FractionalTranslation(
-              translation: secondaryTranslationAnimation.value,
-              child: child,
-            ),
-          ),
-        );
-      },
-    );
-  }
+          );
+        },
+      );
 }
