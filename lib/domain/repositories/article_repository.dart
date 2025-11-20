@@ -1,36 +1,37 @@
 import 'dart:async';
 
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wikwok/data/services/wikipedia_service.dart';
 import 'package:wikwok/domain/models/article.dart';
 import 'package:wikwok/domain/models/settings.dart';
 import 'package:wikwok/domain/repositories/settings_repository.dart';
 
+@singleton
+@injectable
 class ArticleRepository {
-  static final ArticleRepository _instance = ArticleRepository._internal();
+  ArticleRepository(
+    this._preferences,
+    this._settingsRepository,
+    this._wikipediaService,
+  );
 
-  factory ArticleRepository() => _instance;
+  final SharedPreferencesAsync _preferences;
+  final SettingsRepository _settingsRepository;
+  final WikipediaService _wikipediaService;
 
-  ArticleRepository._internal();
+  static const _maxCache = 99;
+  static const _key = 'saved';
 
-  final _preferences = SharedPreferencesAsync();
-
-  final _wikipediaService = WikipediaService();
-  final _settingsRepository = SettingsRepository();
-
-  final _maxCache = 99;
-
-  final _articles = <int, Article>{};
-
-  final String _key = 'saved';
+  final _articlePageMap = <int, Article>{};
 
   Future<Article?> fetch(int currentIndex) async {
-    Article? article = _articles[currentIndex];
+    Article? article = _articlePageMap[currentIndex];
 
     if (article == null) {
       article = await _fetchRandomArticle();
 
-      _articles[currentIndex] = article;
+      _articlePageMap[currentIndex] = article;
     }
 
     final prefetchAmount =
@@ -51,14 +52,14 @@ class ArticleRepository {
   Future<void> _fetchNextArticle(int index) async {
     final nextIndex = index + 1;
 
-    if (!_articles.containsKey(nextIndex)) {
+    if (!_articlePageMap.containsKey(nextIndex)) {
       final nextArticle = await _fetchRandomArticle();
 
-      _articles[nextIndex] = nextArticle;
+      _articlePageMap[nextIndex] = nextArticle;
     }
 
-    if (_articles.length > _maxCache) {
-      _articles.remove(_articles.keys.first);
+    if (_articlePageMap.length > _maxCache) {
+      _articlePageMap.remove(_articlePageMap.keys.first);
     }
   }
 

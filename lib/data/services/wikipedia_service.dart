@@ -1,22 +1,25 @@
+import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'package:wikwok/core/exception_handler.dart';
-import 'package:wikwok/core/http_client.dart';
 import 'package:wikwok/shared/utils/async_cache.dart';
 
+@singleton
+@injectable
 class WikipediaService {
-  static final WikipediaService _instance = WikipediaService._internal();
+  WikipediaService(
+    Dio dio,
+  ) : _dio = dio
+          ..options = dio.options.copyWith(
+            baseUrl: 'https://en.wikipedia.org/api/rest_v1/',
+          );
 
-  factory WikipediaService() => _instance;
-
-  WikipediaService._internal();
-
-  final _httpClient =
-      WHttpClient().getClient(baseUrl: 'https://en.wikipedia.org/api/rest_v1/');
+  final Dio _dio;
 
   final _asyncCache = AsyncCache();
 
   Future<Map<String, dynamic>> fetchRandomArticle() async {
     try {
-      final response = await _httpClient.get('page/random/summary');
+      final response = await _dio.get('page/random/summary');
 
       return response.data as Map<String, dynamic>;
     } on Exception catch (e) {
@@ -31,7 +34,7 @@ class WikipediaService {
           key: title,
           action: () async {
             try {
-              final response = await _httpClient.get('page/summary/$title');
+              final response = await _dio.get('page/summary/$title');
 
               return response.data as Map<String, dynamic>;
             } on Exception catch (e) {

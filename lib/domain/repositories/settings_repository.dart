@@ -1,16 +1,17 @@
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wikwok/domain/models/settings.dart';
 
+@singleton
+@injectable
 class SettingsRepository {
-  static final SettingsRepository _instance = SettingsRepository._internal();
+  SettingsRepository(
+    this._preferences,
+  );
 
-  factory SettingsRepository() => _instance;
+  final SharedPreferencesAsync _preferences;
 
-  SettingsRepository._internal();
-
-  final _preferences = SharedPreferencesAsync();
-
-  final String _key = 'settings';
+  static const _key = 'settings';
 
   Future<Settings> get() async {
     final data = await _preferences.getString(_key);
@@ -20,11 +21,6 @@ class SettingsRepository {
     return Settings.fromJson(data);
   }
 
-  Future<void> set(Settings settings) async {
-    await _preferences.setString(_key, settings.toJson());
-  }
-
-  Future<void> reset() async {
-    await _preferences.remove(_key);
-  }
+  Future<void> set(Settings settings) async =>
+      await _preferences.setString(_key, settings.toJson());
 }
