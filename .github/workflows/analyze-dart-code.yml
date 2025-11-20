@@ -20,6 +20,8 @@ jobs:
 
       - run: flutter pub get
 
+      - run: dart run build_runner build
+
       - run: dart format -o none --set-exit-if-changed .
 
   fix:
@@ -35,6 +37,8 @@ jobs:
 
       - run: flutter pub get
 
+      - run: dart run build_runner build
+
       - run: dart fix --dry-run
 
   analyze:
@@ -49,5 +53,7 @@ jobs:
           flutter-version: ${{ needs.get-flutter-sdk-version.outputs.version }}
 
       - run: flutter pub get
+
+      - run: dart run build_runner build
 
       - run: dart analyze --fatal-infos
