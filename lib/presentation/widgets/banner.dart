@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:wikwok/presentation/widgets/cached_network_image.dart';
@@ -20,9 +18,7 @@ class WBanner extends StatelessWidget {
   final bool showBackground;
   final bool shouldWrapInSafeArea;
 
-  double get _blur => 16;
-
-  double get _opacity => 0.16;
+  double get _opacity => .08;
 
   EdgeInsetsGeometry get _padding => fill
       ? EdgeInsets.zero
@@ -42,15 +38,9 @@ class WBanner extends StatelessWidget {
             Positioned.fill(
               child: Opacity(
                 opacity: _opacity,
-                child: ImageFiltered(
-                  imageFilter: ImageFilter.blur(sigmaX: _blur, sigmaY: _blur),
-                  child: Transform.scale(
-                    scale: 1.1,
-                    child: WCachedNetworkImage(
-                      src: src,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                child: WCachedNetworkImage(
+                  src: src,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
