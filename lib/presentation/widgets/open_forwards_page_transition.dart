@@ -120,7 +120,7 @@ class _OpenForwardsPageTransitionState
               child: SizedBox(
                 width: clipAnimation.value,
                 child: OverflowBox(
-                  alignment: Alignment.bottomLeft,
+                  alignment: Alignment.centerRight,
                   maxWidth: size.width,
                   child: child,
                 ),
