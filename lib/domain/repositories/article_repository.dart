@@ -25,11 +25,11 @@ class ArticleRepository {
 
   final String _key = 'saved';
 
-  Article? getArticleByIndex(int index) => _articles[index];
-
-  Article? getArticleByTitle(String title) => _articles.values.firstWhereOrNull(
-        (article) => article.title == title,
-      );
+  Article? getArticleByTitle(String title) {
+    return _articles.values.firstWhereOrNull(
+      (article) => article.title == title,
+    );
+  }
 
   Future<Article?> fetch(int currentIndex) async {
     Article? article = _articles[currentIndex];
