@@ -25,6 +25,7 @@ dependencies:
   flutter_native_splash: ^2.4.7
   injectable: ^2.6.0
   get_it: ^9.0.5
+  shared_preferences_platform_interface: ^2.4.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
