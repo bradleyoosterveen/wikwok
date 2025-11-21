@@ -88,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const .symmetric(horizontal: 24),
           child: Column(
             children: [
               Builder(
