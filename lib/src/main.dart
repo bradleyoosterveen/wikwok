@@ -14,7 +14,7 @@ Future<void> main() async {
 
   FlutterNativeSplash.preserve(widgetsBinding: binding);
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setEnabledSystemUIMode(.edgeToEdge);
 
   final exceptionHandler = inject<ExceptionHandler>();
 

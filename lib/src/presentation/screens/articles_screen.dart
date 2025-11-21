@@ -23,7 +23,7 @@ class ArticlesScreen extends StatelessWidget {
           ),
           Positioned(
             child: Align(
-              alignment: Alignment.bottomCenter,
+              alignment: .bottomCenter,
               child: Container(
                 color: Colors.transparent,
                 height: MediaQuery.of(context).viewPadding.bottom + 16,
@@ -45,13 +45,13 @@ class _Header extends StatelessWidget {
     final updateState = context.watch<UpdateCubit>().state;
 
     return Align(
-      alignment: Alignment.topCenter,
+      alignment: .topCenter,
       child: FHeader.nested(
         suffixes: [
           if (updateState is UpdateAvailableState) ...[
             FButton.icon(
               style: FButtonStyle.ghost(),
-              onPress: () => launchUrl(Uri.parse(updateState.url)),
+              onPress: () => launchUrl(.parse(updateState.url)),
               child: const Icon(FIcons.sparkles),
             ),
           ],

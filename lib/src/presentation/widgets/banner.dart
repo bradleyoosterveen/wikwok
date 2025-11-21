@@ -21,27 +21,24 @@ class WBanner extends StatelessWidget {
   double get _opacity => .08;
 
   EdgeInsetsGeometry get _padding => fill
-      ? EdgeInsets.zero
-      : const EdgeInsets.symmetric(horizontal: 24).add(
-          EdgeInsets.only(top: shouldWrapInSafeArea ? 64 : 0),
-        );
+      ? .zero
+      : const EdgeInsets.symmetric(
+          horizontal: 24,
+        ).add(.only(top: shouldWrapInSafeArea ? 64 : 0));
 
   @override
   Widget build(BuildContext context) {
     final backgroundColor = context.theme.scaffoldStyle.backgroundColor;
 
     return ClipRect(
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       child: Stack(
         children: [
           if (showBackground) ...[
             Positioned.fill(
               child: Opacity(
                 opacity: _opacity,
-                child: WCachedNetworkImage(
-                  src: src,
-                  fit: BoxFit.cover,
-                ),
+                child: WCachedNetworkImage(src: src, fit: .cover),
               ),
             ),
           ],
@@ -50,8 +47,8 @@ class WBanner extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                    begin: .topCenter,
+                    end: .bottomCenter,
                     colors: [
                       backgroundColor,
                       backgroundColor.withValues(alpha: 0),
@@ -70,10 +67,7 @@ class WBanner extends StatelessWidget {
               top: shouldWrapInSafeArea,
               child: Padding(
                 padding: _padding,
-                child: WCachedNetworkImage(
-                  src: src,
-                  fit: BoxFit.contain,
-                ),
+                child: WCachedNetworkImage(src: src, fit: .contain),
               ),
             ),
           ),
