@@ -8,25 +8,18 @@ import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
 
 class ArticleScreen extends StatefulWidget {
-  const ArticleScreen._({
-    required this.article,
-  });
+  const ArticleScreen._({required this.article});
 
   final Article article;
 
-  static push(
-    BuildContext context, {
-    required Article article,
-  }) =>
+  static push(BuildContext context, {required Article article}) =>
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (context) => inject<SaveArticleCubit>()),
             ],
-            child: ArticleScreen._(
-              article: article,
-            ),
+            child: ArticleScreen._(article: article),
           ),
         ),
       );
@@ -54,7 +47,7 @@ class _ArticleScreenState extends State<ArticleScreen>
       child: FScaffold(
         childPad: false,
         footer: Padding(
-          padding: EdgeInsets.only(
+          padding: .only(
             bottom: MediaQuery.of(context).systemGestureInsets.bottom,
             left: 24.0,
             right: 24.0,
@@ -64,9 +57,7 @@ class _ArticleScreenState extends State<ArticleScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               FButton(
-                onPress: () => launchUrl(
-                  Uri.parse(widget.article.url),
-                ),
+                onPress: () => launchUrl(Uri.parse(widget.article.url)),
                 child: const Text('Visit'),
               ),
               const SizedBox(height: 16),
@@ -89,8 +80,8 @@ class _ArticleScreenState extends State<ArticleScreen>
           suffixes: [
             FPopoverMenu(
               popoverController: _popoverController,
-              menuAnchor: Alignment.topRight,
-              childAnchor: Alignment.bottomRight,
+              menuAnchor: .topRight,
+              childAnchor: .bottomRight,
               menu: [
                 FItemGroup(
                   children: [
@@ -102,9 +93,9 @@ class _ArticleScreenState extends State<ArticleScreen>
                         softWrap: true,
                       ),
                       onPress: () {
-                        context
-                            .read<SaveArticleCubit>()
-                            .toggle(widget.article.title);
+                        context.read<SaveArticleCubit>().toggle(
+                          widget.article.title,
+                        );
 
                         Navigator.pop(context);
                       },
@@ -122,45 +113,49 @@ class _ArticleScreenState extends State<ArticleScreen>
         ),
         child: ListView(
           shrinkWrap: true,
-          padding: EdgeInsets.zero,
+          padding: .zero,
           children: [
             Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: .min,
+              crossAxisAlignment: .stretch,
               children: [
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height * 0.3,
-                  child: Builder(builder: (context) {
-                    final shouldDownloadFullSizeImages = context.select(
-                      (SettingsCubit settings) =>
-                          settings.state.shouldDownloadFullSizeImages,
-                    );
+                  child: Builder(
+                    builder: (context) {
+                      final shouldDownloadFullSizeImages = context.select(
+                        (SettingsCubit settings) =>
+                            settings.state.shouldDownloadFullSizeImages,
+                      );
 
-                    final hasWifi = context.select(
-                          (ConnectivityCubit connectivity) => connectivity.state
-                              ?.contains(ConnectivityResult.wifi),
-                        ) ??
-                        false;
+                      final hasWifi =
+                          context.select(
+                            (ConnectivityCubit connectivity) => connectivity
+                                .state
+                                ?.contains(ConnectivityResult.wifi),
+                          ) ??
+                          false;
 
-                    final urlWifiOnly = hasWifi
-                        ? widget.article.originalImageUrl
-                        : widget.article.thumbnailUrl;
+                      final urlWifiOnly = hasWifi
+                          ? widget.article.originalImageUrl
+                          : widget.article.thumbnailUrl;
 
-                    return WBanner(
-                      shouldWrapInSafeArea: false,
-                      src: switch (shouldDownloadFullSizeImages) {
-                        ShouldDownloadFullSizeImages.yes =>
-                          widget.article.originalImageUrl,
-                        ShouldDownloadFullSizeImages.no =>
-                          widget.article.thumbnailUrl,
-                        _ => urlWifiOnly,
-                      },
-                    );
-                  }),
+                      return WBanner(
+                        shouldWrapInSafeArea: false,
+                        src: switch (shouldDownloadFullSizeImages) {
+                          ShouldDownloadFullSizeImages.yes =>
+                            widget.article.originalImageUrl,
+                          ShouldDownloadFullSizeImages.no =>
+                            widget.article.thumbnailUrl,
+                          _ => urlWifiOnly,
+                        },
+                      );
+                    },
+                  ),
                 ),
                 Flexible(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const .all(8.0),
                     child: FCard(
                       style: (style) => style.copyWith(
                         decoration: style.decoration.copyWith(

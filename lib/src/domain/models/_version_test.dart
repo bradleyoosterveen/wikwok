@@ -44,9 +44,10 @@ void main() {
           expected: false,
         ),
         _Case(
-            version: Version.parse('2.0.0'),
-            other: Version.parse('1.0.0'),
-            expected: true),
+          version: Version.parse('2.0.0'),
+          other: Version.parse('1.0.0'),
+          expected: true,
+        ),
       ];
 
       for (final case_ in cases) {

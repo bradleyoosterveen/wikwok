@@ -15,22 +15,15 @@ class WErrorRetryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const .all(24.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             const Icon(FIcons.circleSlash),
             const SizedBox(height: 16),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: context.theme.typography.lg,
-            ),
+            Text(title, textAlign: .center, style: context.theme.typography.lg),
             const SizedBox(height: 16),
-            FButton(
-              onPress: onRetry,
-              child: const Text('Try again'),
-            ),
+            FButton(onPress: onRetry, child: const Text('Try again')),
           ],
         ),
       ),

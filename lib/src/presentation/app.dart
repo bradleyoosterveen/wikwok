@@ -41,40 +41,43 @@ class _AppState extends State<App> {
           create: (context) => inject<ConnectivityCubit>()..initialize(),
         ),
       ],
-      child: Builder(builder: (context) {
-        final themeMode = context.select(
-          (SettingsCubit cubit) => cubit.state.themeMode,
-        );
+      child: Builder(
+        builder: (context) {
+          final themeMode = context.select(
+            (SettingsCubit cubit) => cubit.state.themeMode,
+          );
 
-        final theme = switch (themeMode) {
-          WThemeMode.light => FThemes.zinc.light,
-          WThemeMode.dark => FThemes.zinc.dark,
-          WThemeMode.system => _platformBrightness == Brightness.dark
-              ? FThemes.zinc.dark
-              : FThemes.zinc.light,
-          WThemeMode.pink => WThemes.pink,
-        };
+          final theme = switch (themeMode) {
+            WThemeMode.light => FThemes.zinc.light,
+            WThemeMode.dark => FThemes.zinc.dark,
+            WThemeMode.system =>
+              _platformBrightness == Brightness.dark
+                  ? FThemes.zinc.dark
+                  : FThemes.zinc.light,
+            WThemeMode.pink => WThemes.pink,
+          };
 
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: MaterialApp(
-            title: 'WikWok',
-            theme: theme.toApproximateMaterialTheme().copyWith(
-                  pageTransitionsTheme: PageTransitionsTheme(
-                    builders: {
-                      for (var platform in TargetPlatform.values)
-                        platform: const WOpenForwardsPageTransitionsBuilder(),
-                    },
-                  ),
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle.light,
+            child: MaterialApp(
+              title: 'WikWok',
+              theme: theme.toApproximateMaterialTheme().copyWith(
+                pageTransitionsTheme: PageTransitionsTheme(
+                  builders: {
+                    for (var platform in TargetPlatform.values)
+                      platform: const WOpenForwardsPageTransitionsBuilder(),
+                  },
                 ),
-            builder: (_, child) => FAnimatedTheme(
-              data: theme,
-              child: child ?? const SizedBox.shrink(),
+              ),
+              builder: (_, child) => FAnimatedTheme(
+                data: theme,
+                child: child ?? const SizedBox.shrink(),
+              ),
+              home: const ArticlesScreen(),
             ),
-            home: const ArticlesScreen(),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 }

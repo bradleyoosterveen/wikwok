@@ -10,11 +10,9 @@ import 'package:wikwok/src/gen/assets.gen.dart';
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen._({super.key});
 
-  static push(BuildContext context, {Key? key}) => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => SettingsScreen._(key: key),
-        ),
-      );
+  static push(BuildContext context, {Key? key}) => Navigator.of(
+    context,
+  ).push(MaterialPageRoute(builder: (context) => SettingsScreen._(key: key)));
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -26,7 +24,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return FScaffold(
       childPad: false,
       footer: Padding(
-        padding: EdgeInsets.only(
+        padding: .only(
           bottom: MediaQuery.of(context).systemGestureInsets.bottom,
           left: 24.0,
           right: 24.0,
@@ -34,26 +32,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         child: BlocBuilder<CurrentVersionCubit, CurrentVersionState>(
           builder: (context, state) => Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Opacity(
                 opacity: 0.64,
                 child: Text(
                   'This app is not affiliated with, endorsed by, or sponsored by Wikipedia or the Wikimedia Foundation. All trademarks and registered trademarks are the property of their respective owners.',
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                   style: context.theme.typography.sm,
                 ),
               ),
               const SizedBox(height: 24),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: .spaceBetween,
                 children: [
                   FLabel(
-                    axis: Axis.vertical,
+                    axis: .vertical,
                     label: const Text('Current version'),
                     child: switch (state) {
-                      CurrentVersionLoadedState state =>
-                        Text(state.version.toString()),
+                      CurrentVersionLoadedState state => Text(
+                        state.version.toString(),
+                      ),
                       CurrentVersionErrorState _ => const Text('Error'),
                       _ => const Text('Loading...'),
                     },
@@ -62,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     height: 32,
                     child: SvgPicture.asset(
                       Assets.logo,
-                      fit: BoxFit.cover,
+                      fit: .cover,
                       height: 72,
                       colorFilter: ColorFilter.mode(
                         context.theme.colors.secondaryForeground,
@@ -92,71 +91,76 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              Builder(builder: (context) {
-                final settings = context.watch<SettingsCubit>().state;
+              Builder(
+                builder: (context) {
+                  final settings = context.watch<SettingsCubit>().state;
 
-                return FTileGroup(
-                  label: const Text('Settings'),
-                  divider: FItemDivider.full,
-                  children: [
-                    _OptionTile<WThemeMode>(
-                      prefix: FIcons.sunMoon,
-                      title: 'Theme',
-                      initialValue: settings.themeMode,
-                      onChange: (WThemeMode value) =>
-                          settings.copyWith(themeMode: value),
-                      labelBuilder: (WThemeMode value) => switch (value) {
-                        WThemeMode.light => 'Light',
-                        WThemeMode.dark => 'Dark',
-                        WThemeMode.system => 'System',
-                        WThemeMode.pink => 'Pink',
-                      },
-                      options: WThemeMode.values,
-                    ),
-                    _OptionTile<Axis>(
-                      prefix: FIcons.move3d,
-                      title: 'Swipe direction',
-                      initialValue: settings.doomScrollDirection,
-                      onChange: (Axis value) =>
-                          settings.copyWith(doomScrollDirection: value),
-                      labelBuilder: (Axis value) => switch (value) {
-                        Axis.vertical => 'Vertical',
-                        Axis.horizontal => 'Horizontal',
-                      },
-                      options: Axis.values,
-                    ),
-                    _OptionTile<ArticlePrefetchRange>(
-                      prefix: FIcons.arrowBigRightDash,
-                      title: 'Article prefetch range',
-                      initialValue: settings.articlePrefetchRange,
-                      onChange: (ArticlePrefetchRange value) =>
-                          settings.copyWith(articlePrefetchRange: value),
-                      labelBuilder: (ArticlePrefetchRange value) =>
-                          switch (value) {
-                        ArticlePrefetchRange.none => 'None',
-                        ArticlePrefetchRange.short => '1',
-                        ArticlePrefetchRange.medium => '2',
-                        ArticlePrefetchRange.large => '3',
-                      },
-                      options: ArticlePrefetchRange.values,
-                    ),
-                    _OptionTile<ShouldDownloadFullSizeImages>(
-                      prefix: FIcons.proportions,
-                      title: 'Download full size images',
-                      initialValue: settings.shouldDownloadFullSizeImages,
-                      onChange: (ShouldDownloadFullSizeImages value) => settings
-                          .copyWith(shouldDownloadFullSizeImages: value),
-                      labelBuilder: (ShouldDownloadFullSizeImages value) =>
-                          switch (value) {
-                        ShouldDownloadFullSizeImages.yes => 'Yes',
-                        ShouldDownloadFullSizeImages.no => 'No',
-                        ShouldDownloadFullSizeImages.wifiOnly => 'Wifi only',
-                      },
-                      options: ShouldDownloadFullSizeImages.values,
-                    ),
-                  ],
-                );
-              }),
+                  return FTileGroup(
+                    label: const Text('Settings'),
+                    divider: .full,
+                    children: [
+                      _OptionTile<WThemeMode>(
+                        prefix: FIcons.sunMoon,
+                        title: 'Theme',
+                        initialValue: settings.themeMode,
+                        onChange: (WThemeMode value) =>
+                            settings.copyWith(themeMode: value),
+                        labelBuilder: (WThemeMode value) => switch (value) {
+                          WThemeMode.light => 'Light',
+                          WThemeMode.dark => 'Dark',
+                          WThemeMode.system => 'System',
+                          WThemeMode.pink => 'Pink',
+                        },
+                        options: WThemeMode.values,
+                      ),
+                      _OptionTile<Axis>(
+                        prefix: FIcons.move3d,
+                        title: 'Swipe direction',
+                        initialValue: settings.doomScrollDirection,
+                        onChange: (Axis value) =>
+                            settings.copyWith(doomScrollDirection: value),
+                        labelBuilder: (Axis value) => switch (value) {
+                          Axis.vertical => 'Vertical',
+                          Axis.horizontal => 'Horizontal',
+                        },
+                        options: Axis.values,
+                      ),
+                      _OptionTile<ArticlePrefetchRange>(
+                        prefix: FIcons.arrowBigRightDash,
+                        title: 'Article prefetch range',
+                        initialValue: settings.articlePrefetchRange,
+                        onChange: (ArticlePrefetchRange value) =>
+                            settings.copyWith(articlePrefetchRange: value),
+                        labelBuilder: (ArticlePrefetchRange value) =>
+                            switch (value) {
+                              ArticlePrefetchRange.none => 'None',
+                              ArticlePrefetchRange.short => '1',
+                              ArticlePrefetchRange.medium => '2',
+                              ArticlePrefetchRange.large => '3',
+                            },
+                        options: ArticlePrefetchRange.values,
+                      ),
+                      _OptionTile<ShouldDownloadFullSizeImages>(
+                        prefix: FIcons.proportions,
+                        title: 'Download full size images',
+                        initialValue: settings.shouldDownloadFullSizeImages,
+                        onChange: (ShouldDownloadFullSizeImages value) =>
+                            settings.copyWith(
+                              shouldDownloadFullSizeImages: value,
+                            ),
+                        labelBuilder: (ShouldDownloadFullSizeImages value) =>
+                            switch (value) {
+                              ShouldDownloadFullSizeImages.yes => 'Yes',
+                              ShouldDownloadFullSizeImages.no => 'No',
+                              ShouldDownloadFullSizeImages.wifiOnly =>
+                                'Wifi only',
+                            },
+                        options: ShouldDownloadFullSizeImages.values,
+                      ),
+                    ],
+                  );
+                },
+              ),
               const SizedBox(height: 24),
               FTileGroup(
                 divider: FItemDivider.full,
@@ -165,22 +169,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     prefix: const Icon(FIcons.gitPullRequestArrow),
                     title: const Text('Suggest feature'),
                     suffix: const Icon(FIcons.chevronRight),
-                    onPress: () => launchUrl(Uri.parse(
-                        'https://github.com/bradleyoosterveen/WikWok/issues/new?template=enhancement.yml')),
+                    onPress: () => launchUrl(
+                      Uri.parse(
+                        'https://github.com/bradleyoosterveen/WikWok/issues/new?template=enhancement.yml',
+                      ),
+                    ),
                   ),
                   FTile(
                     prefix: const Icon(FIcons.bug),
                     title: const Text('Report a bug'),
                     suffix: const Icon(FIcons.chevronRight),
-                    onPress: () => launchUrl(Uri.parse(
-                        'https://github.com/bradleyoosterveen/WikWok/issues/new?template=bug.yml')),
+                    onPress: () => launchUrl(
+                      Uri.parse(
+                        'https://github.com/bradleyoosterveen/WikWok/issues/new?template=bug.yml',
+                      ),
+                    ),
                   ),
                   FTile(
                     prefix: const Icon(FIcons.code),
                     title: const Text('View source code'),
                     suffix: const Icon(FIcons.chevronRight),
-                    onPress: () => launchUrl(Uri.parse(
-                        'https://github.com/bradleyoosterveen/WikWok')),
+                    onPress: () => launchUrl(
+                      Uri.parse('https://github.com/bradleyoosterveen/WikWok'),
+                    ),
                   ),
                 ],
               ),
@@ -229,15 +240,13 @@ class _OptionTile<T> extends StatefulWidget with FTileMixin {
 }
 
 class _OptionTileState<T> extends State<_OptionTile<T>> {
-  final _controller = FSelectMenuTileController<T>.radio();
+  final FSelectMenuTileController<T> _controller = .radio();
 
   @override
   void initState() {
     super.initState();
 
-    _controller.value = {
-      widget.initialValue,
-    };
+    _controller.value = {widget.initialValue};
 
     _controller.addListener(_onThemeSelected);
   }
@@ -247,9 +256,7 @@ class _OptionTileState<T> extends State<_OptionTile<T>> {
 
     if (selectedValue == null) return;
 
-    context.read<SettingsCubit>().change(
-          widget.onChange.call(selectedValue),
-        );
+    context.read<SettingsCubit>().change(widget.onChange.call(selectedValue));
   }
 
   @override

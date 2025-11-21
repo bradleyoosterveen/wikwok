@@ -5,9 +5,7 @@ import 'package:wikwok/presentation.dart';
 @injectable
 @singleton
 class SettingsCubit extends WCubit<Settings> {
-  SettingsCubit(
-    this._settingsRepository,
-  ) : super(Settings.asDefault());
+  SettingsCubit(this._settingsRepository) : super(Settings.asDefault());
 
   final SettingsRepository _settingsRepository;
 

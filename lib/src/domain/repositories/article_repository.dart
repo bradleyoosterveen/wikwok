@@ -34,11 +34,11 @@ class ArticleRepository {
 
     final prefetchAmount =
         switch ((await _settingsRepository.get()).articlePrefetchRange) {
-      ArticlePrefetchRange.none => 0,
-      ArticlePrefetchRange.short => 1,
-      ArticlePrefetchRange.medium => 2,
-      ArticlePrefetchRange.large => 3,
-    };
+          ArticlePrefetchRange.none => 0,
+          ArticlePrefetchRange.short => 1,
+          ArticlePrefetchRange.medium => 2,
+          ArticlePrefetchRange.large => 3,
+        };
 
     for (var i = 0; i < prefetchAmount; i++) {
       unawaited(_fetchNextArticle(currentIndex + i));
@@ -77,7 +77,9 @@ class ArticleRepository {
     saved.add(title);
 
     await _preferences.setStringList(
-        _key, saved.map((e) => e.toString()).toList());
+      _key,
+      saved.map((e) => e.toString()).toList(),
+    );
 
     return true;
   }
@@ -92,7 +94,9 @@ class ArticleRepository {
     saved.remove(title);
 
     await _preferences.setStringList(
-        _key, saved.map((e) => e.toString()).toList());
+      _key,
+      saved.map((e) => e.toString()).toList(),
+    );
 
     return false;
   }

@@ -6,10 +6,8 @@ import 'package:wikwok/presentation.dart';
 @injectable
 @singleton
 class ArticleCubit extends WCubit<ArticleState> {
-  ArticleCubit(
-    this._articleRepository,
-    this._exceptionHandler,
-  ) : super(const ArticleLoadingState());
+  ArticleCubit(this._articleRepository, this._exceptionHandler)
+    : super(const ArticleLoadingState());
 
   final ArticleRepository _articleRepository;
   final ExceptionHandler _exceptionHandler;

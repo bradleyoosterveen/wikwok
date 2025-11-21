@@ -6,10 +6,8 @@ import 'package:wikwok/presentation.dart';
 @injectable
 @singleton
 class SavedArticlesListItemCubit extends WCubit<SavedArticlesListItemState> {
-  SavedArticlesListItemCubit(
-    this._articleRepository,
-    this._exceptionHandler,
-  ) : super(const SavedArticlesListItemLoadingState());
+  SavedArticlesListItemCubit(this._articleRepository, this._exceptionHandler)
+    : super(const SavedArticlesListItemLoadingState());
 
   final ArticleRepository _articleRepository;
   final ExceptionHandler _exceptionHandler;

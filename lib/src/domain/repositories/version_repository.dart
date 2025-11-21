@@ -6,9 +6,7 @@ import 'package:wikwok/domain.dart';
 @singleton
 @injectable
 class VersionRepository {
-  VersionRepository(
-    this._githubService,
-  );
+  VersionRepository(this._githubService);
 
   final GithubService _githubService;
 

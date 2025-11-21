@@ -11,8 +11,10 @@ void main() {
 
         expect(settings.themeMode, WThemeMode.system);
         expect(settings.articlePrefetchRange, ArticlePrefetchRange.short);
-        expect(settings.shouldDownloadFullSizeImages,
-            ShouldDownloadFullSizeImages.no);
+        expect(
+          settings.shouldDownloadFullSizeImages,
+          ShouldDownloadFullSizeImages.no,
+        );
         expect(settings.doomScrollDirection, Axis.vertical);
       });
     });
@@ -31,8 +33,10 @@ void main() {
 
         expect(settings.themeMode, WThemeMode.dark);
         expect(settings.articlePrefetchRange, ArticlePrefetchRange.medium);
-        expect(settings.shouldDownloadFullSizeImages,
-            ShouldDownloadFullSizeImages.wifiOnly);
+        expect(
+          settings.shouldDownloadFullSizeImages,
+          ShouldDownloadFullSizeImages.wifiOnly,
+        );
         expect(settings.doomScrollDirection, Axis.horizontal);
       });
       test('should return default object when map is invalid', () {
@@ -48,12 +52,18 @@ void main() {
         final defaultSettings = Settings.asDefault();
 
         expect(settings.themeMode, defaultSettings.themeMode);
-        expect(settings.articlePrefetchRange,
-            defaultSettings.articlePrefetchRange);
-        expect(settings.shouldDownloadFullSizeImages,
-            defaultSettings.shouldDownloadFullSizeImages);
         expect(
-            settings.doomScrollDirection, defaultSettings.doomScrollDirection);
+          settings.articlePrefetchRange,
+          defaultSettings.articlePrefetchRange,
+        );
+        expect(
+          settings.shouldDownloadFullSizeImages,
+          defaultSettings.shouldDownloadFullSizeImages,
+        );
+        expect(
+          settings.doomScrollDirection,
+          defaultSettings.doomScrollDirection,
+        );
       });
     });
   });

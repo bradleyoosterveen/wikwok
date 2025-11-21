@@ -3,37 +3,34 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:forui/forui.dart';
 
 class WToggleSaveAnimation extends StatelessWidget {
-  const WToggleSaveAnimation._({
-    required this.controller,
-    required this.type,
-  });
+  const WToggleSaveAnimation._({required this.controller, required this.type});
 
   factory WToggleSaveAnimation.save({
     required AnimationController controller,
-  }) =>
-      WToggleSaveAnimation._(
-        controller: controller,
-        type: WToggleSaveAnimationType.save,
-      );
+  }) => WToggleSaveAnimation._(
+    controller: controller,
+    type: WToggleSaveAnimationType.save,
+  );
 
   factory WToggleSaveAnimation.unsave({
     required AnimationController controller,
-  }) =>
-      WToggleSaveAnimation._(
-          controller: controller, type: WToggleSaveAnimationType.unsave);
+  }) => WToggleSaveAnimation._(
+    controller: controller,
+    type: WToggleSaveAnimationType.unsave,
+  );
 
   final AnimationController controller;
   final WToggleSaveAnimationType type;
 
   IconData get _icon => switch (type) {
-        WToggleSaveAnimationType.save => FIcons.bookCheck,
-        WToggleSaveAnimationType.unsave => FIcons.bookX,
-      };
+    WToggleSaveAnimationType.save => FIcons.bookCheck,
+    WToggleSaveAnimationType.unsave => FIcons.bookX,
+  };
 
   String get _text => switch (type) {
-        WToggleSaveAnimationType.save => 'Saved to library',
-        WToggleSaveAnimationType.unsave => 'Removed from library',
-      };
+    WToggleSaveAnimationType.save => 'Saved to library',
+    WToggleSaveAnimationType.unsave => 'Removed from library',
+  };
 
   Duration get _scaleDuration => 100.milliseconds;
 
@@ -42,24 +39,19 @@ class WToggleSaveAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(_icon, size: 16),
-        const SizedBox(width: 8),
-        Text(_text),
-      ],
-    )
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(_icon, size: 16),
+            const SizedBox(width: 8),
+            Text(_text),
+          ],
+        )
         .animate(
           controller: controller,
           autoPlay: false,
           onComplete: (c) => c.reset(),
         )
-        .fade(
-          begin: 0,
-          end: 1,
-          curve: Curves.easeOut,
-          duration: _scaleDuration,
-        )
+        .fade(begin: 0, end: 1, curve: Curves.easeOut, duration: _scaleDuration)
         .fade(
           delay: _delayDuration,
           begin: 1,
@@ -70,7 +62,4 @@ class WToggleSaveAnimation extends StatelessWidget {
   }
 }
 
-enum WToggleSaveAnimationType {
-  save,
-  unsave;
-}
+enum WToggleSaveAnimationType { save, unsave }

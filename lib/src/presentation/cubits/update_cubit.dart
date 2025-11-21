@@ -6,10 +6,8 @@ import 'package:wikwok/presentation.dart';
 @injectable
 @singleton
 class UpdateCubit extends WCubit<UpdateState> {
-  UpdateCubit(
-    this._versionRepository,
-    this._exceptionHandler,
-  ) : super(const UpdateLoadingState());
+  UpdateCubit(this._versionRepository, this._exceptionHandler)
+    : super(const UpdateLoadingState());
 
   final VersionRepository _versionRepository;
   final ExceptionHandler _exceptionHandler;
@@ -45,10 +43,7 @@ class UpdateAvailableState extends UpdateState {
   final String url;
   final Version version;
 
-  const UpdateAvailableState(
-    this.url,
-    this.version,
-  );
+  const UpdateAvailableState(this.url, this.version);
 }
 
 class UpdateUnavailableState extends UpdateState {

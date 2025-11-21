@@ -16,32 +16,31 @@ class Settings {
   });
 
   factory Settings.asDefault() => Settings._(
-        themeMode: WThemeMode.system,
-        articlePrefetchRange: ArticlePrefetchRange.short,
-        shouldDownloadFullSizeImages: ShouldDownloadFullSizeImages.no,
-        doomScrollDirection: Axis.vertical,
-      );
+    themeMode: WThemeMode.system,
+    articlePrefetchRange: ArticlePrefetchRange.short,
+    shouldDownloadFullSizeImages: ShouldDownloadFullSizeImages.no,
+    doomScrollDirection: Axis.vertical,
+  );
 
   Settings copyWith({
     WThemeMode? themeMode,
     ArticlePrefetchRange? articlePrefetchRange,
     ShouldDownloadFullSizeImages? shouldDownloadFullSizeImages,
     Axis? doomScrollDirection,
-  }) =>
-      Settings._(
-        themeMode: themeMode ?? this.themeMode,
-        articlePrefetchRange: articlePrefetchRange ?? this.articlePrefetchRange,
-        shouldDownloadFullSizeImages:
-            shouldDownloadFullSizeImages ?? this.shouldDownloadFullSizeImages,
-        doomScrollDirection: doomScrollDirection ?? this.doomScrollDirection,
-      );
+  }) => Settings._(
+    themeMode: themeMode ?? this.themeMode,
+    articlePrefetchRange: articlePrefetchRange ?? this.articlePrefetchRange,
+    shouldDownloadFullSizeImages:
+        shouldDownloadFullSizeImages ?? this.shouldDownloadFullSizeImages,
+    doomScrollDirection: doomScrollDirection ?? this.doomScrollDirection,
+  );
 
   Map<String, dynamic> toMap() => {
-        'themeMode': themeMode.index,
-        'articlePrefetchRange': articlePrefetchRange.index,
-        'shouldDownloadFullSizeImages': shouldDownloadFullSizeImages.index,
-        'doomScrollDirection': doomScrollDirection.index,
-      };
+    'themeMode': themeMode.index,
+    'articlePrefetchRange': articlePrefetchRange.index,
+    'shouldDownloadFullSizeImages': shouldDownloadFullSizeImages.index,
+    'doomScrollDirection': doomScrollDirection.index,
+  };
 
   String toJson() => json.encode(toMap());
 
@@ -64,22 +63,8 @@ class Settings {
       Settings.fromMap(json.decode(source));
 }
 
-enum WThemeMode {
-  system,
-  light,
-  dark,
-  pink,
-}
+enum WThemeMode { system, light, dark, pink }
 
-enum ArticlePrefetchRange {
-  none,
-  short,
-  medium,
-  large;
-}
+enum ArticlePrefetchRange { none, short, medium, large }
 
-enum ShouldDownloadFullSizeImages {
-  yes,
-  no,
-  wifiOnly;
-}
+enum ShouldDownloadFullSizeImages { yes, no, wifiOnly }

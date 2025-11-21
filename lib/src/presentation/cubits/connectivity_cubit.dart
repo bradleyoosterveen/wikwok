@@ -7,17 +7,16 @@ import 'package:wikwok/presentation.dart';
 @injectable
 @singleton
 class ConnectivityCubit extends WCubit<List<ConnectivityResult>?> {
-  ConnectivityCubit(
-    this._connectivity,
-  ) : super(null);
+  ConnectivityCubit(this._connectivity) : super(null);
 
   final Connectivity _connectivity;
 
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   Future initialize() async {
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
   }
 
   void _updateConnectionStatus(List<ConnectivityResult> result) => emit(result);
