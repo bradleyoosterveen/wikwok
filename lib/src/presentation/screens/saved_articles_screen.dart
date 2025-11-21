@@ -32,6 +32,7 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
   @override
   Widget build(BuildContext context) {
     return FScaffold(
+      childPad: false,
       header: Builder(
         builder: (context) {
           final hasArticles =
@@ -87,8 +88,8 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
       ),
       child: SafeArea(
         top: false,
-        child: Material(
-          color: Colors.transparent,
+        child: Padding(
+          padding: const .symmetric(horizontal: 24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
