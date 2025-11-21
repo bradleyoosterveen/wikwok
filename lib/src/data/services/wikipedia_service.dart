@@ -5,14 +5,11 @@ import 'package:wikwok/core.dart';
 @singleton
 @injectable
 class WikipediaService {
-  WikipediaService(
-    Dio dio,
-    this._asyncCacheHandler,
-    this._exceptionHandler,
-  ) : _dio = dio
-          ..options = dio.options.copyWith(
-            baseUrl: 'https://en.wikipedia.org/api/rest_v1/',
-          );
+  WikipediaService(Dio dio, this._asyncCacheHandler, this._exceptionHandler)
+    : _dio = dio
+        ..options = dio.options.copyWith(
+          baseUrl: 'https://en.wikipedia.org/api/rest_v1/',
+        );
 
   final Dio _dio;
   final AsyncCacheHandler _asyncCacheHandler;

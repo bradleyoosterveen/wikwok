@@ -5,14 +5,9 @@ import 'package:wikwok/core.dart';
 @singleton
 @injectable
 class GithubService {
-  GithubService(
-    Dio dio,
-    this._asyncCacheHandler,
-    this._exceptionHandler,
-  ) : _dio = dio
-          ..options = dio.options.copyWith(
-            baseUrl: 'https://api.github.com/',
-          );
+  GithubService(Dio dio, this._asyncCacheHandler, this._exceptionHandler)
+    : _dio = dio
+        ..options = dio.options.copyWith(baseUrl: 'https://api.github.com/');
 
   final Dio _dio;
   final AsyncCacheHandler _asyncCacheHandler;

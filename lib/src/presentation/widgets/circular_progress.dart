@@ -6,12 +6,9 @@ class WCircularProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: FCircularProgress.loader(
-          style: (style) => style.copyWith(
-            iconStyle: style.iconStyle.copyWith(
-              size: 32,
-            ),
-          ),
-        ),
-      );
+    child: FCircularProgress.loader(
+      style: (style) =>
+          style.copyWith(iconStyle: style.iconStyle.copyWith(size: 32)),
+    ),
+  );
 }

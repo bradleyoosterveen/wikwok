@@ -6,10 +6,8 @@ import 'package:wikwok/presentation.dart';
 @injectable
 @singleton
 class CurrentVersionCubit extends WCubit<CurrentVersionState> {
-  CurrentVersionCubit(
-    this._versionRepository,
-    this._exceptionHandler,
-  ) : super(const CurrentVersionLoadingState());
+  CurrentVersionCubit(this._versionRepository, this._exceptionHandler)
+    : super(const CurrentVersionLoadingState());
 
   final VersionRepository _versionRepository;
   final ExceptionHandler _exceptionHandler;

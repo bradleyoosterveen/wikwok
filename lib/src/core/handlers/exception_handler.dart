@@ -8,10 +8,10 @@ class ExceptionHandler {
   BehaviorSubject<String> errorStream = BehaviorSubject<String>();
 
   void handle(Object e) => errorStream.add(switch (e) {
-        _ when e is DioException => _onDioException(e),
-        _ when e is Exception => _onException(e),
-        _ => _onAnything(e),
-      });
+    _ when e is DioException => _onDioException(e),
+    _ when e is Exception => _onException(e),
+    _ => _onAnything(e),
+  });
 
   String _onAnything(Object e) => e.toString();
 

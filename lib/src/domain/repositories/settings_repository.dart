@@ -5,9 +5,7 @@ import 'package:wikwok/domain.dart';
 @singleton
 @injectable
 class SettingsRepository {
-  SettingsRepository(
-    this._preferences,
-  );
+  SettingsRepository(this._preferences);
 
   final SharedPreferencesAsync _preferences;
 
