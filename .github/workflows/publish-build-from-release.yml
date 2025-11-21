@@ -38,7 +38,7 @@ jobs:
           echo $KEY_PROPERTIES | base64 -d > android/key.properties
 
       - run: |
-          flutter build apk --release --target-platform android-arm64
+          flutter build apk --release --target-platform android-arm64 --target="lib/src/main.dart"
           mv build/app/outputs/flutter-apk/app-release.apk .
 
       - uses: actions/upload-artifact@v4
