@@ -201,6 +201,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  console:
+    dependency: transitive
+    description:
+      name: console
+      sha256: e04e7824384c5b39389acdd6dc7d33f3efe6b232f6f16d7626f194f6a01ad69a
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   convert:
     dependency: transitive
     description:
@@ -509,6 +517,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+  index_generator:
+    dependency: "direct main"
+    description:
+      name: index_generator
+      sha256: "11efcc981f663e169ada65a8f329a1678eb3cba6b7157d5c93a5f4a81a5395d0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.2"
   injectable:
     dependency: "direct main"
     description:

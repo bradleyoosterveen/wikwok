@@ -26,6 +26,7 @@ dependencies:
   injectable: ^2.6.0
   get_it: ^9.0.5
   shared_preferences_platform_interface: ^2.4.1
+  index_generator: ^4.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

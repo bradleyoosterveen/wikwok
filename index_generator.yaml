@@ -1,0 +1,36 @@
+index_generator:
+  exclude:
+    - '**.g.dart'
+    - '**.freezed.dart'
+
+  libraries:
+    - directory_path: lib
+      file_name: core
+      include:
+        - 'src/core/**'
+      exclude:
+        - 'src/core/**/_*'
+    - directory_path: lib
+      file_name: data
+      include:
+        - 'src/data/**'
+      exclude:
+        - 'src/data/**/_*'
+    - directory_path: lib
+      file_name: domain
+      include:
+        - 'src/domain/**'
+      exclude:
+        - 'src/domain/**/_*'
+    - directory_path: lib
+      file_name: presentation
+      include:
+        - 'src/presentation/**'
+      exclude:
+        - 'src/presentation/**/_*'
+    - directory_path: lib
+      file_name: shared
+      include:
+        - 'src/shared/**'
+      exclude:
+        - 'src/shared/**/_*'
