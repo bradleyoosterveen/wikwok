@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wikwok/core.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
 
@@ -21,7 +22,7 @@ class ArticleScreen extends StatefulWidget {
         MaterialPageRoute(
           builder: (context) => MultiBlocProvider(
             providers: [
-              BlocProvider(create: (context) => SaveArticleCubit()),
+              BlocProvider(create: (context) => inject<SaveArticleCubit>()),
             ],
             child: ArticleScreen._(
               article: article,

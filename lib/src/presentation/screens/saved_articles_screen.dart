@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
+import 'package:wikwok/core.dart';
 import 'package:wikwok/presentation.dart';
 
 class SavedArticlesScreen extends StatefulWidget {
@@ -97,11 +98,8 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
                         itemCount: state.articleTitles.length,
-                        itemBuilder: (context, index) => BlocProvider(
-                          create: (context) => SavedArticlesListItemCubit(),
-                          child: _ListItem(
-                            title: state.articleTitles[index],
-                          ),
+                        itemBuilder: (context, index) => _ListItem(
+                          title: state.articleTitles[index],
                         ),
                       ),
                     ),
@@ -133,18 +131,13 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
   }
 }
 
-class _ListItem extends StatefulWidget {
+class _ListItem extends StatelessWidget {
   const _ListItem({
     required this.title,
   });
 
   final String title;
 
-  @override
-  State<_ListItem> createState() => _ListItemState();
-}
-
-class _ListItemState extends State<_ListItem> {
   static const _titleWidthMultiplier = 0.5;
 
   static const _subtitleWidthMultiplier = 0.3;
@@ -156,66 +149,66 @@ class _ListItemState extends State<_ListItem> {
       constraints.maxWidth * _subtitleWidthMultiplier;
 
   @override
-  void initState() {
-    super.initState();
-
-    context.read<SavedArticlesListItemCubit>().get(widget.title);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final savedArticleListItemState =
-        context.watch<SavedArticlesListItemCubit>().state;
+    return BlocProvider(
+      create: (context) => inject<SavedArticlesListItemCubit>()..get(title),
+      child: Builder(builder: (context) {
+        final savedArticleListItemState =
+            context.watch<SavedArticlesListItemCubit>().state;
 
-    return FItem(
-      prefix: SizedBox(
-        width: 64,
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: switch (savedArticleListItemState) {
-              SavedArticlesListItemLoadedState state => WBanner(
-                  src: state.article.thumbnailUrl,
-                  fill: true,
-                  showGradient: false,
-                  showBackground: false,
-                  shouldWrapInSafeArea: false,
-                ),
-              SavedArticlesListItemLoadingState _ => const WCircularProgress(),
-              _ => const Icon(FIcons.circleSlash),
-            },
+        return FItem(
+          prefix: SizedBox(
+            width: 64,
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: switch (savedArticleListItemState) {
+                  SavedArticlesListItemLoadedState state => WBanner(
+                      src: state.article.thumbnailUrl,
+                      fill: true,
+                      showGradient: false,
+                      showBackground: false,
+                      shouldWrapInSafeArea: false,
+                    ),
+                  SavedArticlesListItemLoadingState _ =>
+                    const WCircularProgress(),
+                  _ => const Icon(FIcons.circleSlash),
+                },
+              ),
+            ),
           ),
-        ),
-      ),
-      title: LayoutBuilder(
-        builder: (context, constraints) => AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: switch (savedArticleListItemState) {
-            SavedArticlesListItemLoadedState state => Text(state.article.title),
-            SavedArticlesListItemLoadingState _ =>
-              WShimmer(width: _titleWidth(constraints)),
-            _ => const SizedBox.shrink(),
-          },
-        ),
-      ),
-      subtitle: LayoutBuilder(
-        builder: (context, constraints) => AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: switch (savedArticleListItemState) {
+          title: LayoutBuilder(
+            builder: (context, constraints) => AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: switch (savedArticleListItemState) {
+                SavedArticlesListItemLoadedState state =>
+                  Text(state.article.title),
+                SavedArticlesListItemLoadingState _ =>
+                  WShimmer(width: _titleWidth(constraints)),
+                _ => const SizedBox.shrink(),
+              },
+            ),
+          ),
+          subtitle: LayoutBuilder(
+            builder: (context, constraints) => AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: switch (savedArticleListItemState) {
+                SavedArticlesListItemLoadedState state =>
+                  Text(state.article.subtitle),
+                SavedArticlesListItemLoadingState _ =>
+                  WShimmer(width: _subtitleWidth(constraints)),
+                _ => const SizedBox.shrink(),
+              },
+            ),
+          ),
+          onPress: () => switch (savedArticleListItemState) {
             SavedArticlesListItemLoadedState state =>
-              Text(state.article.subtitle),
-            SavedArticlesListItemLoadingState _ =>
-              WShimmer(width: _subtitleWidth(constraints)),
-            _ => const SizedBox.shrink(),
+              ArticleScreen.push(context, article: state.article),
+            _ => {}
           },
-        ),
-      ),
-      onPress: () => switch (savedArticleListItemState) {
-        SavedArticlesListItemLoadedState state =>
-          ArticleScreen.push(context, article: state.article),
-        _ => {}
-      },
+        );
+      }),
     );
   }
 }

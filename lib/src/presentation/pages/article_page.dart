@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:forui/forui.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wikwok/core.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
 
@@ -24,8 +25,8 @@ class _ArticlePageState extends State<ArticlePage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => ArticleCubit()),
-        BlocProvider(create: (context) => SaveArticleCubit()),
+        BlocProvider(create: (context) => inject<ArticleCubit>()),
+        BlocProvider(create: (context) => inject<SaveArticleCubit>()),
       ],
       child: Scaffold(
         body: MultiBlocListener(

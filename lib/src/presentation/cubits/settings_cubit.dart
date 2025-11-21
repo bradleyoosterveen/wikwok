@@ -1,11 +1,15 @@
-import 'package:wikwok/core.dart';
+import 'package:injectable/injectable.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
 
+@injectable
+@singleton
 class SettingsCubit extends WCubit<Settings> {
-  SettingsCubit() : super(Settings.asDefault());
+  SettingsCubit(
+    this._settingsRepository,
+  ) : super(Settings.asDefault());
 
-  final _settingsRepository = inject<SettingsRepository>();
+  final SettingsRepository _settingsRepository;
 
   Future get() async {
     final settings = await _settingsRepository.get();

@@ -1,12 +1,18 @@
+import 'package:injectable/injectable.dart';
 import 'package:wikwok/core.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
 
+@injectable
+@singleton
 class ArticleCubit extends WCubit<ArticleState> {
-  ArticleCubit() : super(const ArticleLoadingState());
+  ArticleCubit(
+    this._articleRepository,
+    this._exceptionHandler,
+  ) : super(const ArticleLoadingState());
 
-  final _articleRepository = inject<ArticleRepository>();
-  final _exceptionHandler = inject<ExceptionHandler>();
+  final ArticleRepository _articleRepository;
+  final ExceptionHandler _exceptionHandler;
 
   Future<void> fetch(int currentIndex) async {
     emit(const ArticleLoadingState());

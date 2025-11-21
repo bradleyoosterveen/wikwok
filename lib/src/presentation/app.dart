@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
+import 'package:wikwok/core.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
 
@@ -21,23 +22,23 @@ class _AppState extends State<App> {
       providers: [
         BlocProvider(
           lazy: false,
-          create: (context) => SavedArticlesListCubit(),
+          create: (context) => inject<SavedArticlesListCubit>(),
         ),
         BlocProvider(
           lazy: false,
-          create: (context) => UpdateCubit()..get(),
+          create: (context) => inject<UpdateCubit>()..get(),
         ),
         BlocProvider(
           lazy: false,
-          create: (context) => CurrentVersionCubit()..get(),
+          create: (context) => inject<CurrentVersionCubit>()..get(),
         ),
         BlocProvider(
           lazy: false,
-          create: (context) => SettingsCubit()..get(),
+          create: (context) => inject<SettingsCubit>()..get(),
         ),
         BlocProvider(
           lazy: false,
-          create: (context) => ConnectivityCubit()..initialize(),
+          create: (context) => inject<ConnectivityCubit>()..initialize(),
         ),
       ],
       child: Builder(builder: (context) {

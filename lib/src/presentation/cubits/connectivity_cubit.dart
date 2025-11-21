@@ -2,12 +2,20 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
+import 'package:injectable/injectable.dart';
+import 'package:wikwok/core.dart';
 import 'package:wikwok/presentation.dart';
 
+@injectable
+@singleton
 class ConnectivityCubit extends WCubit<List<ConnectivityResult>?> {
-  ConnectivityCubit() : super(null);
+  ConnectivityCubit(
+    this._connectivity,
+    this._exceptionHandler,
+  ) : super(null);
 
-  final Connectivity _connectivity = Connectivity();
+  final Connectivity _connectivity;
+  final ExceptionHandler _exceptionHandler;
 
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
@@ -20,8 +28,9 @@ class ConnectivityCubit extends WCubit<List<ConnectivityResult>?> {
     late List<ConnectivityResult> result;
     try {
       result = await _connectivity.checkConnectivity();
-    } on PlatformException catch (_) {
-      return;
+    } on PlatformException catch (e) {
+      _exceptionHandler.handle(e);
+      result = [ConnectivityResult.none];
     }
 
     return _updateConnectionStatus(result);
