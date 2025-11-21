@@ -1,21 +1,19 @@
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
-class WExceptionHandler {
-  static final WExceptionHandler _instance = WExceptionHandler._internal();
-
-  factory WExceptionHandler() => _instance;
-
-  WExceptionHandler._internal();
-
+@singleton
+@injectable
+class ExceptionHandler {
   BehaviorSubject<String> errorStream = BehaviorSubject<String>();
 
-  void handleException(Exception e) => errorStream.add(switch (e) {
+  void handle(Object e) => errorStream.add(switch (e) {
         _ when e is DioException => _onDioException(e),
-        _ => _onException(e),
+        _ when e is Exception => _onException(e),
+        _ => _onAnything(e),
       });
 
-  void handleAnything(Object e) => errorStream.add(e.toString());
+  String _onAnything(Object e) => e.toString();
 
   String _onException(Exception e) => 'A generic exception occurred: $e';
 

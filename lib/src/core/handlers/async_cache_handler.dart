@@ -1,6 +1,10 @@
 import 'dart:async';
 
-class AsyncCache {
+import 'package:injectable/injectable.dart';
+
+@singleton
+@injectable
+class AsyncCacheHandler {
   final Map<String, Completer> _completers = {};
 
   Future<T> handle<T>({

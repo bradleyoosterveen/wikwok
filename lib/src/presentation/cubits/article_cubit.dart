@@ -6,6 +6,7 @@ class ArticleCubit extends WCubit<ArticleState> {
   ArticleCubit() : super(const ArticleLoadingState());
 
   final _articleRepository = inject<ArticleRepository>();
+  final _exceptionHandler = inject<ExceptionHandler>();
 
   Future<void> fetch(int currentIndex) async {
     emit(const ArticleLoadingState());
@@ -19,7 +20,7 @@ class ArticleCubit extends WCubit<ArticleState> {
 
       emit(ArticleLoadedState(article));
     } on Exception catch (e) {
-      WExceptionHandler().handleException(e);
+      _exceptionHandler.handle(e);
       emit(const ArticleErrorState());
     }
   }

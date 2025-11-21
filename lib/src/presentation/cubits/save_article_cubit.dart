@@ -6,6 +6,7 @@ class SaveArticleCubit extends WCubit<SaveArticleState> {
   SaveArticleCubit() : super(const SaveArticleLoadingState());
 
   final _articleRepository = inject<ArticleRepository>();
+  final _exceptionHandler = inject<ExceptionHandler>();
 
   Future<void> get(String title) async {
     emit(const SaveArticleLoadingState());
@@ -15,7 +16,7 @@ class SaveArticleCubit extends WCubit<SaveArticleState> {
 
       emit(SaveArticleLoadedState(saved));
     } on Exception catch (e) {
-      WExceptionHandler().handleException(e);
+      _exceptionHandler.handle(e);
       emit(const SaveArticleErrorState());
     }
   }
@@ -34,7 +35,7 @@ class SaveArticleCubit extends WCubit<SaveArticleState> {
 
       return !saved;
     } on Exception catch (e) {
-      WExceptionHandler().handleException(e);
+      _exceptionHandler.handle(e);
       emit(const SaveArticleErrorState());
 
       return false;

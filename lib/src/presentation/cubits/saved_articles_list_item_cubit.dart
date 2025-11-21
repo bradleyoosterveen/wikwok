@@ -7,6 +7,7 @@ class SavedArticlesListItemCubit extends WCubit<SavedArticlesListItemState> {
       : super(const SavedArticlesListItemLoadingState());
 
   final _articleRepository = inject<ArticleRepository>();
+  final _exceptionHandler = inject<ExceptionHandler>();
 
   Future<void> get(String title) async {
     emit(const SavedArticlesListItemLoadingState());
@@ -16,7 +17,7 @@ class SavedArticlesListItemCubit extends WCubit<SavedArticlesListItemState> {
 
       emit(SavedArticlesListItemLoadedState(article));
     } on Exception catch (e) {
-      WExceptionHandler().handleException(e);
+      _exceptionHandler.handle(e);
       emit(const SavedArticlesListItemErrorState());
     }
   }

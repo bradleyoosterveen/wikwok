@@ -16,18 +16,20 @@ Future<void> main() async {
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-  WExceptionHandler().errorStream.listen((error) => developer.log(
+  final exceptionHandler = inject<ExceptionHandler>();
+
+  exceptionHandler.errorStream.listen((error) => developer.log(
         error,
         name: 'Exception',
       ));
 
   FlutterError.onError = (details) {
+    exceptionHandler.handle(details);
     FlutterError.presentError(details);
-    WExceptionHandler().handleAnything(details);
   };
 
   PlatformDispatcher.instance.onError = (error, stack) {
-    WExceptionHandler().handleAnything(error);
+    exceptionHandler.handle(error);
     return true;
   };
 

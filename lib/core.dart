@@ -2,6 +2,7 @@
 
 library;
 
+export 'src/core/handlers/async_cache_handler.dart';
 export 'src/core/handlers/exception_handler.dart';
 export 'src/core/inject.config.dart';
 export 'src/core/inject.dart';

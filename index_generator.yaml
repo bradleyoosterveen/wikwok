@@ -28,9 +28,3 @@ index_generator:
         - 'src/presentation/**'
       exclude:
         - 'src/presentation/**/_*'
-    - directory_path: lib
-      file_name: shared
-      include:
-        - 'src/shared/**'
-      exclude:
-        - 'src/shared/**/_*'

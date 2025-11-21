@@ -6,15 +6,21 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
   SavedArticlesListCubit() : super(const SavedArticlesListLoadingState());
 
   final _articleRepository = inject<ArticleRepository>();
+  final _exceptionHandler = inject<ExceptionHandler>();
 
   Future<void> get() async {
-    final saved = await _articleRepository.getSavedArticles();
+    try {
+      final saved = await _articleRepository.getSavedArticles();
 
-    if (saved.isEmpty) {
-      return emit(const SavedArticlesListEmptyState());
+      if (saved.isEmpty) {
+        return emit(const SavedArticlesListEmptyState());
+      }
+
+      emit(SavedArticlesListLoadedState(saved));
+    } on Exception catch (e) {
+      _exceptionHandler.handle(e);
+      emit(const SavedArticlesListErrorState());
     }
-
-    emit(SavedArticlesListLoadedState(saved));
   }
 
   Future<void> deleteAll() async {
@@ -27,7 +33,7 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
 
       emit(const SavedArticlesListEmptyState());
     } on Exception catch (e) {
-      WExceptionHandler().handleException(e);
+      _exceptionHandler.handle(e);
       emit(const SavedArticlesListErrorState());
     }
   }

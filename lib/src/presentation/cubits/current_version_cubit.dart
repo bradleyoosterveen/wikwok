@@ -6,6 +6,7 @@ class CurrentVersionCubit extends WCubit<CurrentVersionState> {
   CurrentVersionCubit() : super(const CurrentVersionLoadingState());
 
   final _versionRepository = inject<VersionRepository>();
+  final _exceptionHandler = inject<ExceptionHandler>();
 
   Future get() async {
     emit(const CurrentVersionLoadingState());
@@ -15,7 +16,7 @@ class CurrentVersionCubit extends WCubit<CurrentVersionState> {
 
       emit(CurrentVersionLoadedState(version));
     } on Exception catch (e) {
-      WExceptionHandler().handleException(e);
+      _exceptionHandler.handle(e);
       emit(const CurrentVersionErrorState());
     }
   }
