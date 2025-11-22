@@ -37,7 +37,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Opacity(
                 opacity: 0.64,
                 child: Text(
-                  'This app is not affiliated with, endorsed by, or sponsored by Wikipedia or the Wikimedia Foundation. All trademarks and registered trademarks are the property of their respective owners.',
+                  context
+                      .l10n
+                      .this_app_is_not_affiliated_with_the_wikimedia_foundation,
                   textAlign: .center,
                   style: context.theme.typography.sm,
                 ),
@@ -48,13 +50,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   FLabel(
                     axis: .vertical,
-                    label: const Text('Current version'),
+                    label: Text(context.l10n.current_version),
                     child: switch (state) {
                       CurrentVersionLoadedState state => Text(
                         state.version.toString(),
                       ),
-                      CurrentVersionErrorState _ => const Text('Error'),
-                      _ => const Text('Loading...'),
+                      CurrentVersionErrorState _ => Text(
+                        context.l10n.something_went_wrong,
+                      ),
+                      _ => Text(context.l10n.loading),
                     },
                   ),
                   SizedBox(
@@ -83,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onPress: () => Navigator.pop(context),
           ),
         ],
-        title: const Text('Settings'),
+        title: Text(context.l10n.settings),
       ),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -96,53 +100,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   final settings = context.watch<SettingsCubit>().state;
 
                   return FTileGroup(
-                    label: const Text('Settings'),
                     divider: .full,
                     children: [
                       _OptionTile<WThemeMode>(
                         prefix: FIcons.sunMoon,
-                        title: 'Theme',
+                        title: context.l10n.theme,
                         initialValue: settings.themeMode,
                         onChange: (WThemeMode value) =>
                             settings.copyWith(themeMode: value),
                         labelBuilder: (WThemeMode value) => switch (value) {
-                          WThemeMode.light => 'Light',
-                          WThemeMode.dark => 'Dark',
-                          WThemeMode.system => 'System',
-                          WThemeMode.pink => 'Pink',
+                          .system => context.l10n.system,
+                          .light => context.l10n.light,
+                          .dark => context.l10n.dark,
+                          .pink => context.l10n.pink,
                         },
                         options: WThemeMode.values,
                       ),
+                      _OptionTile<WLocale>(
+                        prefix: FIcons.languages,
+                        title: context.l10n.interface_language,
+                        initialValue: settings.locale,
+                        onChange: (WLocale value) =>
+                            settings.copyWith(locale: value),
+                        labelBuilder: (WLocale value) => switch (value) {
+                          .system => context.l10n.system,
+                          .en => 'English',
+                          .nl => 'Nederlands',
+                        },
+                        options: WLocale.values,
+                      ),
                       _OptionTile<Axis>(
                         prefix: FIcons.move3d,
-                        title: 'Swipe direction',
+                        title: context.l10n.swipe_direction,
                         initialValue: settings.doomScrollDirection,
                         onChange: (Axis value) =>
                             settings.copyWith(doomScrollDirection: value),
                         labelBuilder: (Axis value) => switch (value) {
-                          Axis.vertical => 'Vertical',
-                          Axis.horizontal => 'Horizontal',
+                          .vertical => context.l10n.vertical,
+                          .horizontal => context.l10n.horizontal,
                         },
                         options: Axis.values,
                       ),
                       _OptionTile<ArticlePrefetchRange>(
                         prefix: FIcons.arrowBigRightDash,
-                        title: 'Article prefetch range',
+                        title: context.l10n.article_prefetch_range,
                         initialValue: settings.articlePrefetchRange,
                         onChange: (ArticlePrefetchRange value) =>
                             settings.copyWith(articlePrefetchRange: value),
                         labelBuilder: (ArticlePrefetchRange value) =>
                             switch (value) {
-                              ArticlePrefetchRange.none => 'None',
-                              ArticlePrefetchRange.short => '1',
-                              ArticlePrefetchRange.medium => '2',
-                              ArticlePrefetchRange.large => '3',
+                              .none => context.l10n.none,
+                              .short => '1',
+                              .medium => '2',
+                              .large => '3',
                             },
                         options: ArticlePrefetchRange.values,
                       ),
                       _OptionTile<ShouldDownloadFullSizeImages>(
                         prefix: FIcons.proportions,
-                        title: 'Download full size images',
+                        title: context.l10n.download_full_size_images,
                         initialValue: settings.shouldDownloadFullSizeImages,
                         onChange: (ShouldDownloadFullSizeImages value) =>
                             settings.copyWith(
@@ -150,10 +166,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                         labelBuilder: (ShouldDownloadFullSizeImages value) =>
                             switch (value) {
-                              ShouldDownloadFullSizeImages.yes => 'Yes',
-                              ShouldDownloadFullSizeImages.no => 'No',
-                              ShouldDownloadFullSizeImages.wifiOnly =>
-                                'Wifi only',
+                              .yes => context.l10n.yes,
+                              .no => context.l10n.no,
+                              .wifiOnly => context.l10n.wifi_only,
                             },
                         options: ShouldDownloadFullSizeImages.values,
                       ),
@@ -163,34 +178,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 24),
               FTileGroup(
-                divider: FItemDivider.full,
+                divider: .full,
                 children: [
                   FTile(
                     prefix: const Icon(FIcons.gitPullRequestArrow),
-                    title: const Text('Suggest feature'),
+                    title: Text(context.l10n.suggest_feature),
                     suffix: const Icon(FIcons.chevronRight),
                     onPress: () => launchUrl(
-                      Uri.parse(
+                      .parse(
                         'https://github.com/bradleyoosterveen/WikWok/issues/new?template=enhancement.yml',
                       ),
                     ),
                   ),
                   FTile(
                     prefix: const Icon(FIcons.bug),
-                    title: const Text('Report a bug'),
+                    title: Text(context.l10n.report_a_bug),
                     suffix: const Icon(FIcons.chevronRight),
                     onPress: () => launchUrl(
-                      Uri.parse(
+                      .parse(
                         'https://github.com/bradleyoosterveen/WikWok/issues/new?template=bug.yml',
                       ),
                     ),
                   ),
                   FTile(
                     prefix: const Icon(FIcons.code),
-                    title: const Text('View source code'),
+                    title: Text(context.l10n.view_source_code),
                     suffix: const Icon(FIcons.chevronRight),
                     onPress: () => launchUrl(
-                      Uri.parse('https://github.com/bradleyoosterveen/WikWok'),
+                      .parse('https://github.com/bradleyoosterveen/WikWok'),
                     ),
                   ),
                 ],
@@ -201,10 +216,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   FTile(
                     prefix: const Icon(FIcons.heart),
-                    title: const Text('Donate to the Wikimedia Foundation'),
+                    title: Text(
+                      context.l10n.donate_to_the_wikimedia_foundation,
+                    ),
                     suffix: const Icon(FIcons.chevronRight),
                     onPress: () =>
-                        launchUrl(Uri.parse('https://donate.wikimedia.org/')),
+                        launchUrl(.parse('https://donate.wikimedia.org/')),
                   ),
                 ],
               ),

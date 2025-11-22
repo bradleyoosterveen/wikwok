@@ -16,6 +16,7 @@ void main() {
           ShouldDownloadFullSizeImages.no,
         );
         expect(settings.doomScrollDirection, Axis.vertical);
+        expect(settings.locale, WLocale.system);
       });
     });
 
@@ -27,6 +28,7 @@ void main() {
           'shouldDownloadFullSizeImages':
               ShouldDownloadFullSizeImages.wifiOnly.index,
           'doomScrollDirection': Axis.horizontal.index,
+          'locale': WLocale.nl.index,
         };
 
         final settings = Settings.fromMap(map);
@@ -38,6 +40,7 @@ void main() {
           ShouldDownloadFullSizeImages.wifiOnly,
         );
         expect(settings.doomScrollDirection, Axis.horizontal);
+        expect(settings.locale, WLocale.nl);
       });
       test('should return default object when map is invalid', () {
         final map = {
@@ -45,6 +48,7 @@ void main() {
           'articlePrefetchRange': 100,
           'shouldDownloadFullSizeImages': 100,
           'doomScrollDirection': 100,
+          'locale': 100,
         };
 
         final settings = Settings.fromMap(map);
@@ -64,6 +68,29 @@ void main() {
           settings.doomScrollDirection,
           defaultSettings.doomScrollDirection,
         );
+        expect(settings.locale, defaultSettings.locale);
+      });
+      // test that if the map is incomplete, but contains valid data, it returns all valid data plus the missing but the missing has the default value
+      test('should return the correct object when map is incomplete', () {
+        final map = {
+          'themeMode': WThemeMode.dark.index,
+          'articlePrefetchRange': ArticlePrefetchRange.medium.index,
+          'shouldDownloadFullSizeImages':
+              ShouldDownloadFullSizeImages.wifiOnly.index,
+          'doomScrollDirection': Axis.horizontal.index,
+          // Locale is missing in this case.
+        };
+
+        final settings = Settings.fromMap(map);
+
+        expect(settings.themeMode, WThemeMode.dark);
+        expect(settings.articlePrefetchRange, ArticlePrefetchRange.medium);
+        expect(
+          settings.shouldDownloadFullSizeImages,
+          ShouldDownloadFullSizeImages.wifiOnly,
+        );
+        expect(settings.doomScrollDirection, Axis.horizontal);
+        expect(settings.locale, WLocale.system);
       });
     });
   });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:forui/forui.dart';
+import 'package:wikwok/presentation.dart';
 
 class WToggleSaveAnimation extends StatelessWidget {
   const WToggleSaveAnimation._({required this.controller, required this.type});
@@ -27,14 +28,14 @@ class WToggleSaveAnimation extends StatelessWidget {
     WToggleSaveAnimationType.unsave => FIcons.bookX,
   };
 
-  String get _text => switch (type) {
-    WToggleSaveAnimationType.save => 'Saved to library',
-    WToggleSaveAnimationType.unsave => 'Removed from library',
-  };
-
   Duration get _scaleDuration => 100.milliseconds;
 
   Duration get _delayDuration => 1.6.seconds;
+
+  String _text(BuildContext context) => switch (type) {
+    WToggleSaveAnimationType.save => context.l10n.added_to_library,
+    WToggleSaveAnimationType.unsave => context.l10n.removed_from_library,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class WToggleSaveAnimation extends StatelessWidget {
           children: [
             Icon(_icon, size: 16),
             const SizedBox(width: 8),
-            Text(_text),
+            Text(_text(context)),
           ],
         )
         .animate(

@@ -58,8 +58,8 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
                       children: [
                         FItem(
                           prefix: const Icon(FIcons.x),
-                          title: const Text(
-                            'Remove all from library (permanent)',
+                          title: Text(
+                            context.l10n.remove_all_from_library_permanent,
                             overflow: .visible,
                             softWrap: true,
                           ),
@@ -82,7 +82,7 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
                 ),
               ],
             ],
-            title: const Text('Library'),
+            title: Text(context.l10n.library),
           );
         },
       ),
@@ -91,7 +91,7 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
         child: Padding(
           padding: const .symmetric(horizontal: 24),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: .center,
             children: [
               Builder(
                 builder: (context) {
@@ -115,12 +115,16 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
                           border: WBorder.zero,
                         ),
                       ),
-                      title: const Text('Your library is empty'),
+                      title: Text(context.l10n.your_library_is_empty),
                       subtitle: const SizedBox.shrink(),
-                      child: const Text('Add some articles to your library.'),
+                      child: Text(
+                        context.l10n.add_some_articles_to_your_library,
+                      ),
                     ),
                     SavedArticlesListErrorState _ => WErrorRetryWidget(
-                      title: 'Something went wrong fetching your library.',
+                      title: context
+                          .l10n
+                          .something_went_wrong_fetching_your_library,
                       onRetry: () =>
                           context.read<SavedArticlesListCubit>().get(),
                     ),
