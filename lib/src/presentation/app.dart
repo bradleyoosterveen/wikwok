@@ -70,7 +70,7 @@ class _AppState extends State<App> {
                   WLocale.en => const Locale('en'),
                   WLocale.nl => const Locale('nl'),
                   WLocale.system =>
-                    Platform.localeName.contains('nl')
+                    Platform.localeName.split('_').first == 'nl'
                         ? const Locale('nl')
                         : const Locale('en'),
                 };
