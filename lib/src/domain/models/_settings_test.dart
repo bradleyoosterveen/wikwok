@@ -70,7 +70,6 @@ void main() {
         );
         expect(settings.locale, defaultSettings.locale);
       });
-      // test that if the map is incomplete, but contains valid data, it returns all valid data plus the missing but the missing has the default value
       test('should return the correct object when map is incomplete', () {
         final map = {
           'themeMode': WThemeMode.dark.index,
