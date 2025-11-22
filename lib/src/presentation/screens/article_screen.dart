@@ -58,13 +58,13 @@ class _ArticleScreenState extends State<ArticleScreen>
             children: [
               FButton(
                 onPress: () => launchUrl(Uri.parse(widget.article.url)),
-                child: const Text('Visit'),
+                child: Text(context.l10n.visit),
               ),
               const SizedBox(height: 16),
               FButton(
                 style: FButtonStyle.outline(),
                 onPress: () => widget.article.share(),
-                child: const Text('Share'),
+                child: Text(context.l10n.share),
               ),
             ],
           ),
@@ -87,8 +87,8 @@ class _ArticleScreenState extends State<ArticleScreen>
                   children: [
                     FItem(
                       prefix: const Icon(FIcons.x),
-                      title: const Text(
-                        'Remove from library (permanent)',
+                      title: Text(
+                        context.l10n.remove_from_library_permanent,
                         overflow: TextOverflow.visible,
                         softWrap: true,
                       ),

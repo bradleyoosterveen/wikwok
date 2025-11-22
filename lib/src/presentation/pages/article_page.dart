@@ -92,7 +92,7 @@ class _ViewState extends State<_View> with TickerProviderStateMixin {
         child: switch (state) {
           ArticleLoadedState state => _content(state.article),
           ArticleErrorState _ => WErrorRetryWidget(
-            title: 'Something went wrong fetching this article.',
+            title: context.l10n.something_went_wrong_fetching_this_article,
             onRetry: () => context.read<ArticleCubit>().fetch(widget.index),
           ),
           _ => const WCircularProgress(),
