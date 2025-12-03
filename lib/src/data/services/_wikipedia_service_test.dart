@@ -6,8 +6,6 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 import 'package:wikwok/core.dart';
 import 'package:wikwok/data.dart';
 
-final _tags = ['integration'];
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -24,7 +22,7 @@ void main() async {
         final article = await service.fetchRandomArticle();
 
         expect(article.containsKey('pageid'), true);
-      }, tags: _tags);
+      });
 
       test('should return a different article each time', () async {
         final article1 = await service.fetchRandomArticle();
@@ -38,7 +36,7 @@ void main() async {
         expect(pageid1, isNot(pageid2));
         expect(pageid2, isNot(pageid3));
         expect(pageid1, isNot(pageid3));
-      }, tags: _tags);
+      });
     });
 
     group('fetchArticleByTitle()', () {
@@ -46,13 +44,13 @@ void main() async {
         final article = await service.fetchArticleByTitle('Flutter');
 
         expect(article.containsKey('pageid'), true);
-      }, tags: _tags);
+      });
 
       test('should return an article with the given title', () async {
         final article = await service.fetchArticleByTitle('Flutter_(software)');
 
         expect(article['titles']['normalized'], 'Flutter (software)');
-      }, tags: _tags);
+      });
     });
   });
 }

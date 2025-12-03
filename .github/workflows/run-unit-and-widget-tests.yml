@@ -1,7 +1,9 @@
-name: Run unit and widget tests
+name: Run tests on pull request
 
 on:
   pull_request:
+  schedule:
+    - cron: '0 2 * * 1'
 
 jobs:
   get-flutter-sdk-version:
@@ -23,4 +25,4 @@ jobs:
 
       - run: dart run build_runner build
 
-      - run: flutter test lib --exclude-tags "integration"
+      - run: flutter test lib
