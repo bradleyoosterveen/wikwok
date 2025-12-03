@@ -46,3 +46,5 @@ app.*.map.json
 .fvm/
 
 *.config.dart
+*.mocks.dart
+coverage
