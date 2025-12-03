@@ -1,9 +1,5 @@
 import 'dart:async';
 
-import 'package:injectable/injectable.dart';
-
-@singleton
-@injectable
 class AsyncCacheHandler {
   final Map<String, Completer> _completers = {};
 
