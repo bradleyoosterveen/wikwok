@@ -6,8 +6,6 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 import 'package:wikwok/core.dart';
 import 'package:wikwok/data.dart';
 
-final _tags = ['integration'];
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -24,7 +22,7 @@ void main() async {
         final article = await service.fetchLatestRelease();
 
         expect(article.containsKey('tag_name'), true);
-      }, tags: _tags);
+      });
     });
   });
 }
