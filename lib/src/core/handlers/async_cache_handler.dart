@@ -1,29 +1,43 @@
 import 'dart:async';
 
-class AsyncCacheHandler {
-  final Map<String, Completer> _completers = {};
+import 'package:flutter/foundation.dart';
 
-  Future<T> handle<T>({
+class AsyncCacheHandler {
+  @visibleForTesting
+  final Map<String, Completer> completers = {};
+
+  Future<T> run<T>({
     required String key,
     required Future<T> Function() action,
+    Duration duration = Duration.zero,
   }) async {
-    if (_completers.containsKey(key)) {
-      return _completers[key]!.future as Future<T>;
+    if (completers.containsKey(key)) {
+      return completers[key]!.future as Future<T>;
     }
 
     final completer = Completer<T>();
-    _completers[key] = completer;
+    completers[key] = completer;
 
     try {
       final result = await action();
       completer.complete(result);
     } catch (e) {
       completer.completeError(e);
+    }
+
+    if (duration > Duration.zero) {
+      scheduleInvalidate(key, duration);
+    } else {
       invalidate(key);
     }
 
     return completer.future;
   }
 
-  void invalidate(String key) => _completers.remove(key);
+  void scheduleInvalidate(String key, Duration duration) =>
+      Timer(duration, () => invalidate(key));
+
+  void invalidate(String key) => completers.remove(key);
+
+  void clear() => completers.clear();
 }

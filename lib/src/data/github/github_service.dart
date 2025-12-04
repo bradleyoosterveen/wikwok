@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logger/logger.dart';
 import 'package:wikwok/core.dart';
 import 'package:wikwok/data.dart';
 
@@ -11,6 +12,7 @@ class GithubService {
     Dio dio,
     this._serviceConfig,
     this._asyncCacheHandler,
+    this._logger,
   ) : _dio = dio
         ..options = dio.options.copyWith(
           baseUrl: _serviceConfig.baseUrl,
@@ -19,10 +21,11 @@ class GithubService {
   final Dio _dio;
   final GithubServiceConfig _serviceConfig;
   final AsyncCacheHandler _asyncCacheHandler;
+  final Logger _logger;
 
   TaskEither<GithubServiceError, Map<String, dynamic>> fetchLatestRelease() =>
       TaskEither.tryCatch(
-        () async => _asyncCacheHandler.handle(
+        () async => _asyncCacheHandler.run(
           key: 'GithubService.fetchLatestRelease',
           action: () async {
             final response = await _dio.get(_serviceConfig.latestReleasePath());
@@ -31,7 +34,7 @@ class GithubService {
           },
         ),
         (e, __) => _toError(e),
-      );
+      ).tapLeft((error) => _logger.e(error));
 }
 
 enum GithubServiceError {
