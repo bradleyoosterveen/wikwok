@@ -9,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   group('AsyncCacheHandler', () {
-    group('handle()', () {
+    group('run()', () {
       test('should return the result of the action', () async {
         final result = await AsyncCacheHandler().run<String>(
           key: 'key',
