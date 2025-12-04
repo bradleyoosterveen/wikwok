@@ -26,7 +26,7 @@ class WikipediaService {
   }
 
   Future<Map<String, dynamic>> fetchArticleByTitle(String title) async =>
-      _asyncCacheHandler.handle(
+      _asyncCacheHandler.run(
         key: title,
         action: () async {
           final response = await _dio.get(
