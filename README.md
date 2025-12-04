@@ -1,5 +1,3 @@
-[![Integration tests](https://github.com/bradleyoosterveen/wikwok/actions/workflows/run-integration-tests.yml/badge.svg)](https://github.com/bradleyoosterveen/wikwok/actions/workflows/run-integration-tests.yml)
-
 # WikWok
 
 Doomscroll your way to endless knowledge.
