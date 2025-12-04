@@ -2,6 +2,7 @@
 
 library;
 
+export 'src/core/extensions/safe_map_lookup_extension.dart';
 export 'src/core/handlers/async_cache_handler.dart';
 export 'src/core/inject.config.dart';
 export 'src/core/inject.dart';
