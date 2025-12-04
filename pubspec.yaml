@@ -30,6 +30,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
+  fpdart: ^1.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

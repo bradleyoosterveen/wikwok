@@ -19,7 +19,11 @@ void main() async {
   group('GithubService', () {
     group('fetchLatestRelease()', () {
       test('should return a map containing a tag_name', () async {
-        final article = await service.fetchLatestRelease();
+        final articleResult = await service.fetchLatestRelease().run();
+
+        expect(articleResult.isRight(), true);
+
+        final article = articleResult.toNullable()!;
 
         expect(article.containsKey('tag_name'), true);
       });

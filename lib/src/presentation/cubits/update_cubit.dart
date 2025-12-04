@@ -1,3 +1,4 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
@@ -11,21 +12,33 @@ class UpdateCubit extends WCubit<UpdateState> {
 
   final VersionRepository _versionRepository;
 
-  Future get() async {
+  Future<void> get() async {
     emit(const UpdateLoadingState());
 
-    try {
-      final updateAvailable = await _versionRepository.isUpdateAvailable();
+    final result = await _versionRepository.isUpdateAvailable().run();
 
-      if (!updateAvailable) return emit(const UpdateUnavailableState());
+    result.match(
+      (error) => emit(const UpdateErrorState()),
+      (isUpdateAvailable) async {
+        if (!isUpdateAvailable) {
+          return emit(const UpdateUnavailableState());
+        }
 
-      final url = await _versionRepository.getUpdateUrl();
-      final version = await _versionRepository.getLatestVersion();
+        final detailsResult =
+            await TaskEither<VersionRepositoryError, (String, Version)>.Do(
+              ($) async {
+                final url = await $(_versionRepository.getUpdateUrl());
+                final version = await $(_versionRepository.getLatestVersion());
+                return (url, version);
+              },
+            ).run();
 
-      emit(UpdateAvailableState(url, version));
-    } catch (_) {
-      emit(const UpdateErrorState());
-    }
+        detailsResult.match(
+          (error) => emit(const UpdateErrorState()),
+          (details) => emit(UpdateAvailableState(details.$1, details.$2)),
+        );
+      },
+    );
   }
 }
 
