@@ -71,8 +71,8 @@ enum VersionRepositoryError {
 }
 
 VersionRepositoryError _toError(dynamic e) => switch (e) {
-  VersionRepositoryError _ => e,
-  GithubServiceError githubServiceError => switch (githubServiceError) {
+  VersionRepositoryError e => e,
+  GithubServiceError e => switch (e) {
     GithubServiceError.unknown => .somethingWentWrong,
     GithubServiceError.clientError => .somethingWentWrong,
     GithubServiceError.timeout => .somethingWentWrong,

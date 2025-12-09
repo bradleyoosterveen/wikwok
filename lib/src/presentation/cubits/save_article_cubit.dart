@@ -12,8 +12,6 @@ class SaveArticleCubit extends WCubit<SaveArticleState> {
   final ArticleRepository _articleRepository;
 
   Future<void> get(String title) async {
-    emit(const SaveArticleLoadingState());
-
     try {
       final saved = await _articleRepository.isArticleSaved(title);
 

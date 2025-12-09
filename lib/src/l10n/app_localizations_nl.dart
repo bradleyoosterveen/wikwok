@@ -18,8 +18,15 @@ class AppLocalizationsNl extends AppLocalizations {
   String get try_again => 'Probeer opnieuw';
 
   @override
+  String get go_back => 'Ga terug';
+
+  @override
   String get something_went_wrong_fetching_this_article =>
-      'Er is iets misgegaan bij het ophalen van dit artikel';
+      'Er is iets misgegaan bij het ophalen van dit artikel. Probeer het opnieuw, of maak een bug-report.';
+
+  @override
+  String get connection_error_fetching_this_article =>
+      'Er is iets misgegaan bij het ophalen van dit artikel. Controleer je internetverbinding en probeer het opnieuw. Als het probleem blijft, maak een bug-report.';
 
   @override
   String get visit => 'Bezoek';
@@ -35,7 +42,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get add_some_articles_to_your_library =>
-      'Voeg enkele artikelen toe aan je bibliotheek.';
+      'Begin door te doomscrollen door de artikelen heen en sla de artikelen op die jij interessant vindt.';
 
   @override
   String get something_went_wrong_fetching_your_library =>

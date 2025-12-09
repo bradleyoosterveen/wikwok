@@ -91,9 +91,23 @@ class _ViewState extends State<_View> with TickerProviderStateMixin {
         duration: 300.milliseconds,
         child: switch (state) {
           ArticleLoadedState state => _content(state.article),
-          ArticleErrorState _ => WErrorRetryWidget(
-            title: context.l10n.something_went_wrong_fetching_this_article,
-            onRetry: () => context.read<ArticleCubit>().fetch(widget.index),
+          ArticleErrorState state => WInformationalLayoutWidget(
+            icon: switch (state.error) {
+              .connectionError => FIcons.wifiOff,
+              _ => FIcons.bug,
+            },
+            title: context.l10n.something_went_wrong,
+            subtitle: switch (state.error) {
+              .connectionError =>
+                context.l10n.connection_error_fetching_this_article,
+              _ => context.l10n.something_went_wrong_fetching_this_article,
+            },
+            actions: [
+              FButton(
+                onPress: () => context.read<ArticleCubit>().fetch(widget.index),
+                child: Text(context.l10n.try_again),
+              ),
+            ],
           ),
           _ => const WCircularProgress(),
         },
@@ -152,9 +166,8 @@ class _ViewState extends State<_View> with TickerProviderStateMixin {
 
                     return WBanner(
                       src: switch (shouldDownloadFullSizeImages) {
-                        ShouldDownloadFullSizeImages.yes =>
-                          article.originalImageUrl,
-                        ShouldDownloadFullSizeImages.no => article.thumbnailUrl,
+                        .yes => article.originalImageUrl,
+                        .no => article.thumbnailUrl,
                         _ => urlWifiOnly,
                       },
                     );
@@ -165,9 +178,7 @@ class _ViewState extends State<_View> with TickerProviderStateMixin {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(
-            24,
-          ).subtract(const EdgeInsets.only(top: 24)),
+          padding: const EdgeInsets.all(24).subtract(const .only(top: 24)),
           child: SafeArea(
             child: Column(
               crossAxisAlignment: .stretch,

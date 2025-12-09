@@ -116,11 +116,23 @@ abstract class AppLocalizations {
   /// **'Try again'**
   String get try_again;
 
+  /// No description provided for @go_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get go_back;
+
   /// No description provided for @something_went_wrong_fetching_this_article.
   ///
   /// In en, this message translates to:
-  /// **'Something went wrong fetching this article'**
+  /// **'Something went wrong when fetching this article. Please try again, or submit a bug report.'**
   String get something_went_wrong_fetching_this_article;
+
+  /// No description provided for @connection_error_fetching_this_article.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection error fetching this article. Please check your internet connection and try again. If the problem persists, please submit a bug report.'**
+  String get connection_error_fetching_this_article;
 
   /// No description provided for @visit.
   ///
@@ -149,7 +161,7 @@ abstract class AppLocalizations {
   /// No description provided for @add_some_articles_to_your_library.
   ///
   /// In en, this message translates to:
-  /// **'Add some articles to your library.'**
+  /// **'Start by doomscrolling through the articles and saving the ones that interest you.'**
   String get add_some_articles_to_your_library;
 
   /// No description provided for @something_went_wrong_fetching_your_library.

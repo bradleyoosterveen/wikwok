@@ -18,8 +18,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get try_again => 'Try again';
 
   @override
+  String get go_back => 'Go back';
+
+  @override
   String get something_went_wrong_fetching_this_article =>
-      'Something went wrong fetching this article';
+      'Something went wrong when fetching this article. Please try again, or submit a bug report.';
+
+  @override
+  String get connection_error_fetching_this_article =>
+      'Connection error fetching this article. Please check your internet connection and try again. If the problem persists, please submit a bug report.';
 
   @override
   String get visit => 'Visit';
@@ -35,7 +42,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get add_some_articles_to_your_library =>
-      'Add some articles to your library.';
+      'Start by doomscrolling through the articles and saving the ones that interest you.';
 
   @override
   String get something_went_wrong_fetching_your_library =>

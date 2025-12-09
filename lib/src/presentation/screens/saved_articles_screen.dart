@@ -109,24 +109,28 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
                             _ListItem(title: state.articleTitles[index]),
                       ),
                     ),
-                    SavedArticlesListEmptyState _ => FCard(
-                      style: (style) => style.copyWith(
-                        decoration: style.decoration.copyWith(
-                          border: WBorder.zero,
+                    SavedArticlesListEmptyState _ => WInformationalLayoutWidget(
+                      icon: FIcons.searchSlash,
+                      title: context.l10n.your_library_is_empty,
+                      subtitle: context.l10n.add_some_articles_to_your_library,
+                      actions: [
+                        FButton(
+                          onPress: () => Navigator.of(context).pop(),
+                          child: Text(context.l10n.go_back),
                         ),
-                      ),
-                      title: Text(context.l10n.your_library_is_empty),
-                      subtitle: const SizedBox.shrink(),
-                      child: Text(
-                        context.l10n.add_some_articles_to_your_library,
-                      ),
+                      ],
                     ),
-                    SavedArticlesListErrorState _ => WErrorRetryWidget(
+                    SavedArticlesListErrorState _ => WInformationalLayoutWidget(
                       title: context
                           .l10n
                           .something_went_wrong_fetching_your_library,
-                      onRetry: () =>
-                          context.read<SavedArticlesListCubit>().get(),
+                      actions: [
+                        FButton(
+                          onPress: () =>
+                              context.read<SavedArticlesListCubit>().get(),
+                          child: Text(context.l10n.try_again),
+                        ),
+                      ],
                     ),
                     _ => const SizedBox.shrink(),
                   };

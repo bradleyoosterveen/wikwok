@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 import 'package:wikwok/core.dart';
@@ -19,23 +20,37 @@ void main() async {
   group('WikipediaService', () {
     group('fetchRandomArticle()', () {
       test('should return a map containing a pageid', () async {
-        final article = await service.fetchRandomArticle();
+        final articleResult = await service.fetchRandomArticle().run();
+
+        expect(articleResult.isRight(), true);
+
+        final article = articleResult.toNullable()!;
 
         expect(article.containsKey('pageid'), true);
       });
 
       test('should return a different article each time', () async {
-        final article1 = await service.fetchRandomArticle();
-        final article2 = await service.fetchRandomArticle();
-        final article3 = await service.fetchRandomArticle();
+        final titles = <String>[];
+        const iterations = 3;
 
-        final pageid1 = article1['pageid'] as int;
-        final pageid2 = article2['pageid'] as int;
-        final pageid3 = article3['pageid'] as int;
+        Future<void> runTest() async {
+          final articleResult = await service.fetchRandomArticle().run();
 
-        expect(pageid1, isNot(pageid2));
-        expect(pageid2, isNot(pageid3));
-        expect(pageid1, isNot(pageid3));
+          switch (articleResult) {
+            case Right(value: final article):
+              final title = article['titles']['normalized'] as String;
+              titles.add(title);
+            case Left():
+              return;
+          }
+        }
+
+        await Future.wait(
+          List.generate(iterations, (index) => runTest()),
+        );
+
+        expect(titles.length, iterations);
+        expect(titles.toSet().length, iterations);
       });
     });
 

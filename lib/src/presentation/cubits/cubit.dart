@@ -10,8 +10,8 @@ class WCubit<T> extends Cubit<T> {
   void onChange(Change<T> change) {
     if (kDebugMode) {
       developer.log(
-        '$runtimeType ${change.currentState} -> ${change.nextState}',
-        name: 'State change',
+        '${change.currentState.runtimeType} ⟶ ${change.nextState.runtimeType}',
+        name: runtimeType.toString(),
       );
     }
     super.onChange(change);

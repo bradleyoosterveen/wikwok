@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wikwok/core.dart';
 import 'package:wikwok/data.dart';
 import 'package:wikwok/domain.dart';
 
@@ -23,101 +25,140 @@ class ArticleRepository {
 
   final _articlePageMap = <int, Article>{};
 
-  Future<Article?> fetch(int currentIndex) async {
-    Article? article = _articlePageMap[currentIndex];
+  TaskEither<ArticleRepositoryError, Article> fetch(int currentIndex) =>
+      TaskEither.Do(
+        ($) async {
+          final cachedArticleResult = _articlePageMap
+              .get<Article>(currentIndex)
+              .mapLeft((e) => _toError(e));
 
-    if (article == null) {
-      article = await _fetchRandomArticle();
+          late final Article article;
+          switch (cachedArticleResult) {
+            case Right(value: final r):
+              article = r;
+            case Left():
+              article = await $(_fetchRandomArticle());
+          }
 
-      _articlePageMap[currentIndex] = article;
-    }
+          _articlePageMap.set(currentIndex, article);
 
-    final prefetchAmount =
-        switch ((await _settingsRepository.get()).articlePrefetchRange) {
-          ArticlePrefetchRange.none => 0,
-          ArticlePrefetchRange.short => 1,
-          ArticlePrefetchRange.medium => 2,
-          ArticlePrefetchRange.large => 3,
-        };
+          await $(_prefetchNext(currentIndex));
 
-    for (var i = 0; i < prefetchAmount; i++) {
-      unawaited(_fetchNextArticle(currentIndex + i));
-    }
+          return article;
+        },
+      );
 
-    return article;
-  }
+  TaskEither<ArticleRepositoryError, void> _prefetchNext(
+    int currentIndex,
+  ) => TaskEither.tryCatch(
+    () async {
+      final prefetchAmount =
+          switch ((await _settingsRepository.get()).articlePrefetchRange) {
+            .none => 0,
+            .short => 1,
+            .medium => 2,
+            .large => 3,
+          };
 
-  Future<void> _fetchNextArticle(int index) async {
-    final nextIndex = index + 1;
+      for (var i = 0; i < prefetchAmount; i++) {
+        unawaited(_fetchNextArticle(currentIndex + i).run());
+      }
 
-    if (!_articlePageMap.containsKey(nextIndex)) {
-      final nextArticle = await _fetchRandomArticle();
+      return;
+    },
+    (e, _) => _toError(e),
+  );
 
-      _articlePageMap[nextIndex] = nextArticle;
-    }
+  TaskEither<ArticleRepositoryError, void> _fetchNextArticle(
+    int index,
+  ) => TaskEither.Do(
+    ($) async {
+      final nextIndex = index + 1;
 
-    if (_articlePageMap.length > _maxCache) {
-      _articlePageMap.remove(_articlePageMap.keys.first);
-    }
-  }
+      if (_articlePageMap.containsKey(nextIndex)) return;
+
+      final nextArticle = await $(_fetchRandomArticle());
+
+      $(
+        TaskEither.fromEither(
+          _articlePageMap
+              .set(nextIndex, nextArticle)
+              .mapLeft((e) => _toError(e)),
+        ),
+      );
+
+      if (_articlePageMap.length > _maxCache) {
+        $(
+          TaskEither.fromEither(
+            _articlePageMap
+                .rem(_articlePageMap.keys.first)
+                .mapLeft((e) => _toError(e)),
+          ),
+        );
+      }
+
+      return;
+    },
+  );
 
   Future<bool> isArticleSaved(String title) async {
-    final saved = await getSavedArticles();
+    final saved = await getSavedArticles().run();
 
-    return saved.contains(title);
+    return saved.fold((e) => false, (list) => list.contains(title));
   }
 
   Future<bool> saveArticle(String title) async {
-    if (await isArticleSaved(title)) {
+    if (await isArticleSaved(title)) return true;
+
+    final savedResult = await getSavedArticles().run();
+
+    return savedResult.fold((e) => false, (list) async {
+      list.add(title);
+
+      await _preferences.setStringList(
+        _key,
+        list.map((e) => e.toString()).toList(),
+      );
+
       return true;
-    }
-
-    final saved = await getSavedArticles();
-
-    saved.add(title);
-
-    await _preferences.setStringList(
-      _key,
-      saved.map((e) => e.toString()).toList(),
-    );
-
-    return true;
+    });
   }
 
   Future<bool> unsaveArticle(String title) async {
-    if (!await isArticleSaved(title)) {
-      return false;
-    }
+    if (!await isArticleSaved(title)) return false;
 
-    final saved = await getSavedArticles();
+    final savedResult = await getSavedArticles().run();
 
-    saved.remove(title);
+    return savedResult.fold((e) => false, (list) async {
+      list.remove(title);
 
-    await _preferences.setStringList(
-      _key,
-      saved.map((e) => e.toString()).toList(),
-    );
+      await _preferences.setStringList(
+        _key,
+        list.map((e) => e.toString()).toList(),
+      );
 
-    return false;
+      return true;
+    });
   }
 
-  Future<List<String>> getSavedArticles() async {
-    final saved = await _preferences.getStringList(_key);
+  TaskEither<ArticleRepositoryError, List<String>> getSavedArticles() =>
+      TaskEither.tryCatch(() async {
+        final saved = await _preferences.getStringList(_key);
 
-    if (saved == null) {
-      await _preferences.setStringList(_key, []);
+        if (saved == null) {
+          await _preferences.setStringList(_key, []);
 
-      return [];
-    }
+          return [];
+        }
 
-    return saved;
-  }
+        return saved;
+      }, (e, _) => _toError(e));
 
-  Future<Article> _fetchRandomArticle() async {
-    final data = await _wikipediaService.fetchRandomArticle();
-
-    return Article.fromJson(data);
-  }
+  TaskEither<ArticleRepositoryError, Article> _fetchRandomArticle() =>
+      _wikipediaService
+          .fetchRandomArticle()
+          .map((data) => Article.fromJson(data))
+          .mapLeft(_toError);
 
   Future<Article> fetchArticleByTitle(String title) async {
     final data = await _wikipediaService.fetchArticleByTitle(title);
@@ -125,3 +166,24 @@ class ArticleRepository {
     return Article.fromJson(data);
   }
 }
+
+enum ArticleRepositoryError {
+  unknown,
+  somethingWentWrong,
+  connectionError,
+}
+
+ArticleRepositoryError _toError(dynamic e) => switch (e) {
+  ArticleRepositoryError e => e,
+  WikipediaServiceError e => switch (e) {
+    .unknown => .somethingWentWrong,
+    .clientError => .somethingWentWrong,
+    .timeout => .somethingWentWrong,
+    .serverError => .somethingWentWrong,
+    .connectionError => .connectionError,
+  },
+  SafeMapLookupError safeMapLookupError => switch (safeMapLookupError) {
+    SafeMapLookupError.keyNotFound => .somethingWentWrong,
+  },
+  _ => .unknown,
+};
