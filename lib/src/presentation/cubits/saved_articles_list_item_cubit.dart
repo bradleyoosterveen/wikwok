@@ -12,8 +12,6 @@ class SavedArticlesListItemCubit extends WCubit<SavedArticlesListItemState> {
   final ArticleRepository _articleRepository;
 
   Future<void> get(String title) async {
-    emit(const SavedArticlesListItemLoadingState());
-
     final articleResult = await _articleRepository
         .fetchArticleByTitle(title)
         .run();

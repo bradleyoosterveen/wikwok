@@ -13,8 +13,6 @@ class UpdateCubit extends WCubit<UpdateState> {
   final VersionRepository _versionRepository;
 
   Future<void> get() async {
-    emit(const UpdateLoadingState());
-
     final result = await _versionRepository.isUpdateAvailable().run();
 
     result.match(
