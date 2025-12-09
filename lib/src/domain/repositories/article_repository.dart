@@ -182,8 +182,8 @@ ArticleRepositoryError _toError(dynamic e) => switch (e) {
     .serverError => .somethingWentWrong,
     .connectionError => .connectionError,
   },
-  SafeMapLookupError safeMapLookupError => switch (safeMapLookupError) {
-    SafeMapLookupError.keyNotFound => .somethingWentWrong,
+  SafeMapLookupError e => switch (e) {
+    .keyNotFound => .somethingWentWrong,
   },
   _ => .unknown,
 };
