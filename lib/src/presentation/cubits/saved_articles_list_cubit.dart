@@ -12,31 +12,33 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
   final ArticleRepository _articleRepository;
 
   Future<void> get() async {
-    try {
-      final saved = await _articleRepository.getSavedArticles();
+    final savedResult = await _articleRepository.getSavedArticles().run();
 
-      if (saved.isEmpty) {
-        return emit(const SavedArticlesListEmptyState());
-      }
+    savedResult.fold(
+      (e) => emit(const SavedArticlesListErrorState()),
+      (list) {
+        if (list.isEmpty) {
+          return emit(const SavedArticlesListEmptyState());
+        }
 
-      emit(SavedArticlesListLoadedState(saved));
-    } catch (_) {
-      emit(const SavedArticlesListErrorState());
-    }
+        emit(SavedArticlesListLoadedState(list));
+      },
+    );
   }
 
   Future<void> deleteAll() async {
-    try {
-      final saved = await _articleRepository.getSavedArticles();
+    final savedResult = await _articleRepository.getSavedArticles().run();
 
-      for (var title in saved) {
-        await _articleRepository.unsaveArticle(title);
-      }
+    savedResult.fold(
+      (e) => emit(const SavedArticlesListErrorState()),
+      (list) async {
+        for (final title in list) {
+          await _articleRepository.unsaveArticle(title);
+        }
 
-      emit(const SavedArticlesListEmptyState());
-    } catch (_) {
-      emit(const SavedArticlesListErrorState());
-    }
+        emit(const SavedArticlesListEmptyState());
+      },
+    );
   }
 }
 

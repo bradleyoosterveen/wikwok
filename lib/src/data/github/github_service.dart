@@ -23,10 +23,12 @@ class GithubService {
   final AsyncCacheHandler _asyncCacheHandler;
   final Logger _logger;
 
+  static _fetchLatestReleaseKey() => 'GithubService.fetchLatestRelease';
   TaskEither<GithubServiceError, Map<String, dynamic>> fetchLatestRelease() =>
       TaskEither.tryCatch(
         () async => _asyncCacheHandler.run(
-          key: 'GithubService.fetchLatestRelease',
+          key: _fetchLatestReleaseKey(),
+          duration: const Duration(days: 1),
           action: () async {
             final response = await _dio.get(_serviceConfig.latestReleasePath());
 
@@ -34,7 +36,10 @@ class GithubService {
           },
         ),
         (e, __) => _toError(e),
-      ).tapLeft((error) => _logger.e(error));
+      ).tapLeft((error) {
+        _asyncCacheHandler.invalidate(_fetchLatestReleaseKey());
+        _logger.e(error);
+      });
 }
 
 enum GithubServiceError {

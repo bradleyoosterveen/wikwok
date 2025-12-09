@@ -1,3 +1,4 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
@@ -12,18 +13,13 @@ class ArticleCubit extends WCubit<ArticleState> {
   final ArticleRepository _articleRepository;
 
   Future<void> fetch(int currentIndex) async {
-    emit(const ArticleLoadingState());
+    final result = await _articleRepository.fetch(currentIndex).run();
 
-    try {
-      final article = await _articleRepository.fetch(currentIndex);
-
-      if (article == null) {
-        return emit(const ArticleNotFoundState());
-      }
-
-      emit(ArticleLoadedState(article));
-    } catch (_) {
-      emit(const ArticleErrorState());
+    switch (result) {
+      case Right(value: final r):
+        emit(ArticleLoadedState(r));
+      case Left(value: final l):
+        emit(ArticleErrorState(l));
     }
   }
 }
@@ -47,5 +43,7 @@ class ArticleNotFoundState extends ArticleState {
 }
 
 class ArticleErrorState extends ArticleState {
-  const ArticleErrorState();
+  final ArticleRepositoryError error;
+
+  const ArticleErrorState(this.error);
 }
