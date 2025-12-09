@@ -30,7 +30,7 @@ class ArticleRepository {
         ($) async {
           final cachedArticleResult = _articlePageMap
               .get<Article>(currentIndex)
-              .mapLeft((e) => _toError(e));
+              .mapLeft(_toError);
 
           late final Article article;
           switch (cachedArticleResult) {
@@ -81,18 +81,14 @@ class ArticleRepository {
 
       $(
         TaskEither.fromEither(
-          _articlePageMap
-              .set(nextIndex, nextArticle)
-              .mapLeft((e) => _toError(e)),
+          _articlePageMap.set(nextIndex, nextArticle).mapLeft(_toError),
         ),
       );
 
       if (_articlePageMap.length > _maxCache) {
         $(
           TaskEither.fromEither(
-            _articlePageMap
-                .rem(_articlePageMap.keys.first)
-                .mapLeft((e) => _toError(e)),
+            _articlePageMap.rem(_articlePageMap.keys.first).mapLeft(_toError),
           ),
         );
       }
