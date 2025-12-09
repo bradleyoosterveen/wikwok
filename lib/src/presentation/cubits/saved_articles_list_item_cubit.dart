@@ -14,13 +14,14 @@ class SavedArticlesListItemCubit extends WCubit<SavedArticlesListItemState> {
   Future<void> get(String title) async {
     emit(const SavedArticlesListItemLoadingState());
 
-    try {
-      final article = await _articleRepository.fetchArticleByTitle(title);
+    final articleResult = await _articleRepository
+        .fetchArticleByTitle(title)
+        .run();
 
-      emit(SavedArticlesListItemLoadedState(article));
-    } catch (_) {
-      emit(const SavedArticlesListItemErrorState());
-    }
+    articleResult.fold(
+      (e) => emit(const SavedArticlesListItemErrorState()),
+      (article) => emit(SavedArticlesListItemLoadedState(article)),
+    );
   }
 }
 

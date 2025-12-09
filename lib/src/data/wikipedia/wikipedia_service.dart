@@ -30,17 +30,28 @@ class WikipediaService {
     return response.data as Map<String, dynamic>;
   }, (e, _) => _toError(e)).tapLeft((error) => _logger.e(error));
 
-  Future<Map<String, dynamic>> fetchArticleByTitle(String title) async =>
-      _asyncCacheHandler.run(
-        key: title,
-        action: () async {
-          final response = await _dio.get(
-            _serviceConfig.articleByTitlePath(title),
-          );
+  static _fetchArticleByTitleKey(String title) =>
+      'WikipediaService.fetchArticleByTitle:$title';
+  TaskEither<WikipediaServiceError, Map<String, dynamic>> fetchArticleByTitle(
+    String title,
+  ) =>
+      TaskEither.tryCatch(
+        () => _asyncCacheHandler.run(
+          key: _fetchArticleByTitleKey(title),
+          duration: const Duration(days: 1),
+          action: () async {
+            final response = await _dio.get(
+              _serviceConfig.articleByTitlePath(title),
+            );
 
-          return response.data as Map<String, dynamic>;
-        },
-      );
+            return response.data as Map<String, dynamic>;
+          },
+        ),
+        (e, _) => _toError(e),
+      ).tapLeft((error) {
+        _asyncCacheHandler.invalidate(_fetchArticleByTitleKey(title));
+        _logger.e(error);
+      });
 }
 
 enum WikipediaServiceError {

@@ -151,16 +151,33 @@ class ArticleRepository {
       }, (e, _) => _toError(e));
 
   TaskEither<ArticleRepositoryError, Article> _fetchRandomArticle() =>
-      _wikipediaService
-          .fetchRandomArticle()
-          .map((data) => Article.fromJson(data))
-          .mapLeft(_toError);
+      TaskEither.Do(($) async {
+        final articleData = await $(
+          _wikipediaService.fetchRandomArticle().mapLeft(_toError),
+        );
 
-  Future<Article> fetchArticleByTitle(String title) async {
-    final data = await _wikipediaService.fetchArticleByTitle(title);
+        return $(
+          TaskEither.tryCatch(
+            () async => Article.fromJson(articleData),
+            (e, _) => _toError(e),
+          ),
+        );
+      });
 
-    return Article.fromJson(data);
-  }
+  TaskEither<ArticleRepositoryError, Article> fetchArticleByTitle(
+    String title,
+  ) => TaskEither.Do(($) async {
+    final articleData = await $(
+      _wikipediaService.fetchArticleByTitle(title).mapLeft(_toError),
+    );
+
+    return $(
+      TaskEither.tryCatch(
+        () async => Article.fromJson(articleData),
+        (e, _) => _toError(e),
+      ),
+    );
+  });
 }
 
 enum ArticleRepositoryError {

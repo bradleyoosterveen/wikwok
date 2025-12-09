@@ -56,13 +56,25 @@ void main() async {
 
     group('fetchArticleByTitle()', () {
       test('should return a map containing a pageid', () async {
-        final article = await service.fetchArticleByTitle('Flutter');
+        final articleResult = await service
+            .fetchArticleByTitle('Flutter')
+            .run();
+
+        expect(articleResult.isRight(), true);
+
+        final article = articleResult.toNullable()!;
 
         expect(article.containsKey('pageid'), true);
       });
 
       test('should return an article with the given title', () async {
-        final article = await service.fetchArticleByTitle('Flutter_(software)');
+        final articleData = await service
+            .fetchArticleByTitle('Flutter_(software)')
+            .run();
+
+        expect(articleData.isRight(), true);
+
+        final article = articleData.toNullable()!;
 
         expect(article['titles']['normalized'], 'Flutter (software)');
       });
