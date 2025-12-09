@@ -12,8 +12,6 @@ class CurrentVersionCubit extends WCubit<CurrentVersionState> {
   final VersionRepository _versionRepository;
 
   Future<void> get() async {
-    emit(const CurrentVersionLoadingState());
-
     final result = await _versionRepository.getCurrentVersion().run();
 
     result.match(
