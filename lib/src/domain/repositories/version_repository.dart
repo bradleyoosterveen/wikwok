@@ -70,13 +70,13 @@ class VersionRepository {
 
   TaskEither<VersionRepositoryError, bool> shouldSkipUpdate() =>
       TaskEither.Do(($) async {
-        final latestVersion = await $(getLatestVersion());
-
         final latestSkippedVersionPure = await _preferences.getString(
           latestSkippedVersionKey,
         );
 
         if (latestSkippedVersionPure == null) return false;
+
+        final latestVersion = await $(getLatestVersion());
 
         final latestSkippedVersion = await $(
           TaskEither.tryCatch(
