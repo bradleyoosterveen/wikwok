@@ -64,5 +64,61 @@ void main() async {
         },
       );
     });
+    group('shouldSkipUpdate()', () {
+      test(
+        'should return false when latest version is newer than latest skipped version',
+        () async {
+          when(
+            mockSharedPreferencesAsync.getString(
+              VersionRepository.latestSkippedVersionKey,
+            ),
+          ).thenAnswer((_) async => '0.1.0');
+
+          when(mockGithubService.fetchLatestRelease()).thenAnswer(
+            (_) => TaskEither.right({
+              'tag_name': 'v1.0.0',
+              'html_url': 'https://github.com/',
+            }),
+          );
+
+          final shouldSkipUpdateResult = await versionRepository
+              .shouldSkipUpdate()
+              .run();
+
+          expect(shouldSkipUpdateResult.isRight(), true);
+
+          final shouldSkipUpdate = shouldSkipUpdateResult.toNullable()!;
+
+          expect(shouldSkipUpdate, false);
+        },
+      );
+      test(
+        'should return true when latest version is older than or equal to the latest skipped version',
+        () async {
+          when(
+            mockSharedPreferencesAsync.getString(
+              VersionRepository.latestSkippedVersionKey,
+            ),
+          ).thenAnswer((_) async => '1.0.0');
+
+          when(mockGithubService.fetchLatestRelease()).thenAnswer(
+            (_) => TaskEither.right({
+              'tag_name': 'v1.0.0',
+              'html_url': 'https://github.com/',
+            }),
+          );
+
+          final shouldSkipUpdateResult = await versionRepository
+              .shouldSkipUpdate()
+              .run();
+
+          expect(shouldSkipUpdateResult.isRight(), true);
+
+          final shouldSkipUpdate = shouldSkipUpdateResult.toNullable()!;
+
+          expect(shouldSkipUpdate, true);
+        },
+      );
+    });
   });
 }
