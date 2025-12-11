@@ -62,7 +62,7 @@ class UpdateCubit extends WCubit<UpdateState> {
         detailsResult.match(
           (error) => emit(const UpdateErrorState()),
           (details) => emit(
-            UpdateAvailableState(UpdateViewModel(details.$1, details.$2)),
+            UpdateSkippedState(UpdateViewModel(details.$1, details.$2)),
           ),
         );
       },
