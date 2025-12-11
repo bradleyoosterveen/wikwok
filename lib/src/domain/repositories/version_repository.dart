@@ -60,11 +60,11 @@ class VersionRepository {
 
   TaskEither<VersionRepositoryError, void> skipUpdate() =>
       TaskEither.Do(($) async {
-        final currentVersion = await $(getLatestVersion());
+        final latestVersion = await $(getLatestVersion());
 
         await _preferences.setString(
           latestSkippedVersionKey,
-          currentVersion.toString(),
+          latestVersion.toString(),
         );
       });
 
