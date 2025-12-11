@@ -119,6 +119,33 @@ void main() async {
           expect(shouldSkipUpdate, true);
         },
       );
+      test(
+        'should return an error when the stored latest skipped version is invalid',
+        () async {
+          when(
+            mockSharedPreferencesAsync.getString(
+              VersionRepository.latestSkippedVersionKey,
+            ),
+          ).thenAnswer((_) async => 'invalid');
+
+          when(mockGithubService.fetchLatestRelease()).thenAnswer(
+            (_) => TaskEither.right({
+              'tag_name': 'v1.0.0',
+              'html_url': 'https://github.com/',
+            }),
+          );
+
+          final shouldSkipUpdateResult = await versionRepository
+              .shouldSkipUpdate()
+              .run();
+
+          expect(shouldSkipUpdateResult.isLeft(), true);
+
+          final error = shouldSkipUpdateResult.getLeft().toNullable()!;
+
+          expect(error, VersionRepositoryError.somethingWentWrong);
+        },
+      );
     });
   });
 }

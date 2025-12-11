@@ -76,14 +76,14 @@ class VersionRepository {
 
         if (latestSkippedVersionPure == null) return false;
 
-        final latestVersion = await $(getLatestVersion());
-
         final latestSkippedVersion = await $(
           TaskEither.tryCatch(
             () async => Version.parse(latestSkippedVersionPure),
             (e, _) => _toError(e),
           ),
         );
+
+        final latestVersion = await $(getLatestVersion());
 
         if (latestVersion.isNewerThan(latestSkippedVersion)) {
           return false;
@@ -123,5 +123,6 @@ VersionRepositoryError _toError(dynamic e) => switch (e) {
     GithubServiceError.connectionError => .connectionError,
   },
   SafeMapLookupError _ => .somethingWentWrong,
+  FormatException _ => .somethingWentWrong,
   _ => .unknown,
 };
