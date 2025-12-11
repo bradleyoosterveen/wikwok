@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
+import 'package:wikwok/core.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
 
@@ -16,12 +20,38 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
 
     savedResult.fold(
       (e) => emit(const SavedArticlesListErrorState()),
-      (list) {
+      (list) async {
         if (list.isEmpty) {
           return emit(const SavedArticlesListEmptyState());
         }
 
-        emit(SavedArticlesListLoadedState(list));
+        emit(SavedArticlesListLoadingState(current: 0, total: list.length));
+
+        var current = 0;
+        final result = await TaskEither.sequenceList(
+          list
+              .map(
+                (e) => _articleRepository.fetchArticleByTitle(e).tapRight(
+                  (_) {
+                    current++;
+                    emit(
+                      SavedArticlesListLoadingState(
+                        current: current,
+                        total: list.length,
+                      ),
+                    );
+                  },
+                ),
+              )
+              .toList(),
+        ).run();
+
+        result.fold(
+          ((e) => emit(const SavedArticlesListErrorState())),
+          (r) async {
+            emit(SavedArticlesListLoadedState(r));
+          },
+        );
       },
     );
   }
@@ -47,7 +77,12 @@ abstract class SavedArticlesListState {
 }
 
 class SavedArticlesListLoadingState extends SavedArticlesListState {
-  const SavedArticlesListLoadingState();
+  final int current;
+  final int total;
+
+  const SavedArticlesListLoadingState({this.current = 0, this.total = 0});
+
+  double get progress => total == 0 ? .0 : current / total;
 }
 
 class SavedArticlesListErrorState extends SavedArticlesListState {
@@ -59,7 +94,7 @@ class SavedArticlesListEmptyState extends SavedArticlesListState {
 }
 
 class SavedArticlesListLoadedState extends SavedArticlesListState {
-  final List<String> articleTitles;
+  final List<Article> articles;
 
-  const SavedArticlesListLoadedState(this.articleTitles);
+  const SavedArticlesListLoadedState(this.articles);
 }
