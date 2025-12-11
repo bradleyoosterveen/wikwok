@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -17,7 +18,8 @@ class VersionRepository {
   final SharedPreferencesAsync _preferences;
   final GithubService _githubService;
 
-  final String _latestSkippedVersionKey = 'latest_skipped_version';
+  @visibleForTesting
+  static const latestSkippedVersionKey = 'latest_skipped_version';
 
   TaskEither<VersionRepositoryError, Version> getCurrentVersion() =>
       TaskEither.tryCatch(() async {
@@ -61,7 +63,7 @@ class VersionRepository {
         final currentVersion = await $(getLatestVersion());
 
         await _preferences.setString(
-          _latestSkippedVersionKey,
+          latestSkippedVersionKey,
           currentVersion.toString(),
         );
       });
@@ -71,7 +73,7 @@ class VersionRepository {
         final latestVersion = await $(getLatestVersion());
 
         final latestSkippedVersionPure = await _preferences.getString(
-          _latestSkippedVersionKey,
+          latestSkippedVersionKey,
         );
 
         if (latestSkippedVersionPure == null) return false;

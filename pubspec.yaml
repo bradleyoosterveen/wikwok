@@ -32,6 +32,7 @@ dependencies:
   intl: ^0.20.2
   fpdart: ^1.2.0
   logger: ^2.6.2
+  mockito: ^5.6.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

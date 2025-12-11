@@ -1,6 +1,17 @@
 targets:
   $default:
+    sources:
+      include:
+        - "pubspec.yaml"
+        - $package$
+        - lib/$lib$
+        - lib/**.dart
+        - test/**.dart
+        - integration_test/**.dart
     builders:
       flutter_gen_runner:
         options:
           output: lib/src/gen/
+      mockito|mockBuilder:
+        generate_for:
+          - lib/**.dart
