@@ -21,7 +21,7 @@ class ArticleRepository {
   final WikipediaService _wikipediaService;
 
   static const _maxCache = 99;
-  static const _key = 'saved';
+  static const _savedArticlesKey = 'saved';
 
   final _articlePageMap = <int, Article>{};
 
@@ -112,7 +112,7 @@ class ArticleRepository {
       list.add(title);
 
       await _preferences.setStringList(
-        _key,
+        _savedArticlesKey,
         list.map((e) => e.toString()).toList(),
       );
 
@@ -129,7 +129,7 @@ class ArticleRepository {
       list.remove(title);
 
       await _preferences.setStringList(
-        _key,
+        _savedArticlesKey,
         list.map((e) => e.toString()).toList(),
       );
 
@@ -139,10 +139,10 @@ class ArticleRepository {
 
   TaskEither<ArticleRepositoryError, List<String>> getSavedArticles() =>
       TaskEither.tryCatch(() async {
-        final saved = await _preferences.getStringList(_key);
+        final saved = await _preferences.getStringList(_savedArticlesKey);
 
         if (saved == null) {
-          await _preferences.setStringList(_key, []);
+          await _preferences.setStringList(_savedArticlesKey, []);
 
           return [];
         }

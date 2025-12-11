@@ -128,4 +128,27 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get this_app_is_not_affiliated_with_the_wikimedia_foundation =>
       'This app is not affiliated with, endorsed by, or sponsored by Wikipedia or the Wikimedia Foundation. All trademarks and registered trademarks are the property of their respective owners.';
+
+  @override
+  String version_available(Object version) {
+    return 'Version $version available';
+  }
+
+  @override
+  String get a_new_version_is_available =>
+      'A new version is available. Tap the button below to get the latest features and improvements.';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get copy_url => 'Copy URL';
+
+  @override
+  String get skip_this_version => 'Skip this version';
+
+  @override
+  String update_to(Object version) {
+    return 'Update to $version';
+  }
 }

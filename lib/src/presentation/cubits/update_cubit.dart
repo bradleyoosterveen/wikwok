@@ -22,22 +22,63 @@ class UpdateCubit extends WCubit<UpdateState> {
           return emit(const UpdateUnavailableState());
         }
 
-        final detailsResult =
-            await TaskEither<VersionRepositoryError, (String, Version)>.Do(
-              ($) async {
-                final url = await $(_versionRepository.getUpdateUrl());
-                final version = await $(_versionRepository.getLatestVersion());
-                return (url, version);
-              },
-            ).run();
+        final shouldSkipResult = await _versionRepository
+            .shouldSkipUpdate()
+            .run();
 
-        detailsResult.match(
+        shouldSkipResult.match(
           (error) => emit(const UpdateErrorState()),
-          (details) => emit(UpdateAvailableState(details.$1, details.$2)),
+          (shouldSkip) async {
+            final detailsResult = await _getDetails().run();
+
+            detailsResult.match(
+              (error) => emit(const UpdateErrorState()),
+              (details) {
+                if (shouldSkip) {
+                  return emit(
+                    UpdateSkippedState(UpdateViewModel(details.$1, details.$2)),
+                  );
+                }
+
+                emit(
+                  UpdateAvailableState(UpdateViewModel(details.$1, details.$2)),
+                );
+              },
+            );
+          },
         );
       },
     );
   }
+
+  Future<void> skip() async {
+    final result = await _versionRepository.skipUpdate().run();
+
+    result.match(
+      (error) => emit(const UpdateErrorState()),
+      (_) async {
+        final detailsResult = await _getDetails().run();
+
+        detailsResult.match(
+          (error) => emit(const UpdateErrorState()),
+          (details) => emit(
+            UpdateAvailableState(UpdateViewModel(details.$1, details.$2)),
+          ),
+        );
+      },
+    );
+  }
+
+  TaskEither<VersionRepositoryError, (String, Version)> _getDetails() =>
+      TaskEither<VersionRepositoryError, (String, Version)>.Do(
+        ($) async {
+          final url = await $(_versionRepository.getUpdateUrl());
+          final version = await $(
+            _versionRepository.getLatestVersion(),
+          );
+          return (url, version);
+        },
+      );
 }
 
 abstract class UpdateState {
@@ -49,10 +90,14 @@ class UpdateLoadingState extends UpdateState {
 }
 
 class UpdateAvailableState extends UpdateState {
-  final String url;
-  final Version version;
+  final UpdateViewModel viewModel;
 
-  const UpdateAvailableState(this.url, this.version);
+  const UpdateAvailableState(this.viewModel);
+}
+
+class UpdateSkippedState extends UpdateState {
+  final UpdateViewModel viewModel;
+  const UpdateSkippedState(this.viewModel);
 }
 
 class UpdateUnavailableState extends UpdateState {
@@ -61,4 +106,11 @@ class UpdateUnavailableState extends UpdateState {
 
 class UpdateErrorState extends UpdateState {
   const UpdateErrorState();
+}
+
+class UpdateViewModel {
+  final String url;
+  final Version version;
+
+  const UpdateViewModel(this.url, this.version);
 }

@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:forui/forui.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:wikwok/presentation.dart';
+
+class UpdateScreen extends StatelessWidget {
+  const UpdateScreen({
+    required this.state,
+    super.key,
+  });
+
+  final UpdateAvailableState state;
+
+  static push(
+    BuildContext context, {
+    required UpdateAvailableState state,
+  }) => Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => UpdateScreen(
+        state: state,
+      ),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<UpdateCubit, UpdateState>(
+          listener: (context, state) => switch (state) {
+            UpdateSkippedState _ => Navigator.pop(context),
+            _ => {},
+          },
+        ),
+      ],
+      child: FScaffold(
+        childPad: false,
+        header: FHeader.nested(
+          prefixes: [
+            FButton.icon(
+              style: FButtonStyle.ghost(),
+              child: const Icon(FIcons.arrowLeft),
+              onPress: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+        child: Center(
+          child: WInformationalLayoutWidget(
+            icon: FIcons.download,
+            title: context.l10n.version_available(
+              state.viewModel.version.toString(),
+            ),
+            subtitle: context.l10n.a_new_version_is_available,
+            actions: [
+              FButton(
+                onPress: () => launchUrl(.parse(state.viewModel.url)),
+                child: Text(context.l10n.update),
+              ),
+              FButton(
+                onPress: () =>
+                    Clipboard.setData(ClipboardData(text: state.viewModel.url)),
+                style: FButtonStyle.secondary(),
+                child: Text(context.l10n.copy_url),
+              ),
+              FButton(
+                onPress: () => context.read<UpdateCubit>().skip(),
+                style: FButtonStyle.ghost(),
+                child: Text(context.l10n.skip_this_version),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

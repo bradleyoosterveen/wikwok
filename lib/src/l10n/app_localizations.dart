@@ -325,6 +325,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This app is not affiliated with, endorsed by, or sponsored by Wikipedia or the Wikimedia Foundation. All trademarks and registered trademarks are the property of their respective owners.'**
   String get this_app_is_not_affiliated_with_the_wikimedia_foundation;
+
+  /// No description provided for @version_available.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} available'**
+  String version_available(Object version);
+
+  /// No description provided for @a_new_version_is_available.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version is available. Tap the button below to get the latest features and improvements.'**
+  String get a_new_version_is_available;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @copy_url.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy URL'**
+  String get copy_url;
+
+  /// No description provided for @skip_this_version.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip this version'**
+  String get skip_this_version;
+
+  /// No description provided for @update_to.
+  ///
+  /// In en, this message translates to:
+  /// **'Update to {version}'**
+  String update_to(Object version);
 }
 
 class _AppLocalizationsDelegate

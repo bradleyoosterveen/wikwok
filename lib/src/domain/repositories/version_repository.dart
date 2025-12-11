@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wikwok/core.dart';
 import 'package:wikwok/data.dart';
 import 'package:wikwok/domain.dart';
@@ -8,9 +9,15 @@ import 'package:wikwok/domain.dart';
 @singleton
 @injectable
 class VersionRepository {
-  VersionRepository(this._githubService);
+  VersionRepository(
+    this._preferences,
+    this._githubService,
+  );
 
+  final SharedPreferencesAsync _preferences;
   final GithubService _githubService;
+
+  final String _latestSkippedVersionKey = 'latest_skipped_version';
 
   TaskEither<VersionRepositoryError, Version> getCurrentVersion() =>
       TaskEither.tryCatch(() async {
@@ -48,6 +55,40 @@ class VersionRepository {
       return latestVersion.isNewerThan(currentVersion);
     },
   );
+
+  TaskEither<VersionRepositoryError, void> skipUpdate() =>
+      TaskEither.Do(($) async {
+        final currentVersion = await $(getLatestVersion());
+
+        await _preferences.setString(
+          _latestSkippedVersionKey,
+          currentVersion.toString(),
+        );
+      });
+
+  TaskEither<VersionRepositoryError, bool> shouldSkipUpdate() =>
+      TaskEither.Do(($) async {
+        final latestVersion = await $(getLatestVersion());
+
+        final latestSkippedVersionPure = await _preferences.getString(
+          _latestSkippedVersionKey,
+        );
+
+        if (latestSkippedVersionPure == null) return false;
+
+        final latestSkippedVersion = await $(
+          TaskEither.tryCatch(
+            () async => Version.parse(latestSkippedVersionPure),
+            (e, _) => _toError(e),
+          ),
+        );
+
+        if (latestVersion.isNewerThan(latestSkippedVersion)) {
+          return false;
+        }
+
+        return true;
+      });
 
   TaskEither<VersionRepositoryError, String> getUpdateUrl() => TaskEither.Do(
     ($) async {

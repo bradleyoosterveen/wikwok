@@ -12,6 +12,8 @@ import 'package:wikwok/src/l10n/app_localizations.dart';
 class App extends StatefulWidget {
   const App({super.key});
 
+  static final navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   State<App> createState() => _AppState();
 }
@@ -60,42 +62,47 @@ class _AppState extends State<App> {
             WThemeMode.pink => WThemes.pink,
           };
 
-          return AnnotatedRegion<SystemUiOverlayStyle>(
-            value: theme.colors.systemOverlayStyle,
-            child: Builder(
-              builder: (context) {
-                final locale = switch (context.select(
-                  (SettingsCubit cubit) => cubit.state.locale,
-                )) {
-                  WLocale.en => const Locale('en'),
-                  WLocale.nl => const Locale('nl'),
-                  WLocale.system =>
-                    Platform.localeName.split('_').first == 'nl'
-                        ? const Locale('nl')
-                        : const Locale('en'),
-                };
+          return MultiBlocListener(
+            listeners: _blocListenersBuilder(context),
+            child: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: theme.colors.systemOverlayStyle,
+              child: Builder(
+                builder: (context) {
+                  final locale = switch (context.select(
+                    (SettingsCubit cubit) => cubit.state.locale,
+                  )) {
+                    WLocale.en => const Locale('en'),
+                    WLocale.nl => const Locale('nl'),
+                    WLocale.system =>
+                      Platform.localeName.split('_').first == 'nl'
+                          ? const Locale('nl')
+                          : const Locale('en'),
+                  };
 
-                return MaterialApp(
-                  title: 'WikWok',
-                  localizationsDelegates:
-                      AppLocalizations.localizationsDelegates,
-                  supportedLocales: AppLocalizations.supportedLocales,
-                  locale: locale,
-                  theme: theme.toApproximateMaterialTheme().copyWith(
-                    pageTransitionsTheme: PageTransitionsTheme(
-                      builders: {
-                        for (var platform in TargetPlatform.values)
-                          platform: const WOpenForwardsPageTransitionsBuilder(),
-                      },
+                  return MaterialApp(
+                    title: 'WikWok',
+                    navigatorKey: App.navigatorKey,
+                    localizationsDelegates:
+                        AppLocalizations.localizationsDelegates,
+                    supportedLocales: AppLocalizations.supportedLocales,
+                    locale: locale,
+                    theme: theme.toApproximateMaterialTheme().copyWith(
+                      pageTransitionsTheme: PageTransitionsTheme(
+                        builders: {
+                          for (var platform in TargetPlatform.values)
+                            platform:
+                                const WOpenForwardsPageTransitionsBuilder(),
+                        },
+                      ),
                     ),
-                  ),
-                  builder: (_, child) => FAnimatedTheme(
-                    data: theme,
-                    child: child ?? const SizedBox.shrink(),
-                  ),
-                  home: const ArticlesScreen(),
-                );
-              },
+                    builder: (context, child) => FAnimatedTheme(
+                      data: theme,
+                      child: child ?? const SizedBox.shrink(),
+                    ),
+                    home: const ArticlesScreen(),
+                  );
+                },
+              ),
             ),
           );
         },
@@ -103,6 +110,21 @@ class _AppState extends State<App> {
     );
   }
 }
+
+List<BlocListener> _blocListenersBuilder(BuildContext context) => [
+  BlocListener<UpdateCubit, UpdateState>(
+    listener: (context, state) => switch (state) {
+      UpdateAvailableState state => switch (Never) {
+        _ when App.navigatorKey.currentContext != null => UpdateScreen.push(
+          context,
+          state: state,
+        ),
+        _ => {},
+      },
+      _ => {},
+    },
+  ),
+];
 
 extension WThemes on Never {
   static final pink = FThemeData(

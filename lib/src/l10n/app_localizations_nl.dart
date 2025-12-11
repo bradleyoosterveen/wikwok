@@ -130,4 +130,27 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get this_app_is_not_affiliated_with_the_wikimedia_foundation =>
       'Deze app is niet gelieerd aan, goedgekeurd door, of gesponsord door Wikipedia of de Wikimedia Foundation. Alle handelsmerken en geregistreerde handelsmerken zijn het eigendom van hun respectieve eigenaren.';
+
+  @override
+  String version_available(Object version) {
+    return 'Versie $version beschikbaar';
+  }
+
+  @override
+  String get a_new_version_is_available =>
+      'Een nieuwe versie is beschikbaar. Tik op de knop hieronder om de nieuwste functies en verbeteringen te krijgen.';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get copy_url => 'Kopieer URL';
+
+  @override
+  String get skip_this_version => 'Sla deze versie over';
+
+  @override
+  String update_to(Object version) {
+    return 'Update naar $version';
+  }
 }
