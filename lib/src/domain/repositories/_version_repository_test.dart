@@ -93,6 +93,33 @@ void main() async {
         },
       );
       test(
+        'should return false when latest skipped version is not set',
+        () async {
+          when(
+            mockSharedPreferencesAsync.getString(
+              VersionRepository.latestSkippedVersionKey,
+            ),
+          ).thenAnswer((_) async => null);
+
+          when(mockGithubService.fetchLatestRelease()).thenAnswer(
+            (_) => TaskEither.right({
+              'tag_name': 'v1.0.0',
+              'html_url': 'https://github.com/',
+            }),
+          );
+
+          final shouldSkipUpdateResult = await versionRepository
+              .shouldSkipUpdate()
+              .run();
+
+          expect(shouldSkipUpdateResult.isRight(), true);
+
+          final shouldSkipUpdate = shouldSkipUpdateResult.toNullable()!;
+
+          expect(shouldSkipUpdate, false);
+        },
+      );
+      test(
         'should return true when latest version is older than or equal to the latest skipped version',
         () async {
           when(
