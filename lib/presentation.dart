@@ -9,7 +9,6 @@ export 'src/presentation/cubits/cubit.dart';
 export 'src/presentation/cubits/current_version_cubit.dart';
 export 'src/presentation/cubits/save_article_cubit.dart';
 export 'src/presentation/cubits/saved_articles_list_cubit.dart';
-export 'src/presentation/cubits/saved_articles_list_item_cubit.dart';
 export 'src/presentation/cubits/settings_cubit.dart';
 export 'src/presentation/cubits/update_cubit.dart';
 export 'src/presentation/extensions/build_context_extension.dart';
