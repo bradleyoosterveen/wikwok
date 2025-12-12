@@ -191,8 +191,8 @@ ArticleRepositoryError _toError(dynamic e) => switch (e) {
   WikipediaServiceError e => switch (e) {
     .unknown => .somethingWentWrong,
     .clientError => .somethingWentWrong,
-    .timeout => .somethingWentWrong,
     .serverError => .somethingWentWrong,
+    .timeout => .connectionError,
     .connectionError => .connectionError,
   },
   SafeMapLookupError e => switch (e) {

@@ -116,11 +116,11 @@ enum VersionRepositoryError {
 VersionRepositoryError _toError(dynamic e) => switch (e) {
   VersionRepositoryError e => e,
   GithubServiceError e => switch (e) {
-    GithubServiceError.unknown => .somethingWentWrong,
-    GithubServiceError.clientError => .somethingWentWrong,
-    GithubServiceError.timeout => .somethingWentWrong,
-    GithubServiceError.serverError => .somethingWentWrong,
-    GithubServiceError.connectionError => .connectionError,
+    .unknown => .somethingWentWrong,
+    .clientError => .somethingWentWrong,
+    .serverError => .somethingWentWrong,
+    .timeout => .connectionError,
+    .connectionError => .connectionError,
   },
   SafeMapLookupError _ => .somethingWentWrong,
   FormatException _ => .somethingWentWrong,
