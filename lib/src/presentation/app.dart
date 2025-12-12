@@ -63,7 +63,7 @@ class _AppState extends State<App> {
           };
 
           return MultiBlocListener(
-            listeners: _blocListenersBuilder(context),
+            listeners: _blocListenersBuilder(),
             child: AnnotatedRegion<SystemUiOverlayStyle>(
               value: theme.colors.systemOverlayStyle,
               child: Builder(
@@ -111,20 +111,22 @@ class _AppState extends State<App> {
   }
 }
 
-List<BlocListener> _blocListenersBuilder(BuildContext context) => [
-  BlocListener<UpdateCubit, UpdateState>(
-    listener: (context, state) => switch (state) {
-      UpdateAvailableState state => switch (Never) {
-        _ when App.navigatorKey.currentContext != null => UpdateScreen.push(
-          context,
-          state: state,
-        ),
+List<BlocListener> _blocListenersBuilder() {
+  return [
+    BlocListener<UpdateCubit, UpdateState>(
+      listener: (context, state) => switch (state) {
+        UpdateAvailableState state => switch (Never) {
+          _ when App.navigatorKey.currentContext != null => UpdateScreen.push(
+            App.navigatorKey.currentContext as BuildContext,
+            state: state,
+          ),
+          _ => {},
+        },
         _ => {},
       },
-      _ => {},
-    },
-  ),
-];
+    ),
+  ];
+}
 
 extension WThemes on Never {
   static final pink = FThemeData(
