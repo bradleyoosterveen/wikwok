@@ -111,22 +111,23 @@ class _AppState extends State<App> {
   }
 }
 
-List<BlocListener> _blocListenersBuilder() {
-  return [
-    BlocListener<UpdateCubit, UpdateState>(
-      listener: (context, state) => switch (state) {
-        UpdateAvailableState state => switch (Never) {
-          _ when App.navigatorKey.currentContext != null => UpdateScreen.push(
-            App.navigatorKey.currentContext as BuildContext,
-            viewModel: state.viewModel,
-          ),
-          _ => {},
-        },
-        _ => {},
-      },
-    ),
-  ];
-}
+List<BlocListener> _blocListenersBuilder() => [
+  BlocListener<UpdateCubit, UpdateState>(
+    listener: (context, state) => switch (state) {
+      UpdateAvailableState state => () {
+        final context = App.navigatorKey.currentContext;
+
+        if (context == null) return;
+
+        UpdateScreen.push(
+          context,
+          viewModel: state.viewModel,
+        );
+      }(),
+      _ => {},
+    },
+  ),
+];
 
 extension WThemes on Never {
   static final pink = FThemeData(
