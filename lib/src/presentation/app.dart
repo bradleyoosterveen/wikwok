@@ -118,7 +118,7 @@ List<BlocListener> _blocListenersBuilder() {
         UpdateAvailableState state => switch (Never) {
           _ when App.navigatorKey.currentContext != null => UpdateScreen.push(
             App.navigatorKey.currentContext as BuildContext,
-            state: state,
+            viewModel: state.viewModel,
           ),
           _ => {},
         },

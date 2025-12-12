@@ -7,19 +7,19 @@ import 'package:wikwok/presentation.dart';
 
 class UpdateScreen extends StatelessWidget {
   const UpdateScreen({
-    required this.state,
+    required this.viewModel,
     super.key,
   });
 
-  final UpdateAvailableState state;
+  final UpdateViewModel viewModel;
 
   static push(
     BuildContext context, {
-    required UpdateAvailableState state,
+    required UpdateViewModel viewModel,
   }) => Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) => UpdateScreen(
-        state: state,
+        viewModel: viewModel,
       ),
     ),
   );
@@ -50,17 +50,17 @@ class UpdateScreen extends StatelessWidget {
           child: WInformationalLayoutWidget(
             icon: FIcons.download,
             title: context.l10n.version_available(
-              state.viewModel.version.toString(),
+              viewModel.version.toString(),
             ),
             subtitle: context.l10n.a_new_version_is_available,
             actions: [
               FButton(
-                onPress: () => launchUrl(.parse(state.viewModel.url)),
+                onPress: () => launchUrl(.parse(viewModel.url)),
                 child: Text(context.l10n.update),
               ),
               FButton(
                 onPress: () =>
-                    Clipboard.setData(ClipboardData(text: state.viewModel.url)),
+                    Clipboard.setData(ClipboardData(text: viewModel.url)),
                 style: FButtonStyle.secondary(),
                 child: Text(context.l10n.copy_url),
               ),

@@ -179,7 +179,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: 24),
               Builder(
                 builder: (context) {
-                  final update = switch (context.watch<UpdateCubit>().state) {
+                  final updateViewModel = switch (context
+                      .watch<UpdateCubit>()
+                      .state) {
                     UpdateAvailableState state => state.viewModel,
                     UpdateSkippedState state => state.viewModel,
                     _ => null,
@@ -216,14 +218,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           .parse('https://github.com/bradleyoosterveen/WikWok'),
                         ),
                       ),
-                      if (update != null) ...[
+                      if (updateViewModel != null) ...[
                         FTile(
                           prefix: const Icon(FIcons.download),
                           title: Text(
-                            context.l10n.update_to(update.version.toString()),
+                            context.l10n.update_to(
+                              updateViewModel.version.toString(),
+                            ),
                           ),
                           suffix: const Icon(FIcons.chevronRight),
-                          onPress: () => launchUrl(.parse(update.url)),
+                          onPress: () => UpdateScreen.push(
+                            context,
+                            viewModel: updateViewModel,
+                          ),
                         ),
                       ],
                     ],
