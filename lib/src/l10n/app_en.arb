@@ -36,5 +36,11 @@
   "view_source_code": "View source code",
   "current_version": "Current version",
   "donate_to_the_wikimedia_foundation": "Donate to the Wikimedia Foundation",
-  "this_app_is_not_affiliated_with_the_wikimedia_foundation": "This app is not affiliated with, endorsed by, or sponsored by Wikipedia or the Wikimedia Foundation. All trademarks and registered trademarks are the property of their respective owners."
+  "this_app_is_not_affiliated_with_the_wikimedia_foundation": "This app is not affiliated with, endorsed by, or sponsored by Wikipedia or the Wikimedia Foundation. All trademarks and registered trademarks are the property of their respective owners.",
+  "version_available": "Version {version} available",
+  "a_new_version_is_available": "A new version is available. Tap the button below to get the latest features and improvements.",
+  "update": "Update",
+  "copy_url": "Copy URL",
+  "skip_this_version": "Skip this version",
+  "update_to": "Update to {version}"
 }

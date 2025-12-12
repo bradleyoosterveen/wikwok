@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wikwok/presentation.dart';
 
 class ArticlesScreen extends StatelessWidget {
@@ -42,19 +41,10 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final updateState = context.watch<UpdateCubit>().state;
-
     return Align(
       alignment: .topCenter,
       child: FHeader.nested(
         suffixes: [
-          if (updateState is UpdateAvailableState) ...[
-            FButton.icon(
-              style: FButtonStyle.ghost(),
-              onPress: () => launchUrl(.parse(updateState.url)),
-              child: const Icon(FIcons.sparkles),
-            ),
-          ],
           FButton.icon(
             style: FButtonStyle.ghost(),
             onPress: () => SavedArticlesScreen.push(context),

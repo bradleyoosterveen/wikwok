@@ -49,7 +49,7 @@ class WInformationalLayoutWidget extends StatelessWidget {
                       height: 1.5,
                     ),
                   ),
-                  if (subtitle != null) ...[
+                  if (subtitle != null && subtitle.isNotEmpty) ...[
                     Text(
                       subtitle,
                       textAlign: .center,
@@ -61,7 +61,13 @@ class WInformationalLayoutWidget extends StatelessWidget {
                 ],
               ),
             ),
-            ...actions,
+            if (actions.isNotEmpty) ...[
+              WFlex.column(
+                mainAxisSize: .min,
+                divider: const SizedBox(height: 8),
+                children: actions,
+              ),
+            ],
           ],
         ),
       ),

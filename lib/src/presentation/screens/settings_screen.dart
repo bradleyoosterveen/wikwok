@@ -177,38 +177,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 },
               ),
               const SizedBox(height: 24),
-              FTileGroup(
-                divider: .full,
-                children: [
-                  FTile(
-                    prefix: const Icon(FIcons.gitPullRequestArrow),
-                    title: Text(context.l10n.suggest_feature),
-                    suffix: const Icon(FIcons.chevronRight),
-                    onPress: () => launchUrl(
-                      .parse(
-                        'https://github.com/bradleyoosterveen/WikWok/issues/new?template=enhancement.yml',
+              Builder(
+                builder: (context) {
+                  final updateViewModel = switch (context
+                      .watch<UpdateCubit>()
+                      .state) {
+                    UpdateAvailableState state => state.viewModel,
+                    UpdateSkippedState state => state.viewModel,
+                    _ => null,
+                  };
+
+                  return FTileGroup(
+                    divider: .full,
+                    children: [
+                      FTile(
+                        prefix: const Icon(FIcons.gitPullRequestArrow),
+                        title: Text(context.l10n.suggest_feature),
+                        suffix: const Icon(FIcons.chevronRight),
+                        onPress: () => launchUrl(
+                          .parse(
+                            'https://github.com/bradleyoosterveen/WikWok/issues/new?template=enhancement.yml',
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  FTile(
-                    prefix: const Icon(FIcons.bug),
-                    title: Text(context.l10n.report_a_bug),
-                    suffix: const Icon(FIcons.chevronRight),
-                    onPress: () => launchUrl(
-                      .parse(
-                        'https://github.com/bradleyoosterveen/WikWok/issues/new?template=bug.yml',
+                      FTile(
+                        prefix: const Icon(FIcons.bug),
+                        title: Text(context.l10n.report_a_bug),
+                        suffix: const Icon(FIcons.chevronRight),
+                        onPress: () => launchUrl(
+                          .parse(
+                            'https://github.com/bradleyoosterveen/WikWok/issues/new?template=bug.yml',
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  FTile(
-                    prefix: const Icon(FIcons.code),
-                    title: Text(context.l10n.view_source_code),
-                    suffix: const Icon(FIcons.chevronRight),
-                    onPress: () => launchUrl(
-                      .parse('https://github.com/bradleyoosterveen/WikWok'),
-                    ),
-                  ),
-                ],
+                      FTile(
+                        prefix: const Icon(FIcons.code),
+                        title: Text(context.l10n.view_source_code),
+                        suffix: const Icon(FIcons.chevronRight),
+                        onPress: () => launchUrl(
+                          .parse('https://github.com/bradleyoosterveen/WikWok'),
+                        ),
+                      ),
+                      if (updateViewModel != null) ...[
+                        FTile(
+                          prefix: const Icon(FIcons.download),
+                          title: Text(
+                            context.l10n.update_to(
+                              updateViewModel.version.toString(),
+                            ),
+                          ),
+                          suffix: const Icon(FIcons.chevronRight),
+                          onPress: () => UpdateScreen.push(
+                            context,
+                            viewModel: updateViewModel,
+                          ),
+                        ),
+                      ],
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: 24),
               FTileGroup(
