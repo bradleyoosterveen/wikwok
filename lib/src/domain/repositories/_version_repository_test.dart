@@ -7,13 +7,20 @@ import 'package:wikwok/data.dart';
 import 'package:wikwok/domain.dart';
 
 void main() async {
-  final mockSharedPreferencesAsync = MockSharedPreferencesAsync();
-  final mockGithubService = MockGithubService();
+  late final MockSharedPreferencesAsync mockSharedPreferencesAsync;
+  late final MockGithubService mockGithubService;
 
-  final versionRepository = VersionRepository(
-    mockSharedPreferencesAsync,
-    mockGithubService,
-  );
+  late final VersionRepository versionRepository;
+
+  setUpAll(() async {
+    mockSharedPreferencesAsync = MockSharedPreferencesAsync();
+    mockGithubService = MockGithubService();
+
+    versionRepository = VersionRepository(
+      mockSharedPreferencesAsync,
+      mockGithubService,
+    );
+  });
 
   provideDummy<TaskEither<GithubServiceError, Map<String, dynamic>>>(
     TaskEither.right({
