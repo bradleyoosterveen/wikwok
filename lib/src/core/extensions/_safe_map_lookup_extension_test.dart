@@ -80,7 +80,7 @@ void main() {
         expect(err, SafeMapLookupError.keyNotFound);
       });
       test(
-        'should return typeMismatch when value is not the correct',
+        'should return typeMismatch when value is not the correct type',
         () {
           final map = <String, int>{'key': 1};
 
