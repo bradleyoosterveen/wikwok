@@ -102,7 +102,6 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
                     duration: 300.milliseconds,
                     child: switch (savedArticlesListState) {
                       SavedArticlesListLoadedState state => ListView.builder(
-                        shrinkWrap: true,
                         padding: EdgeInsets.zero,
                         itemCount: state.articles.length,
                         itemBuilder: (context, index) =>
