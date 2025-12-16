@@ -1,0 +1,14 @@
+name: 'Get app version'
+description: 'Get the app version (major.minor.patch) from pubspec.yaml.'
+outputs:
+  version:
+    description: "The app version"
+    value: ${{ steps.get.outputs.version }}
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      id: get
+      run: |
+        version=$(python3 _scripts/get_app_version_from_pubspec.py --file pubspec.yaml)
+        echo "version=$version" >> $GITHUB_OUTPUT
