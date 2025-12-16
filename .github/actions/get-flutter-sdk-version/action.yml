@@ -3,7 +3,7 @@ description: 'Get the Flutter SDK version from .fvmrc.'
 outputs:
   version:
     description: "The Flutter SDK version"
-    value: ${{ jobs.get.outputs.version }}
+    value: ${{ steps.get.outputs.version }}
 runs:
   using: "composite"
   steps:
