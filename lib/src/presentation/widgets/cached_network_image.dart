@@ -7,11 +7,13 @@ class WCachedNetworkImage extends StatelessWidget {
   const WCachedNetworkImage({
     required this.src,
     this.fit = .contain,
+    this.opacity = 1,
     super.key,
   });
 
   final String src;
   final BoxFit fit;
+  final double opacity;
 
   @override
   Widget build(BuildContext context) => CachedNetworkImage(
@@ -24,5 +26,7 @@ class WCachedNetworkImage extends StatelessWidget {
     errorWidget: (context, url, error) => const Center(
       child: Opacity(opacity: 0.32, child: Icon(FIcons.imageOff, size: 32)),
     ),
+    color: Color.fromRGBO(255, 255, 255, opacity),
+    colorBlendMode: BlendMode.modulate,
   );
 }
