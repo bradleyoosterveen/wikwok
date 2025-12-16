@@ -14,14 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - id: flutter-sdk-version
-        uses: ./.github/actions/get-flutter-sdk-version
-
-      - name: Setup Flutter (${{ steps.flutter-sdk-version.outputs.version }})
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ steps.flutter-sdk-version.outputs.version }}
-          cache: true
+      - uses: ./.github/actions/setup-flutter
 
       - run: flutter pub get
 
