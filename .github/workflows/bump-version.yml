@@ -25,9 +25,6 @@ jobs:
         with:
           token: ${{ steps.app.outputs.token }}
           fetch-depth: 0
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.14'
       - run: |
           python -m venv _scripts/venv
           source _scripts/venv/bin/activate
