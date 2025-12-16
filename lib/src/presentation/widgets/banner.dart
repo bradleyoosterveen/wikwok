@@ -36,9 +36,10 @@ class WBanner extends StatelessWidget {
         children: [
           if (showBackground) ...[
             Positioned.fill(
-              child: Opacity(
+              child: WCachedNetworkImage(
+                src: src,
+                fit: .cover,
                 opacity: _opacity,
-                child: WCachedNetworkImage(src: src, fit: .cover),
               ),
             ),
           ],
