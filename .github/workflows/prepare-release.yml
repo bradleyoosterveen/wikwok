@@ -52,3 +52,5 @@ jobs:
         uses: ./.github/actions/get-app-version
       - run: |
           gh release create v${{ steps.app-version.outputs.version }} --latest=false --generate-notes --prerelease --latest=false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
