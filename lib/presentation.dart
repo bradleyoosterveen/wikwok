@@ -18,6 +18,7 @@ export 'src/presentation/screens/articles_screen.dart';
 export 'src/presentation/screens/saved_articles_screen.dart';
 export 'src/presentation/screens/settings_screen.dart';
 export 'src/presentation/screens/update_screen.dart';
+export 'src/presentation/theme/themes.dart';
 export 'src/presentation/widgets/banner.dart';
 export 'src/presentation/widgets/border.dart';
 export 'src/presentation/widgets/cached_network_image.dart';
