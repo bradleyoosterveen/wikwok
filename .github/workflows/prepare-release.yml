@@ -12,6 +12,9 @@ on:
           - minor
           - major
 
+permissions:
+  contents: write
+
 jobs:
   bump:
     runs-on: ubuntu-latest
