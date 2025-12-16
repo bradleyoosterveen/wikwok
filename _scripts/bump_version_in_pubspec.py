@@ -2,31 +2,12 @@ import sys
 import yaml
 from enum import Enum
 import argparse
+import _utils
 
 class Part(Enum):
     MAJOR = 1
     MINOR = 2
     PATCH = 3
-
-def parse_version(version_str: str) -> tuple[int, int, int]:
-    """
-    Args:
-        version_str: The version string, e.g., '1.2.3' or '1.2.3+4'.
-    """
-    version_core: str = version_str.split('+')[0]
-    version_parts: list[str] = version_core.split('.')
-
-    if len(version_parts) != 3:
-        raise ValueError(f"Version must be in format 'major.minor.patch', got '{version_str}'")
-
-    try:
-        major = int(version_parts[0])
-        minor = int(version_parts[1])
-        patch = int(version_parts[2])
-    except Exception as e:
-        raise ValueError(f"Version parts must be integers: {e}")
-
-    return major, minor, patch
 
 def update_version(path: str, part: Part) -> None:
     try:
@@ -43,7 +24,7 @@ def update_version(path: str, part: Part) -> None:
     major: int
     minor: int
     patch: int
-    major, minor, patch = parse_version(current_version)
+    major, minor, patch = _utils.parse_version(current_version)
 
     if part == Part.MAJOR:
         major += 1

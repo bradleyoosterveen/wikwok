@@ -1,4 +1,4 @@
-name: Bump version and build number
+name: Bump version and prepare release
 
 on:
   workflow_dispatch:
@@ -8,9 +8,9 @@ on:
         required: true
         type: choice
         options:
-          - major
-          - minor
           - patch
+          - minor
+          - major
 
 jobs:
   bump:
@@ -42,3 +42,13 @@ jobs:
 
           git commit -m "Bump version and build number"
           git push origin HEAD:${GITHUB_REF#refs/heads/}
+
+  create-release:
+    needs: [bump]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - id: app-version
+        uses: ./.github/actions/get-app-version
+      - run: |
+          gh release create v${{ steps.app-version.outputs.version }} --latest=false --generate-notes --prerelease --latest=false
