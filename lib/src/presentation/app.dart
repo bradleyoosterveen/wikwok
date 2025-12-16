@@ -9,6 +9,47 @@ import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
 import 'package:wikwok/src/l10n/app_localizations.dart';
 
+extension on WLocale {
+  Locale get toLocale => switch (this) {
+    .en => const Locale('en'),
+    .nl => const Locale('nl'),
+    .system =>
+      Platform.localeName.split('_').first == 'nl'
+          ? const Locale('nl')
+          : const Locale('en'),
+  };
+}
+
+extension on WThemeMode {
+  FThemeData toFThemeData(BuildContext context) => switch (this) {
+    .light => FThemes.zinc.light,
+    .dark => FThemes.zinc.dark,
+    .pink => WThemes.pink,
+    .system =>
+      MediaQuery.of(context).platformBrightness == .dark
+          ? FThemes.zinc.dark
+          : FThemes.zinc.light,
+  };
+}
+
+List<BlocListener> _blocListenersBuilder() => [
+  BlocListener<UpdateCubit, UpdateState>(
+    listener: (context, state) => switch (state) {
+      UpdateAvailableState state => () {
+        final context = App.navigatorKey.currentContext;
+
+        if (context == null) return;
+
+        UpdateScreen.push(
+          context,
+          viewModel: state.viewModel,
+        );
+      }(),
+      _ => {},
+    },
+  ),
+];
+
 class App extends StatefulWidget {
   const App({super.key});
 
@@ -19,8 +60,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  late final _platformBrightness = MediaQuery.of(context).platformBrightness;
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -48,19 +87,9 @@ class _AppState extends State<App> {
       ],
       child: Builder(
         builder: (context) {
-          final themeMode = context.select(
-            (SettingsCubit cubit) => cubit.state.themeMode,
-          );
-
-          final theme = switch (themeMode) {
-            WThemeMode.light => FThemes.zinc.light,
-            WThemeMode.dark => FThemes.zinc.dark,
-            WThemeMode.system =>
-              _platformBrightness == Brightness.dark
-                  ? FThemes.zinc.dark
-                  : FThemes.zinc.light,
-            WThemeMode.pink => WThemes.pink,
-          };
+          final theme = context
+              .select((SettingsCubit cubit) => cubit.state.themeMode)
+              .toFThemeData(context);
 
           return MultiBlocListener(
             listeners: _blocListenersBuilder(),
@@ -68,16 +97,9 @@ class _AppState extends State<App> {
               value: theme.colors.systemOverlayStyle,
               child: Builder(
                 builder: (context) {
-                  final locale = switch (context.select(
-                    (SettingsCubit cubit) => cubit.state.locale,
-                  )) {
-                    WLocale.en => const Locale('en'),
-                    WLocale.nl => const Locale('nl'),
-                    WLocale.system =>
-                      Platform.localeName.split('_').first == 'nl'
-                          ? const Locale('nl')
-                          : const Locale('en'),
-                  };
+                  final locale = context
+                      .select((SettingsCubit cubit) => cubit.state.locale)
+                      .toLocale;
 
                   return MaterialApp(
                     title: 'WikWok',
@@ -109,46 +131,4 @@ class _AppState extends State<App> {
       ),
     );
   }
-}
-
-List<BlocListener> _blocListenersBuilder() => [
-  BlocListener<UpdateCubit, UpdateState>(
-    listener: (context, state) => switch (state) {
-      UpdateAvailableState state => () {
-        final context = App.navigatorKey.currentContext;
-
-        if (context == null) return;
-
-        UpdateScreen.push(
-          context,
-          viewModel: state.viewModel,
-        );
-      }(),
-      _ => {},
-    },
-  ),
-];
-
-extension WThemes on Never {
-  static final pink = FThemeData(
-    debugLabel: 'Rose Light ThemeData',
-    colors: const FColors(
-      brightness: Brightness.light,
-      systemOverlayStyle: SystemUiOverlayStyle.dark,
-      barrier: Color(0x33000000),
-      background: Color(0xFFFCEEF3),
-      foreground: Color(0xFF230610),
-      primary: Color(0xFF9A5B7F),
-      primaryForeground: Color(0xFFFFF1F2),
-      secondary: Color(0xFFF0E5EB),
-      secondaryForeground: Color(0xFF18181B),
-      muted: Color(0xFFF4F4F5),
-      mutedForeground: Color(0xFFA88994),
-      destructive: Color(0xFFEF4444),
-      destructiveForeground: Color(0xFFFAFAFA),
-      error: Color(0xFFEF4444),
-      errorForeground: Color(0xFFFAFAFA),
-      border: Color(0xFFE1CCD8),
-    ),
-  );
 }
