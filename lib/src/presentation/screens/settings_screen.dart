@@ -90,7 +90,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Text(context.l10n.settings),
       ),
       child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
           padding: const .symmetric(horizontal: 24),
           child: Column(
@@ -252,6 +251,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
               ),
+              const SizedBox(height: 24),
             ],
           ),
         ),
