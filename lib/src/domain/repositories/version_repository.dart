@@ -7,6 +7,12 @@ import 'package:wikwok/core.dart';
 import 'package:wikwok/data.dart';
 import 'package:wikwok/domain.dart';
 
+enum VersionRepositoryError {
+  unknown,
+  somethingWentWrong,
+  connectionError,
+}
+
 @singleton
 @injectable
 class VersionRepository {
@@ -17,6 +23,20 @@ class VersionRepository {
 
   final SharedPreferencesAsync _preferences;
   final GithubService _githubService;
+
+  static VersionRepositoryError _toError(dynamic e) => switch (e) {
+    VersionRepositoryError e => e,
+    GithubServiceError e => switch (e) {
+      .unknown => .somethingWentWrong,
+      .clientError => .somethingWentWrong,
+      .serverError => .somethingWentWrong,
+      .timeout => .connectionError,
+      .connectionError => .connectionError,
+    },
+    SafeMapLookupError _ => .somethingWentWrong,
+    FormatException _ => .somethingWentWrong,
+    _ => .unknown,
+  };
 
   @visibleForTesting
   static const latestSkippedVersionKey = 'latest_skipped_version';
@@ -106,23 +126,3 @@ class VersionRepository {
     },
   );
 }
-
-enum VersionRepositoryError {
-  unknown,
-  somethingWentWrong,
-  connectionError,
-}
-
-VersionRepositoryError _toError(dynamic e) => switch (e) {
-  VersionRepositoryError e => e,
-  GithubServiceError e => switch (e) {
-    .unknown => .somethingWentWrong,
-    .clientError => .somethingWentWrong,
-    .serverError => .somethingWentWrong,
-    .timeout => .connectionError,
-    .connectionError => .connectionError,
-  },
-  SafeMapLookupError _ => .somethingWentWrong,
-  FormatException _ => .somethingWentWrong,
-  _ => .unknown,
-};
