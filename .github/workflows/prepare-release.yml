@@ -33,6 +33,8 @@ jobs:
           source _scripts/venv/bin/activate
           pip install -r _scripts/requirements.txt
           python _scripts/bump_version_in_pubspec.py --${{ inputs.part }} --file pubspec.yaml
+      - id: app-version
+        uses: ./.github/actions/get-app-version
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -43,7 +45,7 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Bump version and build number"
+          git commit -m "Bump version to ${{ steps.app-version.outputs.version }}"
           git push origin HEAD:${GITHUB_REF#refs/heads/}
 
   create-release:
