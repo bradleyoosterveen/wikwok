@@ -7,6 +7,12 @@ import 'package:wikwok/core.dart';
 import 'package:wikwok/data.dart';
 import 'package:wikwok/domain.dart';
 
+enum ArticleRepositoryError {
+  unknown,
+  somethingWentWrong,
+  connectionError,
+}
+
 @singleton
 @injectable
 class ArticleRepository {
@@ -19,6 +25,23 @@ class ArticleRepository {
   final SharedPreferencesAsync _preferences;
   final SettingsRepository _settingsRepository;
   final WikipediaService _wikipediaService;
+
+  static ArticleRepositoryError _toError(dynamic e) => switch (e) {
+    ArticleRepositoryError e => e,
+    WikipediaServiceError e => switch (e) {
+      .unknown => .somethingWentWrong,
+      .clientError => .somethingWentWrong,
+      .serverError => .somethingWentWrong,
+      .timeout => .connectionError,
+      .connectionError => .connectionError,
+    },
+    SafeMapLookupError e => switch (e) {
+      .keyNotFound => .somethingWentWrong,
+      .typeMismatch => .somethingWentWrong,
+      .somethingWentWrong => .somethingWentWrong,
+    },
+    _ => .unknown,
+  };
 
   static const _maxCache = 99;
   static const _key = 'saved';
@@ -179,26 +202,3 @@ class ArticleRepository {
     );
   });
 }
-
-enum ArticleRepositoryError {
-  unknown,
-  somethingWentWrong,
-  connectionError,
-}
-
-ArticleRepositoryError _toError(dynamic e) => switch (e) {
-  ArticleRepositoryError e => e,
-  WikipediaServiceError e => switch (e) {
-    .unknown => .somethingWentWrong,
-    .clientError => .somethingWentWrong,
-    .serverError => .somethingWentWrong,
-    .timeout => .connectionError,
-    .connectionError => .connectionError,
-  },
-  SafeMapLookupError e => switch (e) {
-    .keyNotFound => .somethingWentWrong,
-    .typeMismatch => .somethingWentWrong,
-    .somethingWentWrong => .somethingWentWrong,
-  },
-  _ => .unknown,
-};
