@@ -92,7 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Padding(
         padding: const .symmetric(horizontal: 24),
         child: ListView(
-          padding: EdgeInsets.zero,
+          padding: .zero,
           children: [
             Builder(
               builder: (context) {
