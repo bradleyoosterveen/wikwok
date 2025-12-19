@@ -50,16 +50,11 @@ List<BlocListener> _blocListenersBuilder() => [
   ),
 ];
 
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   const App({super.key});
 
   static final navigatorKey = GlobalKey<NavigatorState>();
 
-  @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -103,7 +98,7 @@ class _AppState extends State<App> {
 
                   return MaterialApp(
                     title: 'WikWok',
-                    navigatorKey: App.navigatorKey,
+                    navigatorKey: navigatorKey,
                     localizationsDelegates:
                         AppLocalizations.localizationsDelegates,
                     supportedLocales: AppLocalizations.supportedLocales,
