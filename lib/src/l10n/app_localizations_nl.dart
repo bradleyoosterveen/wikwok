@@ -165,5 +165,5 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get you_are_about_to_open_this_link_in_your_default_browser =>
-      'Je staat op het punt deze link in uw standaardbrowser te openen. Wil je doorgaan?';
+      'Je staat op het punt deze link in je standaardbrowser te openen. Wil je doorgaan?';
 }
