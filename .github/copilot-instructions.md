@@ -8,7 +8,7 @@ When reviewing code, prioritize clarity and consistency. Specifically:
 
 This repository uses Dart 3.10, which introduces:
 
-### Dot shorthands.
+### Dot shorthands
 This new feature lets you omit redundant class or enum names when the compiler can infer the type from the context. You can also use them with constructors, static methods, and static fields.
 
 Example: 
