@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:forui/forui.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
 import 'package:wikwok/src/gen/assets.gen.dart';
@@ -193,28 +192,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       prefix: const Icon(FIcons.gitPullRequestArrow),
                       title: Text(context.l10n.suggest_feature),
                       suffix: const Icon(FIcons.chevronRight),
-                      onPress: () => launchUrl(
-                        .parse(
-                          'https://github.com/bradleyoosterveen/WikWok/issues/new?template=enhancement.yml',
-                        ),
+                      onPress: () => WUrlLauncher.show(
+                        context,
+                        'https://github.com/bradleyoosterveen/WikWok/issues/new?template=enhancement.yml',
                       ),
                     ),
                     FTile(
                       prefix: const Icon(FIcons.bug),
                       title: Text(context.l10n.report_a_bug),
                       suffix: const Icon(FIcons.chevronRight),
-                      onPress: () => launchUrl(
-                        .parse(
-                          'https://github.com/bradleyoosterveen/WikWok/issues/new?template=bug.yml',
-                        ),
+                      onPress: () => WUrlLauncher.show(
+                        context,
+                        'https://github.com/bradleyoosterveen/WikWok/issues/new?template=bug.yml',
                       ),
                     ),
                     FTile(
                       prefix: const Icon(FIcons.code),
                       title: Text(context.l10n.view_source_code),
                       suffix: const Icon(FIcons.chevronRight),
-                      onPress: () => launchUrl(
-                        .parse('https://github.com/bradleyoosterveen/WikWok'),
+                      onPress: () => WUrlLauncher.show(
+                        context,
+                        'https://github.com/bradleyoosterveen/WikWok',
                       ),
                     ),
                     if (updateViewModel != null) ...[
@@ -246,8 +244,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     context.l10n.donate_to_the_wikimedia_foundation,
                   ),
                   suffix: const Icon(FIcons.chevronRight),
-                  onPress: () =>
-                      launchUrl(.parse('https://donate.wikimedia.org/')),
+                  onPress: () => WUrlLauncher.show(
+                    context,
+                    'https://donate.wikimedia.org/',
+                  ),
                 ),
               ],
             ),

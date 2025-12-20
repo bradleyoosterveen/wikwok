@@ -2,7 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wikwok/core.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
@@ -57,7 +56,7 @@ class _ArticleScreenState extends State<ArticleScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               FButton(
-                onPress: () => launchUrl(Uri.parse(widget.article.url)),
+                onPress: () => WUrlLauncher.show(context, widget.article.url),
                 child: Text(context.l10n.visit),
               ),
               const SizedBox(height: 16),

@@ -28,3 +28,5 @@ export 'src/presentation/widgets/informational_layout_widget.dart';
 export 'src/presentation/widgets/open_forwards_page_transition.dart';
 export 'src/presentation/widgets/shimmer.dart';
 export 'src/presentation/widgets/toggle_save_animation.dart';
+export 'src/presentation/widgets/url_launcher.dart';
+export 'src/presentation/widgets/url_previewer.dart';
