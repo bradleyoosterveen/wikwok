@@ -21,6 +21,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get go_back => 'Go back';
 
   @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get continue_text => 'Continue';
+
+  @override
   String get something_went_wrong_fetching_this_article =>
       'Something went wrong when fetching this article. Please try again, or submit a bug report.';
 
@@ -151,4 +157,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String update_to(Object version) {
     return 'Update to $version';
   }
+
+  @override
+  String get open_in_browser => 'Open in browser';
+
+  @override
+  String get you_are_about_to_open_this_link_in_your_default_browser =>
+      'You are about to open this link in your default browser. Do you want to continue?';
 }

@@ -122,6 +122,18 @@ abstract class AppLocalizations {
   /// **'Go back'**
   String get go_back;
 
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @continue_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_text;
+
   /// No description provided for @something_went_wrong_fetching_this_article.
   ///
   /// In en, this message translates to:
@@ -361,6 +373,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update to {version}'**
   String update_to(Object version);
+
+  /// No description provided for @open_in_browser.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in browser'**
+  String get open_in_browser;
+
+  /// No description provided for @you_are_about_to_open_this_link_in_your_default_browser.
+  ///
+  /// In en, this message translates to:
+  /// **'You are about to open this link in your default browser. Do you want to continue?'**
+  String get you_are_about_to_open_this_link_in_your_default_browser;
 }
 
 class _AppLocalizationsDelegate

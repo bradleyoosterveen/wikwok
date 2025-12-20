@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wikwok/presentation.dart';
 
 class UpdateScreen extends StatelessWidget {
@@ -55,14 +53,8 @@ class UpdateScreen extends StatelessWidget {
             subtitle: context.l10n.a_new_version_is_available,
             actions: [
               FButton(
-                onPress: () => launchUrl(.parse(viewModel.url)),
+                onPress: () => WUrlLauncher.show(context, viewModel.url),
                 child: Text(context.l10n.update),
-              ),
-              FButton(
-                onPress: () =>
-                    Clipboard.setData(ClipboardData(text: viewModel.url)),
-                style: FButtonStyle.secondary(),
-                child: Text(context.l10n.copy_url),
               ),
               FButton(
                 onPress: () => context.read<UpdateCubit>().skip(),

@@ -3,6 +3,8 @@
   "something_went_wrong": "Er is iets misgegaan",
   "try_again": "Probeer opnieuw",
   "go_back": "Ga terug",
+  "cancel": "Annuleren",
+  "continue_text": "Doorgaan",
   "something_went_wrong_fetching_this_article": "Er is iets misgegaan bij het ophalen van dit artikel. Probeer het opnieuw, of maak een bug-report.",
   "connection_error_fetching_this_article": "Er is iets misgegaan bij het ophalen van dit artikel. Controleer je internetverbinding en probeer het opnieuw. Als het probleem blijft, maak een bug-report.",
   "visit": "Bezoek",
@@ -42,5 +44,7 @@
   "update": "Update",
   "copy_url": "Kopieer URL",
   "skip_this_version": "Sla deze versie over",
-  "update_to": "Update naar {version}"
+  "update_to": "Update naar {version}",
+  "open_in_browser": "Open in browser",
+  "you_are_about_to_open_this_link_in_your_default_browser": "Je staat op het punt deze link in uw standaardbrowser te openen. Wil je doorgaan?"
 }

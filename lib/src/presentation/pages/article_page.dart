@@ -4,7 +4,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:forui/forui.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wikwok/core.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
@@ -221,7 +220,7 @@ class _ViewState extends State<_View> with TickerProviderStateMixin {
                     const SizedBox(width: 8),
                     FButton.icon(
                       style: FButtonStyle.ghost(),
-                      onPress: () => launchUrl(.parse(article.url)),
+                      onPress: () => WUrlLauncher.show(context, article.url),
                       child: const Icon(FIcons.externalLink),
                     ),
                   ],

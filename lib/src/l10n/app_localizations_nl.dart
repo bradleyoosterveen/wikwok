@@ -21,6 +21,12 @@ class AppLocalizationsNl extends AppLocalizations {
   String get go_back => 'Ga terug';
 
   @override
+  String get cancel => 'Annuleren';
+
+  @override
+  String get continue_text => 'Doorgaan';
+
+  @override
   String get something_went_wrong_fetching_this_article =>
       'Er is iets misgegaan bij het ophalen van dit artikel. Probeer het opnieuw, of maak een bug-report.';
 
@@ -153,4 +159,11 @@ class AppLocalizationsNl extends AppLocalizations {
   String update_to(Object version) {
     return 'Update naar $version';
   }
+
+  @override
+  String get open_in_browser => 'Open in browser';
+
+  @override
+  String get you_are_about_to_open_this_link_in_your_default_browser =>
+      'Je staat op het punt deze link in uw standaardbrowser te openen. Wil je doorgaan?';
 }

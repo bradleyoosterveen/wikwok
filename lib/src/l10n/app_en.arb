@@ -3,6 +3,8 @@
   "something_went_wrong": "Something went wrong",
   "try_again": "Try again",
   "go_back": "Go back",
+  "cancel": "Cancel",
+  "continue_text": "Continue",
   "something_went_wrong_fetching_this_article": "Something went wrong when fetching this article. Please try again, or submit a bug report.",
   "connection_error_fetching_this_article": "Connection error fetching this article. Please check your internet connection and try again. If the problem persists, please submit a bug report.",
   "visit": "Visit",
@@ -42,5 +44,7 @@
   "update": "Update",
   "copy_url": "Copy URL",
   "skip_this_version": "Skip this version",
-  "update_to": "Update to {version}"
+  "update_to": "Update to {version}",
+  "open_in_browser": "Open in browser",
+  "you_are_about_to_open_this_link_in_your_default_browser": "You are about to open this link in your default browser. Do you want to continue?"
 }
