@@ -2,6 +2,7 @@
 
 library;
 
+export 'src/core/constants/network.dart';
 export 'src/core/extensions/fpdart_tap_extension.dart';
 export 'src/core/extensions/safe_map_lookup_extension.dart';
 export 'src/core/handlers/async_cache_handler.dart';

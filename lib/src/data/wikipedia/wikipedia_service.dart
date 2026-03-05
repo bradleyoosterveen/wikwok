@@ -18,12 +18,16 @@ enum WikipediaServiceError {
 class WikipediaService {
   WikipediaService(
     Dio dio,
+    NetworkConstants networkConstants,
     this._serviceConfig,
     this._asyncCacheHandler,
     this._logger,
   ) : _dio = dio
         ..options = dio.options.copyWith(
           baseUrl: _serviceConfig.baseUrl,
+          headers: {
+            'User-Agent': networkConstants.userAgent,
+          },
         );
 
   final Dio _dio;
