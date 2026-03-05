@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:forui/assets.dart';
+import 'package:wikwok/core.dart';
 
 class WCachedNetworkImage extends StatelessWidget {
   const WCachedNetworkImage({
@@ -24,6 +25,7 @@ class WCachedNetworkImage extends StatelessWidget {
       fadeInCurve: Curves.easeInOut,
       fadeOutCurve: Curves.easeInOut,
       imageUrl: src,
+      httpHeaders: {'User-Agent': inject<NetworkConstants>().userAgent},
       fit: fit,
       errorWidget: (context, url, error) => const Center(
         child: Opacity(opacity: 0.32, child: Icon(FIcons.imageOff, size: 32)),

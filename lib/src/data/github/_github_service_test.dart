@@ -1,6 +1,7 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, invalid_use_of_visible_for_testing_member
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 import 'package:wikwok/core.dart';
@@ -11,6 +12,13 @@ void main() async {
 
   SharedPreferencesAsyncPlatform.instance =
       InMemorySharedPreferencesAsync.withData({});
+  PackageInfo.setMockInitialValues(
+    appName: 'WikWok (test)',
+    packageName: 'WikWok',
+    version: '0.0.1',
+    buildNumber: '1',
+    buildSignature: '',
+  );
 
   await initInject();
 

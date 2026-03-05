@@ -19,10 +19,12 @@ class VersionRepository {
   VersionRepository(
     this._preferences,
     this._githubService,
+    this._packageInfo,
   );
 
   final SharedPreferencesAsync _preferences;
   final GithubService _githubService;
+  final PackageInfo _packageInfo;
 
   static VersionRepositoryError _toError(dynamic e) => switch (e) {
     VersionRepositoryError e => e,
@@ -43,8 +45,7 @@ class VersionRepository {
 
   TaskEither<VersionRepositoryError, Version> getCurrentVersion() =>
       TaskEither.tryCatch(() async {
-        final packageInfo = await PackageInfo.fromPlatform();
-        return Version.parse(packageInfo.version);
+        return Version.parse(_packageInfo.version);
       }, (e, _) => _toError(e));
 
   TaskEither<VersionRepositoryError, Version> getLatestVersion() =>

@@ -9,16 +9,19 @@ import 'package:wikwok/domain.dart';
 void main() async {
   late final MockSharedPreferencesAsync mockSharedPreferencesAsync;
   late final MockGithubService mockGithubService;
+  late final MockPackageInfo mockPackageInfo;
 
   late final VersionRepository versionRepository;
 
   setUpAll(() async {
     mockSharedPreferencesAsync = MockSharedPreferencesAsync();
     mockGithubService = MockGithubService();
+    mockPackageInfo = MockPackageInfo();
 
     versionRepository = VersionRepository(
       mockSharedPreferencesAsync,
       mockGithubService,
+      mockPackageInfo,
     );
   });
 
