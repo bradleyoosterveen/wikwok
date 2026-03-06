@@ -20,11 +20,13 @@ class ArticleRepository {
     this._preferences,
     this._settingsRepository,
     this._wikipediaService,
+    this._asyncCacheHandler,
   );
 
   final SharedPreferencesAsync _preferences;
   final SettingsRepository _settingsRepository;
   final WikipediaService _wikipediaService;
+  final AsyncCacheHandler _asyncCacheHandler;
 
   static ArticleRepositoryError _toError(dynamic e) => switch (e) {
     ArticleRepositoryError e => e,
@@ -50,25 +52,28 @@ class ArticleRepository {
 
   TaskEither<ArticleRepositoryError, Article> fetch(int currentIndex) =>
       TaskEither.Do(
-        ($) async {
-          final cachedArticleResult = _articlePageMap
-              .get<Article>(currentIndex)
-              .mapLeft(_toError);
+        ($) async => await _asyncCacheHandler.run(
+          key: 'article_$currentIndex',
+          action: () async {
+            final cachedArticleResult = _articlePageMap
+                .get<Article>(currentIndex)
+                .mapLeft(_toError);
 
-          late final Article article;
-          switch (cachedArticleResult) {
-            case Right(value: final r):
-              article = r;
-            case Left():
-              article = await $(_fetchRandomArticle());
-          }
+            late final Article article;
+            switch (cachedArticleResult) {
+              case Right(value: final r):
+                article = r;
+              case Left():
+                article = await $(_fetchRandomArticle());
+            }
 
-          _articlePageMap.set(currentIndex, article);
+            _articlePageMap.set(currentIndex, article);
 
-          await $(_prefetchNext(currentIndex));
+            await $(_prefetchNext(currentIndex));
 
-          return article;
-        },
+            return article;
+          },
+        ),
       );
 
   TaskEither<ArticleRepositoryError, void> _prefetchNext(
