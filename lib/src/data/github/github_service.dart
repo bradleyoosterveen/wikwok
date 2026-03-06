@@ -26,7 +26,7 @@ class GithubService {
         ..options = dio.options.copyWith(
           baseUrl: _serviceConfig.baseUrl,
           headers: {
-            "User-Agent": networkConstants.userAgent,
+            'User-Agent': networkConstants.userAgent,
           },
         );
 
