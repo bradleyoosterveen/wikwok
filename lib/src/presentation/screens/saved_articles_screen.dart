@@ -270,40 +270,4 @@ class _ListItem extends StatelessWidget {
       subtitle: Text(article.subtitle),
     ),
   );
-
-  // @override
-  // Widget build(BuildContext context) => FItem(
-  //   prefix: SizedBox(
-  //     width: 64,
-  //     child: AspectRatio(
-  //       aspectRatio: 1,
-  //       child: AnimatedSwitcher(
-  //         duration: 300.milliseconds,
-  //         child: WBanner(
-  //           src: article.thumbnailUrl,
-  //           fill: true,
-  //           showGradient: false,
-  //           showBackground: false,
-  //           shouldWrapInSafeArea: false,
-  //         ),
-  //       ),
-  //     ),
-  //   ),
-  //   title: LayoutBuilder(
-  //     builder: (context, constraints) => AnimatedSwitcher(
-  //       duration: 300.milliseconds,
-  //       child: Text(article.title),
-  //     ),
-  //   ),
-  //   subtitle: LayoutBuilder(
-  //     builder: (context, constraints) => AnimatedSwitcher(
-  //       duration: 300.milliseconds,
-  //       child: Text(article.subtitle),
-  //     ),
-  //   ),
-  //   onPress: () => ArticleScreen.push(
-  //     context,
-  //     article: article,
-  //   ),
-  // );
 }
