@@ -88,7 +88,8 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
       ),
       child: SafeArea(
         top: false,
-        child: Column(
+        bottom: false,
+        child: WFlex.column(
           mainAxisAlignment: .center,
           children: [
             Builder(
@@ -101,12 +102,7 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
                   child: AnimatedSwitcher(
                     duration: 300.milliseconds,
                     child: switch (savedArticlesListState) {
-                      SavedArticlesListLoadedState state => ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: state.articles.length,
-                        itemBuilder: (context, index) =>
-                            _ListItem(article: state.articles[index]),
-                      ),
+                      SavedArticlesListLoadedState state => _List(state: state),
                       SavedArticlesListEmptyState _ =>
                         WInformationalLayoutWidget(
                           icon: FIcons.searchSlash,
@@ -159,44 +155,155 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
   }
 }
 
+class _List extends StatefulWidget {
+  const _List({required this.state});
+
+  final SavedArticlesListLoadedState state;
+
+  @override
+  State<_List> createState() => _ListState();
+}
+
+class _ListState extends State<_List> {
+  bool _sortAscending = true;
+
+  // get articles, sorted
+  List<Article> get _articles {
+    final articles = List<Article>.from(widget.state.articles);
+    articles.sort((a, b) {
+      final comparison = a.title.compareTo(b.title);
+      return _sortAscending ? comparison : -comparison;
+    });
+    return articles;
+  }
+
+  Widget _listItemBuilder(
+    BuildContext context,
+    int index,
+    SavedArticlesListLoadedState state,
+  ) {
+    if (index < state.articles.length - 1) {
+      return _ListItem(article: _articles[index]);
+    }
+
+    return Column(
+      children: [
+        _ListItem(article: _articles[index]),
+        SizedBox(
+          height:
+              MediaQuery.of(context).viewPadding.bottom +
+              (MediaQuery.sizeOf(context).height * 0.1),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 24.0,
+    ),
+    child: WFlex.column(
+      divider: const SizedBox(height: 16),
+      children: [
+        WFlex.row(
+          mainAxisAlignment: .end,
+          divider: const SizedBox(width: 16),
+          children: [
+            FButton.icon(
+              onPress: () => setState(() => _sortAscending = !_sortAscending),
+              child: Icon(
+                _sortAscending ? FIcons.arrowDownAZ : FIcons.arrowDownZA,
+              ),
+            ),
+          ],
+        ),
+        Expanded(
+          child: ListView.separated(
+            padding: EdgeInsets.zero,
+            itemCount: widget.state.articles.length,
+            itemBuilder: (context, index) =>
+                _listItemBuilder(context, index, widget.state),
+            separatorBuilder: (BuildContext context, int index) =>
+                const SizedBox(height: 32),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 class _ListItem extends StatelessWidget {
   const _ListItem({required this.article});
 
   final Article article;
 
   @override
-  Widget build(BuildContext context) => FItem(
-    prefix: SizedBox(
-      width: 64,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: AnimatedSwitcher(
-          duration: 300.milliseconds,
-          child: WBanner(
-            src: article.thumbnailUrl,
-            fill: true,
-            showGradient: false,
-            showBackground: false,
-            shouldWrapInSafeArea: false,
-          ),
-        ),
-      ),
-    ),
-    title: LayoutBuilder(
-      builder: (context, constraints) => AnimatedSwitcher(
-        duration: 300.milliseconds,
-        child: Text(article.title),
-      ),
-    ),
-    subtitle: LayoutBuilder(
-      builder: (context, constraints) => AnimatedSwitcher(
-        duration: 300.milliseconds,
-        child: Text(article.subtitle),
-      ),
-    ),
-    onPress: () => ArticleScreen.push(
+  Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
+    onTap: () => ArticleScreen.push(
       context,
       article: article,
     ),
+    child: FCard(
+      style: (style) => style.copyWith(
+        contentStyle: style.contentStyle
+            .copyWith(
+              padding: .zero,
+            )
+            .call,
+        decoration: style.decoration.copyWith(
+          border: Border.all(color: Colors.transparent),
+        ),
+      ),
+      image: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * .2,
+        ),
+        child: WBanner(
+          shouldWrapInSafeArea: false,
+          showGradient: false,
+          src: article.thumbnailUrl,
+        ),
+      ),
+      title: Text(article.title),
+      subtitle: Text(article.subtitle),
+    ),
   );
+
+  // @override
+  // Widget build(BuildContext context) => FItem(
+  //   prefix: SizedBox(
+  //     width: 64,
+  //     child: AspectRatio(
+  //       aspectRatio: 1,
+  //       child: AnimatedSwitcher(
+  //         duration: 300.milliseconds,
+  //         child: WBanner(
+  //           src: article.thumbnailUrl,
+  //           fill: true,
+  //           showGradient: false,
+  //           showBackground: false,
+  //           shouldWrapInSafeArea: false,
+  //         ),
+  //       ),
+  //     ),
+  //   ),
+  //   title: LayoutBuilder(
+  //     builder: (context, constraints) => AnimatedSwitcher(
+  //       duration: 300.milliseconds,
+  //       child: Text(article.title),
+  //     ),
+  //   ),
+  //   subtitle: LayoutBuilder(
+  //     builder: (context, constraints) => AnimatedSwitcher(
+  //       duration: 300.milliseconds,
+  //       child: Text(article.subtitle),
+  //     ),
+  //   ),
+  //   onPress: () => ArticleScreen.push(
+  //     context,
+  //     article: article,
+  //   ),
+  // );
 }

@@ -24,6 +24,7 @@ class WBanner extends StatelessWidget {
       ? .zero
       : const EdgeInsets.symmetric(
           horizontal: 24,
+          vertical: 8,
         ).add(.only(top: shouldWrapInSafeArea ? 64 : 0));
 
   @override
