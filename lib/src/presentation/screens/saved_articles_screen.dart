@@ -167,7 +167,6 @@ class _List extends StatefulWidget {
 class _ListState extends State<_List> {
   bool _sortAscending = true;
 
-  // get articles, sorted
   List<Article> get _articles {
     final articles = List<Article>.from(widget.state.articles);
     articles.sort((a, b) {
