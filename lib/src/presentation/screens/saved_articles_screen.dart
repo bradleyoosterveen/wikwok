@@ -165,10 +165,22 @@ class _List extends StatefulWidget {
 }
 
 class _ListState extends State<_List> {
+  final TextEditingController _searchController = TextEditingController();
+
   bool _sortAscending = true;
 
   List<Article> get _articles {
-    final articles = List<Article>.from(widget.state.articles);
+    var articles = List<Article>.from(widget.state.articles);
+
+    articles = articles.where((article) {
+      final searchText = '${article.title} ${article.subtitle}'.toLowerCase();
+
+      final query = _searchController.text.toLowerCase();
+      return searchText.contains(query);
+    }).toList();
+
+    if (articles.isEmpty) return [];
+
     articles.sort((a, b) {
       final comparison = a.title.compareTo(b.title);
       return _sortAscending ? comparison : -comparison;
@@ -181,7 +193,7 @@ class _ListState extends State<_List> {
     int index,
     SavedArticlesListLoadedState state,
   ) {
-    if (index < state.articles.length - 1) {
+    if (index < _articles.length - 1) {
       return _ListItem(article: _articles[index]);
     }
 
@@ -200,15 +212,47 @@ class _ListState extends State<_List> {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(
-      horizontal: 24.0,
+      horizontal: 12.0,
     ),
     child: WFlex.column(
       divider: const SizedBox(height: 16),
       children: [
         WFlex.row(
           mainAxisAlignment: .end,
-          divider: const SizedBox(width: 16),
+          divider: const SizedBox(width: 12),
           children: [
+            Expanded(
+              child: FTextField(
+                style: (style) => style.copyWith(
+                  contentPadding: style.contentPadding.add(
+                    const .symmetric(vertical: 4),
+                  ),
+                ),
+                onTapOutside: (_) =>
+                    FocusManager.instance.primaryFocus?.unfocus(),
+                onChange: (value) => setState(() {}),
+                controller: _searchController,
+                prefixBuilder: (_, __, ___) => const Padding(
+                  padding: .only(left: 12, right: 4),
+                  child: Icon(FIcons.search),
+                ),
+                suffixBuilder: (_, __, ___) {
+                  if (_searchController.text.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return Padding(
+                    padding: const .only(left: 4, right: 6),
+                    child: FButton.icon(
+                      style: FButtonStyle.ghost(),
+                      onPress: () =>
+                          setState(() => _searchController.text = ''),
+                      child: const Icon(FIcons.x),
+                    ),
+                  );
+                },
+              ),
+            ),
             FButton.icon(
               onPress: () => setState(() => _sortAscending = !_sortAscending),
               child: Icon(
@@ -217,16 +261,22 @@ class _ListState extends State<_List> {
             ),
           ],
         ),
-        Expanded(
-          child: ListView.separated(
-            padding: EdgeInsets.zero,
-            itemCount: widget.state.articles.length,
-            itemBuilder: (context, index) =>
-                _listItemBuilder(context, index, widget.state),
-            separatorBuilder: (BuildContext context, int index) =>
-                const SizedBox(height: 32),
+        if (_articles.isNotEmpty) ...[
+          Expanded(
+            child: ListView.separated(
+              padding: EdgeInsets.zero,
+              itemCount: _articles.length,
+              itemBuilder: (context, index) =>
+                  _listItemBuilder(context, index, widget.state),
+              separatorBuilder: (BuildContext context, int index) =>
+                  const SizedBox(height: 32),
+            ),
           ),
-        ),
+        ] else ...[
+          const Expanded(
+            child: Text("Not found"),
+          ),
+        ],
       ],
     ),
   );
