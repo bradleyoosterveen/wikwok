@@ -25,11 +25,14 @@ class SaveArticleCubit extends WCubit<SaveArticleState> {
     try {
       final saved = await _articleRepository.isArticleSaved(title);
 
+      final bool result;
       if (saved) {
-        await _articleRepository.unsaveArticle(title);
+        result = await _articleRepository.unsaveArticle(title);
       } else {
-        await _articleRepository.saveArticle(title);
+        result = await _articleRepository.saveArticle(title);
       }
+
+      if (!result) return false;
 
       emit(SaveArticleLoadedState(!saved));
 
