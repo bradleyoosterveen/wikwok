@@ -70,8 +70,8 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
 
     await _alertRepository.saveAlert(
       Alert.info(
-        'Library updated',
-        '${article.title} has been removed from your library.',
+        l10n.library_updated,
+        l10n.article_has_been_removed_from_your_library(article.title),
       ),
     );
   }
@@ -88,8 +88,8 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
 
         await _alertRepository.saveAlert(
           Alert.info(
-            'Library updated',
-            'All articles have been removed from your library.',
+            l10n.library_updated,
+            l10n.all_articles_have_been_removed_from_your_library,
           ),
         );
 

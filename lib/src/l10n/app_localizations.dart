@@ -415,6 +415,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove'**
   String get remove;
+
+  /// No description provided for @library_updated.
+  ///
+  /// In en, this message translates to:
+  /// **'Library updated'**
+  String get library_updated;
+
+  /// No description provided for @article_has_been_added_to_your_library.
+  ///
+  /// In en, this message translates to:
+  /// **'Article {title} has been added to your library.'**
+  String article_has_been_added_to_your_library(Object title);
+
+  /// No description provided for @article_has_been_removed_from_your_library.
+  ///
+  /// In en, this message translates to:
+  /// **'Article {title} has been removed from your library.'**
+  String article_has_been_removed_from_your_library(Object title);
+
+  /// No description provided for @all_articles_have_been_removed_from_your_library.
+  ///
+  /// In en, this message translates to:
+  /// **'All articles have been removed from your library.'**
+  String get all_articles_have_been_removed_from_your_library;
 }
 
 class _AppLocalizationsDelegate

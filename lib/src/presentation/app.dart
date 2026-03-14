@@ -124,12 +124,16 @@ class App extends StatelessWidget {
                         },
                       ),
                     ),
-                    builder: (context, child) => FAnimatedTheme(
-                      data: theme,
-                      child: WAlertOverlay(
-                        child: child ?? const SizedBox.shrink(),
-                      ),
-                    ),
+                    builder: (context, child) {
+                      initL10n(context);
+
+                      return FAnimatedTheme(
+                        data: theme,
+                        child: WAlertOverlay(
+                          child: child ?? const SizedBox.shrink(),
+                        ),
+                      );
+                    },
                     home: const ArticlesScreen(),
                   );
                 },

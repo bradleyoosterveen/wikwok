@@ -14,6 +14,7 @@ export 'src/presentation/cubits/saved_articles_list_cubit.dart';
 export 'src/presentation/cubits/settings_cubit.dart';
 export 'src/presentation/cubits/update_cubit.dart';
 export 'src/presentation/extensions/build_context_extension.dart';
+export 'src/presentation/l10n.dart';
 export 'src/presentation/pages/article_page.dart';
 export 'src/presentation/screens/article_screen.dart';
 export 'src/presentation/screens/articles_screen.dart';

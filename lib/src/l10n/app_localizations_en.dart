@@ -181,4 +181,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remove => 'Remove';
+
+  @override
+  String get library_updated => 'Library updated';
+
+  @override
+  String article_has_been_added_to_your_library(Object title) {
+    return 'Article $title has been added to your library.';
+  }
+
+  @override
+  String article_has_been_removed_from_your_library(Object title) {
+    return 'Article $title has been removed from your library.';
+  }
+
+  @override
+  String get all_articles_have_been_removed_from_your_library =>
+      'All articles have been removed from your library.';
 }

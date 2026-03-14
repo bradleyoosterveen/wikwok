@@ -41,15 +41,15 @@ class SaveArticleCubit extends WCubit<SaveArticleState> {
       if (!saved) {
         await _alertRepository.saveAlert(
           Alert.info(
-            'Library updated',
-            'Article "$title" has been added to your library.',
+            l10n.library_updated,
+            l10n.article_has_been_added_to_your_library(title),
           ),
         );
       } else {
         await _alertRepository.saveAlert(
           Alert.info(
-            'Library updated',
-            'Article "$title" has been removed from your library.',
+            l10n.library_updated,
+            l10n.article_has_been_removed_from_your_library(title),
           ),
         );
       }
