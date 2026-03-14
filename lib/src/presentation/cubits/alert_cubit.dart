@@ -22,7 +22,7 @@ class AlertCubit extends WCubit<Alert?> {
       final currentAlert = state;
 
       if (currentAlert != null) {
-        read(currentAlert);
+        await read(currentAlert);
 
         await Future.delayed(const Duration(milliseconds: 20));
       }
