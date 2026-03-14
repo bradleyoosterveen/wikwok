@@ -126,10 +126,23 @@ class ArticleRepository {
     },
   );
 
+  Timer? _libraryNotificationTimer;
+
   Future<bool> isArticleSaved(String title) async {
     final saved = await getSavedArticles().run();
 
     return saved.fold((e) => false, (list) => list.contains(title));
+  }
+
+  void _scheduleLibraryNotification() {
+    _libraryNotificationTimer?.cancel();
+    _libraryNotificationTimer = Timer(
+      const Duration(milliseconds: 50),
+      () {
+        _libraryNotificationTimer = null;
+        _libraryStreamController.add(null);
+      },
+    );
   }
 
   Future<bool> saveArticle(String title) async {
@@ -147,7 +160,7 @@ class ArticleRepository {
         list.map((e) => e.toString()).toList(),
       );
 
-      _libraryStreamController.add(null);
+      _scheduleLibraryNotification();
 
       return true;
     });
@@ -166,7 +179,7 @@ class ArticleRepository {
         list.map((e) => e.toString()).toList(),
       );
 
-      _libraryStreamController.add(null);
+      _scheduleLibraryNotification();
 
       return true;
     });
