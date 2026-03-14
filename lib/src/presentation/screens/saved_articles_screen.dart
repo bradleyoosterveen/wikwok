@@ -33,58 +33,8 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
   Widget build(BuildContext context) {
     return FScaffold(
       childPad: false,
-      header: Builder(
-        builder: (context) {
-          final hasArticles =
-              context.watch<SavedArticlesListCubit>().state
-                  is SavedArticlesListLoadedState;
-
-          return FHeader.nested(
-            prefixes: [
-              FButton.icon(
-                style: FButtonStyle.ghost(),
-                child: const Icon(FIcons.arrowLeft),
-                onPress: () => Navigator.pop(context),
-              ),
-            ],
-            suffixes: [
-              if (hasArticles) ...[
-                FPopoverMenu(
-                  popoverController: _popoverController,
-                  menuAnchor: .topRight,
-                  childAnchor: .bottomRight,
-                  menu: [
-                    FItemGroup(
-                      children: [
-                        FItem(
-                          prefix: const Icon(FIcons.x),
-                          title: Text(
-                            context.l10n.remove_all_from_library_permanent,
-                            overflow: .visible,
-                            softWrap: true,
-                          ),
-                          onPress: () async {
-                            await _popoverController.hide();
-
-                            if (!context.mounted) return;
-
-                            context.read<SavedArticlesListCubit>().deleteAll();
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                  child: FButton.icon(
-                    style: FButtonStyle.ghost(),
-                    child: const Icon(FIcons.ellipsisVertical),
-                    onPress: () => _popoverController.show(),
-                  ),
-                ),
-              ],
-            ],
-            title: Text(context.l10n.library),
-          );
-        },
+      header: _Header(
+        popoverController: _popoverController,
       ),
       child: SafeArea(
         top: false,
@@ -154,6 +104,95 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({
+    required this.popoverController,
+  });
+
+  final FPopoverController popoverController;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasArticles =
+        context.watch<SavedArticlesListCubit>().state
+            is SavedArticlesListLoadedState;
+
+    return FHeader.nested(
+      prefixes: [
+        FButton.icon(
+          style: FButtonStyle.ghost(),
+          child: const Icon(FIcons.arrowLeft),
+          onPress: () => Navigator.pop(context),
+        ),
+      ],
+      suffixes: [
+        if (hasArticles) ...[
+          FPopoverMenu(
+            popoverController: popoverController,
+            menuAnchor: .topRight,
+            childAnchor: .bottomRight,
+            menu: [
+              FItemGroup(
+                children: [
+                  FItem(
+                    prefix: const Icon(FIcons.x),
+                    title: Text(
+                      context.l10n.remove_all_from_library_permanent,
+                      overflow: .visible,
+                      softWrap: true,
+                    ),
+                    onPress: () async {
+                      await popoverController.hide();
+
+                      if (!context.mounted) return;
+
+                      context.read<SavedArticlesListCubit>().deleteAll();
+                    },
+                  ),
+                ],
+              ),
+            ],
+            child: FButton.icon(
+              style: FButtonStyle.ghost(),
+              child: const Icon(FIcons.ellipsisVertical),
+              onPress: () => popoverController.show(),
+            ),
+          ),
+        ],
+      ],
+      title: Column(
+        children: [
+          Text(context.l10n.library),
+          Builder(
+            builder: (context) {
+              final savedArticlesLimitState = context
+                  .watch<SavedArticlesLimitCubit>()
+                  .state;
+
+              final text = switch (savedArticlesLimitState) {
+                SavedArticlesLimitLoadedState state =>
+                  "${state.current} / ${state.limit}",
+                SavedArticlesLimitErrorState _ =>
+                  context.l10n.something_went_wrong,
+                SavedArticlesLimitLoadingState _ => context.l10n.loading,
+                _ => context.l10n.loading,
+              };
+
+              return Text(
+                text,
+                style: context.theme.typography.sm.copyWith(
+                  color: context.theme.colors.mutedForeground,
+                  fontWeight: FontWeight.w400,
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

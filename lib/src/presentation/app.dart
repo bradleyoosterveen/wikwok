@@ -79,6 +79,12 @@ class App extends StatelessWidget {
           lazy: false,
           create: (context) => inject<ConnectivityCubit>()..initialize(),
         ),
+        BlocProvider(
+          lazy: false,
+          create: (context) => inject<SavedArticlesLimitCubit>()
+            ..get()
+            ..listen(),
+        ),
       ],
       child: Builder(
         builder: (context) {
