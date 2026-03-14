@@ -58,29 +58,12 @@ class _View extends StatefulWidget {
   State<_View> createState() => _ViewState();
 }
 
-class _ViewState extends State<_View> with TickerProviderStateMixin {
-  late final _saveAnimationController = AnimationController(vsync: this);
-  late final _unsaveAnimationController = AnimationController(vsync: this);
-
+class _ViewState extends State<_View> {
   @override
   void initState() {
     super.initState();
 
     context.read<ArticleCubit>().fetch(widget.index);
-  }
-
-  @override
-  void dispose() {
-    _saveAnimationController.dispose();
-    _unsaveAnimationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void deactivate() {
-    _saveAnimationController.stop();
-    _unsaveAnimationController.stop();
-    super.deactivate();
   }
 
   @override
