@@ -11,9 +11,11 @@ import 'package:wikwok/presentation.dart';
 class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
   SavedArticlesListCubit(
     this._articleRepository,
+    this._alertRepository,
   ) : super(const SavedArticlesListLoadingState());
 
   final ArticleRepository _articleRepository;
+  final AlertRepository _alertRepository;
 
   Future<void> get() async {
     final savedResult = await _articleRepository.getSavedArticles().run();
@@ -65,6 +67,13 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
         for (final title in list) {
           await _articleRepository.unsaveArticle(title);
         }
+
+        await _alertRepository.saveAlert(
+          Alert.info(
+            'Library updated',
+            'All articles have been removed from your library.',
+          ),
+        );
 
         emit(const SavedArticlesListEmptyState());
       },

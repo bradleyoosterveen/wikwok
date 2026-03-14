@@ -154,23 +154,7 @@ class _ViewState extends State<_View> with TickerProviderStateMixin {
                 onDoubleTap: () async {
                   if (!canSave && !isSaved) return;
 
-                  final wasSaved = isSaved;
-                  final isNowSaved = await context
-                      .read<SaveArticleCubit>()
-                      .toggle(
-                        article.title,
-                      );
-
-                  // Only animate when the saved state actually changes.
-                  if (isNowSaved == wasSaved) {
-                    return;
-                  }
-
-                  if (isNowSaved) {
-                    _saveAnimationController.forward(from: 0);
-                  } else {
-                    _unsaveAnimationController.forward(from: 0);
-                  }
+                  await context.read<SaveArticleCubit>().toggle(article.title);
                 },
                 child: Stack(
                   children: [
@@ -218,18 +202,6 @@ class _ViewState extends State<_View> with TickerProviderStateMixin {
                   divider: const SizedBox(width: 8),
                   mainAxisAlignment: .end,
                   children: [
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          WToggleSaveAnimation.save(
-                            controller: _saveAnimationController,
-                          ),
-                          WToggleSaveAnimation.unsave(
-                            controller: _unsaveAnimationController,
-                          ),
-                        ],
-                      ),
-                    ),
                     Builder(
                       builder: (context) {
                         final saveArticleState = context
