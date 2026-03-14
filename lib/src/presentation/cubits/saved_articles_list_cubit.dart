@@ -97,6 +97,13 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
       },
     );
   }
+
+  @override
+  Future<void> close() async {
+    await _librarySubscription?.cancel();
+    _librarySubscription = null;
+    return super.close();
+  }
 }
 
 abstract class SavedArticlesListState {
