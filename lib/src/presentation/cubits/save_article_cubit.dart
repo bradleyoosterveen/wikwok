@@ -7,9 +7,11 @@ import 'package:wikwok/presentation.dart';
 class SaveArticleCubit extends WCubit<SaveArticleState> {
   SaveArticleCubit(
     this._articleRepository,
+    this._alertRepository,
   ) : super(const SaveArticleLoadingState());
 
   final ArticleRepository _articleRepository;
+  final AlertRepository _alertRepository;
 
   Future<void> get(String title) async {
     try {
@@ -35,6 +37,22 @@ class SaveArticleCubit extends WCubit<SaveArticleState> {
       if (!result) return false;
 
       emit(SaveArticleLoadedState(!saved));
+
+      if (!saved) {
+        await _alertRepository.saveAlert(
+          Alert.info(
+            'Library updated',
+            'Article "$title" has been added to your library.',
+          ),
+        );
+      } else {
+        await _alertRepository.saveAlert(
+          Alert.info(
+            'Library updated',
+            'Article "$title" has been removed from your library.',
+          ),
+        );
+      }
 
       return !saved;
     } catch (_) {

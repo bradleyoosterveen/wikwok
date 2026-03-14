@@ -85,6 +85,10 @@ class App extends StatelessWidget {
             ..get()
             ..listen(),
         ),
+        BlocProvider(
+          lazy: false,
+          create: (context) => inject<AlertCubit>()..init(),
+        ),
       ],
       child: Builder(
         builder: (context) {
@@ -120,7 +124,9 @@ class App extends StatelessWidget {
                     ),
                     builder: (context, child) => FAnimatedTheme(
                       data: theme,
-                      child: child ?? const SizedBox.shrink(),
+                      child: WAlertOverlay(
+                        child: child ?? const SizedBox.shrink(),
+                      ),
                     ),
                     home: const ArticlesScreen(),
                   );

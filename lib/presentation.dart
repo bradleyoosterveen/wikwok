@@ -3,6 +3,7 @@
 library;
 
 export 'src/presentation/app.dart';
+export 'src/presentation/cubits/alert_cubit.dart';
 export 'src/presentation/cubits/article_cubit.dart';
 export 'src/presentation/cubits/connectivity_cubit.dart';
 export 'src/presentation/cubits/cubit.dart';
@@ -20,6 +21,8 @@ export 'src/presentation/screens/saved_articles_screen.dart';
 export 'src/presentation/screens/settings_screen.dart';
 export 'src/presentation/screens/update_screen.dart';
 export 'src/presentation/theme/themes.dart';
+export 'src/presentation/widgets/alert.dart';
+export 'src/presentation/widgets/alert_overlay.dart';
 export 'src/presentation/widgets/banner.dart';
 export 'src/presentation/widgets/border.dart';
 export 'src/presentation/widgets/cached_network_image.dart';
