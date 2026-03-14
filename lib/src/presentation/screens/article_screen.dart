@@ -81,11 +81,12 @@ class _ArticleScreenState extends State<ArticleScreen>
                       overflow: TextOverflow.visible,
                       softWrap: true,
                     ),
-                    onPress: () {
-                      context.read<SaveArticleCubit>().toggle(
+                    onPress: () async {
+                      await context.read<SaveArticleCubit>().toggle(
                         widget.article.title,
                       );
 
+                      if (!mounted) return;
                       Navigator.pop(context);
                     },
                   ),
