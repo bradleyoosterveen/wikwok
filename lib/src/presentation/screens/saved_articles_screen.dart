@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -360,7 +361,9 @@ class _RemoveFromLibraryBottomSheet extends StatelessWidget {
   );
 
   void _onConfirm(BuildContext context) {
-    context.read<SavedArticlesListCubit>().delete(article);
+    unawaited(
+      context.read<SavedArticlesListCubit>().delete(article),
+    );
     Navigator.pop(context);
   }
 
