@@ -87,7 +87,7 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           lazy: false,
-          create: (context) => inject<AlertCubit>()..listen(),
+          create: (context) => inject<AlertCubit>()..init(),
         ),
       ],
       child: Builder(

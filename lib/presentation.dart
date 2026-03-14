@@ -21,6 +21,7 @@ export 'src/presentation/screens/saved_articles_screen.dart';
 export 'src/presentation/screens/settings_screen.dart';
 export 'src/presentation/screens/update_screen.dart';
 export 'src/presentation/theme/themes.dart';
+export 'src/presentation/widgets/alert.dart';
 export 'src/presentation/widgets/alert_overlay.dart';
 export 'src/presentation/widgets/banner.dart';
 export 'src/presentation/widgets/border.dart';

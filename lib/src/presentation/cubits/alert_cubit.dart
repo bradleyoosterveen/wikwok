@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:injectable/injectable.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
@@ -11,13 +13,12 @@ class AlertCubit extends WCubit<Alert?> {
 
   final AlertRepository _alertRepository;
 
-  bool _isListening = false;
-  Future<void> listen() async {
-    if (_isListening) return;
+  StreamSubscription? _alertSubscription;
 
-    _isListening = true;
+  Future<void> init() async {
+    if (_alertSubscription != null) return;
 
-    _alertRepository.alertStream.listen((alert) async {
+    _alertSubscription ??= _alertRepository.alertStream.listen((alert) async {
       final currentAlert = state;
 
       if (currentAlert != null) {
@@ -42,4 +43,10 @@ class AlertCubit extends WCubit<Alert?> {
 
   Future<void> add(Alert alert) async =>
       await _alertRepository.saveAlert(alert);
+
+  @override
+  Future<void> close() async {
+    await _alertSubscription?.cancel();
+    await super.close();
+  }
 }
