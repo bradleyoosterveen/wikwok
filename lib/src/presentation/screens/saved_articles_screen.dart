@@ -139,7 +139,7 @@ class _Header extends StatelessWidget {
 
                       if (!context.mounted) return;
 
-                      context.read<SavedArticlesListCubit>().deleteAll();
+                      await context.read<SavedArticlesListCubit>().deleteAll();
                     },
                   ),
                 ],
