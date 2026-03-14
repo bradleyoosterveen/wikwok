@@ -29,7 +29,7 @@ class AlertCubit extends WCubit<Alert?> {
 
       emit(alert);
 
-      Future.delayed(const Duration(milliseconds: 3000), () async {
+      await Future.delayed(const Duration(milliseconds: 3000), () async {
         await read(alert);
       });
     });
