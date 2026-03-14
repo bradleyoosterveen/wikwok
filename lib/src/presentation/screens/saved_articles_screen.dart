@@ -51,12 +51,7 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
                   child: AnimatedSwitcher(
                     duration: 300.milliseconds,
                     child: switch (savedArticlesListState) {
-                      SavedArticlesListLoadedState state => ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: state.articles.length,
-                        itemBuilder: (context, index) =>
-                            _ListItem(article: state.articles[index]),
-                      ),
+                      SavedArticlesListLoadedState state => _List(state: state),
                       SavedArticlesListEmptyState _ =>
                         WInformationalLayoutWidget(
                           icon: FIcons.searchSlash,
@@ -198,50 +193,168 @@ class _Header extends StatelessWidget {
   }
 }
 
+class _List extends StatefulWidget {
+  const _List({required this.state});
+
+  final SavedArticlesListLoadedState state;
+
+  @override
+  State<_List> createState() => _ListState();
+}
+
+class _ListState extends State<_List> {
+  final TextEditingController _searchController = TextEditingController();
+
+  bool _sortAscending = true;
+
+  List<Article> get _articles {
+    var articles = List<Article>.from(widget.state.articles);
+
+    articles = articles.where((article) {
+      final searchText = '${article.title} ${article.subtitle}'.toLowerCase();
+
+      final query = _searchController.text.toLowerCase();
+      return searchText.contains(query);
+    }).toList();
+
+    if (articles.isEmpty) return [];
+
+    articles.sort((a, b) {
+      final comparison = a.title.compareTo(b.title);
+      return _sortAscending ? comparison : -comparison;
+    });
+    return articles;
+  }
+
+  Widget _listItemBuilder(
+    BuildContext context,
+    int index,
+    SavedArticlesListLoadedState state,
+  ) {
+    if (index < _articles.length - 1) {
+      return _ListItem(article: _articles[index]);
+    }
+
+    return Column(
+      children: [
+        _ListItem(article: _articles[index]),
+        SizedBox(
+          height:
+              MediaQuery.of(context).viewPadding.bottom +
+              (MediaQuery.sizeOf(context).height * 0.1),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 12.0,
+    ),
+    child: WFlex.column(
+      divider: const SizedBox(height: 16),
+      children: [
+        WFlex.row(
+          mainAxisAlignment: .end,
+          divider: const SizedBox(width: 12),
+          children: [
+            Expanded(
+              child: FTextField(
+                style: (style) => style.copyWith(
+                  contentPadding: style.contentPadding.add(
+                    const .symmetric(vertical: 4),
+                  ),
+                ),
+                onTapOutside: (_) =>
+                    FocusManager.instance.primaryFocus?.unfocus(),
+                onChange: (value) => setState(() {}),
+                controller: _searchController,
+                prefixBuilder: (_, __, ___) => const Padding(
+                  padding: .only(left: 12, right: 4),
+                  child: Icon(FIcons.search),
+                ),
+                suffixBuilder: (_, __, ___) {
+                  if (_searchController.text.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return Padding(
+                    padding: const .only(left: 4, right: 6),
+                    child: FButton.icon(
+                      style: FButtonStyle.ghost(),
+                      onPress: () =>
+                          setState(() => _searchController.text = ''),
+                      child: const Icon(FIcons.x),
+                    ),
+                  );
+                },
+              ),
+            ),
+            FButton.icon(
+              onPress: () => setState(() => _sortAscending = !_sortAscending),
+              child: Icon(
+                _sortAscending ? FIcons.arrowDownAZ : FIcons.arrowDownZA,
+              ),
+            ),
+          ],
+        ),
+        if (_articles.isNotEmpty) ...[
+          Expanded(
+            child: ListView.separated(
+              padding: EdgeInsets.zero,
+              itemCount: _articles.length,
+              itemBuilder: (context, index) =>
+                  _listItemBuilder(context, index, widget.state),
+              separatorBuilder: (BuildContext context, int index) =>
+                  const SizedBox(height: 32),
+            ),
+          ),
+        ] else ...[
+          const Expanded(
+            child: Text("Not found"),
+          ),
+        ],
+      ],
+    ),
+  );
+}
+
 class _ListItem extends StatelessWidget {
   const _ListItem({required this.article});
 
   final Article article;
 
   @override
-  Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        return FItem(
-          prefix: SizedBox(
-            width: 64,
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: AnimatedSwitcher(
-                duration: 300.milliseconds,
-                child: WBanner(
-                  src: article.thumbnailUrl,
-                  fill: true,
-                  showGradient: false,
-                  showBackground: false,
-                  shouldWrapInSafeArea: false,
-                ),
-              ),
-            ),
-          ),
-          title: LayoutBuilder(
-            builder: (context, constraints) => AnimatedSwitcher(
-              duration: 300.milliseconds,
-              child: Text(article.title),
-            ),
-          ),
-          subtitle: LayoutBuilder(
-            builder: (context, constraints) => AnimatedSwitcher(
-              duration: 300.milliseconds,
-              child: Text(article.subtitle),
-            ),
-          ),
-          onPress: () => ArticleScreen.push(
-            context,
-            article: article,
-          ),
-        );
-      },
-    );
-  }
+  Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
+    onTap: () => ArticleScreen.push(
+      context,
+      article: article,
+    ),
+    child: FCard(
+      style: (style) => style.copyWith(
+        contentStyle: style.contentStyle
+            .copyWith(
+              padding: .zero,
+            )
+            .call,
+        decoration: style.decoration.copyWith(
+          border: Border.all(color: Colors.transparent),
+        ),
+      ),
+      image: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * .2,
+        ),
+        child: WBanner(
+          shouldWrapInSafeArea: false,
+          showGradient: false,
+          src: article.thumbnailUrl,
+        ),
+      ),
+      title: Text(article.title),
+      subtitle: Text(article.subtitle),
+    ),
+  );
 }
