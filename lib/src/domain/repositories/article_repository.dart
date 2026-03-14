@@ -229,7 +229,7 @@ class ArticleRepository {
 
   @disposeMethod
   void dispose() {
-    _libraryStreamController.close();
+    unawaited(_libraryStreamController.close());
     _libraryNotificationTimer?.cancel();
   }
 }
