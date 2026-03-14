@@ -226,4 +226,10 @@ class ArticleRepository {
       ),
     );
   });
+
+  @disposeMethod
+  void dispose() {
+    _libraryStreamController.close();
+    _libraryNotificationTimer?.cancel();
+  }
 }
