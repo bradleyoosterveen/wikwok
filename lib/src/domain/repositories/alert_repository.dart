@@ -29,5 +29,5 @@ class AlertRepository {
   }
 
   @disposeMethod
-  void dispose() => _alertStreamController.close();
+  void dispose() => unawaited(_alertStreamController.close());
 }
