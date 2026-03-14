@@ -66,14 +66,16 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
   }
 
   Future<void> delete(Article article) async {
-    await _articleRepository.unsaveArticle(article.title);
+    final result = await _articleRepository.unsaveArticle(article.title);
 
-    await _alertRepository.saveAlert(
-      Alert.info(
-        l10n.library_updated,
-        l10n.article_has_been_removed_from_your_library(article.title),
-      ),
-    );
+    if (result) {
+      await _alertRepository.saveAlert(
+        Alert.info(
+          l10n.library_updated,
+          l10n.article_has_been_removed_from_your_library(article.title),
+        ),
+      );
+    }
   }
 
   Future<void> deleteAll() async {
@@ -82,9 +84,17 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
     savedResult.fold(
       (e) => emit(const SavedArticlesListErrorState()),
       (list) async {
+        var allSucceeded = true;
         for (final title in list) {
-          await _articleRepository.unsaveArticle(title);
+          final result = await _articleRepository.unsaveArticle(title);
+
+          if (!result) {
+            allSucceeded = false;
+            break;
+          }
         }
+
+        if (!allSucceeded) return;
 
         await _alertRepository.saveAlert(
           Alert.info(
