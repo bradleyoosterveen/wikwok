@@ -61,7 +61,7 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
 
   Future<void> listen() async {
     _librarySubscription ??= _articleRepository.libraryStream.listen(
-      (_) => get(),
+      (_) => unawaited(get()),
     );
   }
 
