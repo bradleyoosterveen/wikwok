@@ -86,7 +86,8 @@ class _ArticleScreenState extends State<ArticleScreen>
                         widget.article.title,
                       );
 
-                      if (!mounted) return;
+                      if (!context.mounted) return;
+
                       Navigator.pop(context);
                     },
                   ),
