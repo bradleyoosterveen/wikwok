@@ -50,9 +50,22 @@ class ArticleRepository {
 
   final _articlePageMap = <int, Article>{};
 
+  Timer? _libraryNotificationTimer;
+
   final _libraryStreamController = StreamController<void>.broadcast();
 
   Stream<void> get libraryStream => _libraryStreamController.stream;
+
+  void _scheduleLibraryNotification() {
+    _libraryNotificationTimer?.cancel();
+    _libraryNotificationTimer = Timer(
+      const Duration(milliseconds: 50),
+      () {
+        _libraryNotificationTimer = null;
+        _libraryStreamController.add(null);
+      },
+    );
+  }
 
   TaskEither<ArticleRepositoryError, Article> fetch(int currentIndex) =>
       TaskEither.Do(
@@ -126,23 +139,10 @@ class ArticleRepository {
     },
   );
 
-  Timer? _libraryNotificationTimer;
-
   Future<bool> isArticleSaved(String title) async {
     final saved = await getSavedArticles().run();
 
     return saved.fold((e) => false, (list) => list.contains(title));
-  }
-
-  void _scheduleLibraryNotification() {
-    _libraryNotificationTimer?.cancel();
-    _libraryNotificationTimer = Timer(
-      const Duration(milliseconds: 50),
-      () {
-        _libraryNotificationTimer = null;
-        _libraryStreamController.add(null);
-      },
-    );
   }
 
   Future<bool> saveArticle(String title) async {
