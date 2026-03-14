@@ -164,4 +164,38 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get you_are_about_to_open_this_link_in_your_default_browser =>
       'You are about to open this link in your default browser. Do you want to continue?';
+
+  @override
+  String get no_articles_found => 'No articles found';
+
+  @override
+  String get try_searching_for_something_else =>
+      'Try searching for something else.';
+
+  @override
+  String get remove_from_library => 'Remove from library';
+
+  @override
+  String get you_are_about_to_remove_this_article_from_your_library =>
+      'You are about to remove this article from your library. Are you sure? This action cannot be undone.';
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get library_updated => 'Library updated';
+
+  @override
+  String article_has_been_added_to_your_library(Object title) {
+    return 'Article $title has been added to your library.';
+  }
+
+  @override
+  String article_has_been_removed_from_your_library(Object title) {
+    return 'Article $title has been removed from your library.';
+  }
+
+  @override
+  String get all_articles_have_been_removed_from_your_library =>
+      'All articles have been removed from your library.';
 }

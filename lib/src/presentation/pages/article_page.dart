@@ -58,29 +58,12 @@ class _View extends StatefulWidget {
   State<_View> createState() => _ViewState();
 }
 
-class _ViewState extends State<_View> with TickerProviderStateMixin {
-  late final _saveAnimationController = AnimationController(vsync: this);
-  late final _unsaveAnimationController = AnimationController(vsync: this);
-
+class _ViewState extends State<_View> {
   @override
   void initState() {
     super.initState();
 
     context.read<ArticleCubit>().fetch(widget.index);
-  }
-
-  @override
-  void dispose() {
-    _saveAnimationController.dispose();
-    _unsaveAnimationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void deactivate() {
-    _saveAnimationController.stop();
-    _unsaveAnimationController.stop();
-    super.deactivate();
   }
 
   @override
@@ -130,50 +113,66 @@ class _ViewState extends State<_View> with TickerProviderStateMixin {
     child: Column(
       children: [
         Expanded(
-          child: GestureDetector(
-            behavior: .translucent,
-            onDoubleTap: () async {
-              final saved = await context.read<SaveArticleCubit>().toggle(
-                article.title,
-              );
+          child: Builder(
+            builder: (context) {
+              final saveArticleState = context.watch<SaveArticleCubit>().state;
+              final savedArticlesLimitState = context
+                  .watch<SavedArticlesLimitCubit>()
+                  .state;
 
-              if (saved) {
-                _saveAnimationController.forward(from: 0);
-              } else {
-                _unsaveAnimationController.forward(from: 0);
-              }
-            },
-            child: Stack(
-              children: [
-                Builder(
-                  builder: (context) {
-                    final shouldDownloadFullSizeImages = context.select(
-                      (SettingsCubit settings) =>
-                          settings.state.shouldDownloadFullSizeImages,
-                    );
+              final canSave = switch (savedArticlesLimitState) {
+                SavedArticlesLimitLoadedState state => !state.hasReachedLimit,
+                SavedArticlesLimitErrorState _ => false,
+                SavedArticlesLimitLoadingState _ => false,
+                _ => false,
+              };
 
-                    final hasWifi =
-                        context.select(
-                          (ConnectivityCubit connectivity) => connectivity.state
-                              ?.contains(ConnectivityResult.wifi),
-                        ) ??
-                        false;
+              final isSaved = switch (saveArticleState) {
+                SaveArticleLoadedState state => state.saved,
+                _ => false,
+              };
 
-                    final urlWifiOnly = hasWifi
-                        ? article.originalImageUrl
-                        : article.thumbnailUrl;
+              return GestureDetector(
+                behavior: .translucent,
+                onDoubleTap: () async {
+                  if (!canSave && !isSaved) return;
 
-                    return WBanner(
-                      src: switch (shouldDownloadFullSizeImages) {
-                        .yes => article.originalImageUrl,
-                        .no => article.thumbnailUrl,
-                        _ => urlWifiOnly,
+                  await context.read<SaveArticleCubit>().toggle(article.title);
+                },
+                child: Stack(
+                  children: [
+                    Builder(
+                      builder: (context) {
+                        final shouldDownloadFullSizeImages = context.select(
+                          (SettingsCubit settings) =>
+                              settings.state.shouldDownloadFullSizeImages,
+                        );
+
+                        final hasWifi =
+                            context.select(
+                              (ConnectivityCubit connectivity) => connectivity
+                                  .state
+                                  ?.contains(ConnectivityResult.wifi),
+                            ) ??
+                            false;
+
+                        final urlWifiOnly = hasWifi
+                            ? article.originalImageUrl
+                            : article.thumbnailUrl;
+
+                        return WBanner(
+                          src: switch (shouldDownloadFullSizeImages) {
+                            .yes => article.originalImageUrl,
+                            .no => article.thumbnailUrl,
+                            _ => urlWifiOnly,
+                          },
+                        );
                       },
-                    );
-                  },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ),
         Padding(
@@ -182,42 +181,48 @@ class _ViewState extends State<_View> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: .stretch,
               children: [
-                Row(
+                WFlex.row(
+                  divider: const SizedBox(width: 8),
                   mainAxisAlignment: .end,
                   children: [
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          WToggleSaveAnimation.save(
-                            controller: _saveAnimationController,
+                    Builder(
+                      builder: (context) {
+                        final saveArticleState = context
+                            .watch<SaveArticleCubit>()
+                            .state;
+                        final savedArticlesLimitState = context
+                            .watch<SavedArticlesLimitCubit>()
+                            .state;
+
+                        final canSave = switch (savedArticlesLimitState) {
+                          SavedArticlesLimitLoadedState state =>
+                            !state.hasReachedLimit,
+                          SavedArticlesLimitErrorState _ => false,
+                          SavedArticlesLimitLoadingState _ => false,
+                          _ => false,
+                        };
+
+                        return switch (saveArticleState) {
+                          SaveArticleLoadedState state => FButton.icon(
+                            style: FButtonStyle.ghost(),
+                            onPress: canSave || state.saved
+                                ? () => context.read<SaveArticleCubit>().toggle(
+                                    article.title,
+                                  )
+                                : null,
+                            child: Icon(
+                              state.saved ? FIcons.bookMarked : FIcons.book,
+                            ),
                           ),
-                          WToggleSaveAnimation.unsave(
-                            controller: _unsaveAnimationController,
-                          ),
-                        ],
-                      ),
-                    ),
-                    BlocBuilder<SaveArticleCubit, SaveArticleState>(
-                      builder: (context, state) => switch (state) {
-                        SaveArticleLoadedState state => FButton.icon(
-                          style: FButtonStyle.ghost(),
-                          onPress: () => context
-                              .read<SaveArticleCubit>()
-                              .toggle(article.title),
-                          child: Icon(
-                            state.saved ? FIcons.bookMarked : FIcons.book,
-                          ),
-                        ),
-                        _ => const SizedBox.shrink(),
+                          _ => const SizedBox.shrink(),
+                        };
                       },
                     ),
-                    const SizedBox(width: 8),
                     FButton.icon(
                       style: FButtonStyle.ghost(),
                       onPress: () => article.share(),
                       child: const Icon(FIcons.share2),
                     ),
-                    const SizedBox(width: 8),
                     FButton.icon(
                       style: FButtonStyle.ghost(),
                       onPress: () => WUrlLauncher.show(context, article.url),

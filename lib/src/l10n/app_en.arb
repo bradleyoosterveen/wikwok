@@ -46,5 +46,14 @@
   "skip_this_version": "Skip this version",
   "update_to": "Update to {version}",
   "open_in_browser": "Open in browser",
-  "you_are_about_to_open_this_link_in_your_default_browser": "You are about to open this link in your default browser. Do you want to continue?"
+  "you_are_about_to_open_this_link_in_your_default_browser": "You are about to open this link in your default browser. Do you want to continue?",
+  "no_articles_found": "No articles found",
+  "try_searching_for_something_else": "Try searching for something else.",
+  "remove_from_library": "Remove from library",
+  "you_are_about_to_remove_this_article_from_your_library": "You are about to remove this article from your library. Are you sure? This action cannot be undone.",
+  "remove": "Remove",
+  "library_updated": "Library updated",
+  "article_has_been_added_to_your_library": "Article {title} has been added to your library.",
+  "article_has_been_removed_from_your_library": "Article {title} has been removed from your library.",
+  "all_articles_have_been_removed_from_your_library": "All articles have been removed from your library."
 }

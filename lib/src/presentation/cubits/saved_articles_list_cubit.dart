@@ -11,9 +11,12 @@ import 'package:wikwok/presentation.dart';
 class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
   SavedArticlesListCubit(
     this._articleRepository,
+    this._alertRepository,
   ) : super(const SavedArticlesListLoadingState());
 
   final ArticleRepository _articleRepository;
+  final AlertRepository _alertRepository;
+  StreamSubscription? _librarySubscription;
 
   Future<void> get() async {
     final savedResult = await _articleRepository.getSavedArticles().run();
@@ -56,19 +59,60 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
     );
   }
 
+  Future<void> listen() async {
+    _librarySubscription ??= _articleRepository.libraryStream.listen(
+      (_) => unawaited(get()),
+    );
+  }
+
+  Future<void> delete(Article article) async {
+    final result = await _articleRepository.unsaveArticle(article.title);
+
+    if (result) {
+      await _alertRepository.saveAlert(
+        Alert.info(
+          l10n.library_updated,
+          l10n.article_has_been_removed_from_your_library(article.title),
+        ),
+      );
+    }
+  }
+
   Future<void> deleteAll() async {
     final savedResult = await _articleRepository.getSavedArticles().run();
 
     savedResult.fold(
       (e) => emit(const SavedArticlesListErrorState()),
       (list) async {
+        var allSucceeded = true;
         for (final title in list) {
-          await _articleRepository.unsaveArticle(title);
+          final result = await _articleRepository.unsaveArticle(title);
+
+          if (!result) {
+            allSucceeded = false;
+            break;
+          }
         }
+
+        if (!allSucceeded) return;
+
+        await _alertRepository.saveAlert(
+          Alert.info(
+            l10n.library_updated,
+            l10n.all_articles_have_been_removed_from_your_library,
+          ),
+        );
 
         emit(const SavedArticlesListEmptyState());
       },
     );
+  }
+
+  @override
+  Future<void> close() async {
+    await _librarySubscription?.cancel();
+    _librarySubscription = null;
+    return super.close();
   }
 }
 

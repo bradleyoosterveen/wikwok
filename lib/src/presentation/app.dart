@@ -61,7 +61,9 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(
           lazy: false,
-          create: (context) => inject<SavedArticlesListCubit>(),
+          create: (context) => inject<SavedArticlesListCubit>()
+            ..get()
+            ..listen(),
         ),
         BlocProvider(
           lazy: false,
@@ -78,6 +80,16 @@ class App extends StatelessWidget {
         BlocProvider(
           lazy: false,
           create: (context) => inject<ConnectivityCubit>()..initialize(),
+        ),
+        BlocProvider(
+          lazy: false,
+          create: (context) => inject<SavedArticlesLimitCubit>()
+            ..get()
+            ..listen(),
+        ),
+        BlocProvider(
+          lazy: false,
+          create: (context) => inject<AlertCubit>()..init(),
         ),
       ],
       child: Builder(
@@ -112,10 +124,16 @@ class App extends StatelessWidget {
                         },
                       ),
                     ),
-                    builder: (context, child) => FAnimatedTheme(
-                      data: theme,
-                      child: child ?? const SizedBox.shrink(),
-                    ),
+                    builder: (context, child) {
+                      initL10n(context);
+
+                      return FAnimatedTheme(
+                        data: theme,
+                        child: WAlertOverlay(
+                          child: child ?? const SizedBox.shrink(),
+                        ),
+                      );
+                    },
                     home: const ArticlesScreen(),
                   );
                 },

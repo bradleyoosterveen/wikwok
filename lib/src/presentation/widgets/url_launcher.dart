@@ -31,57 +31,13 @@ class WUrlLauncher extends StatelessWidget {
   void _onCancel(BuildContext context) => Navigator.pop(context);
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const .symmetric(horizontal: 8),
-      child: Container(
-        clipBehavior: .antiAlias,
-        decoration: BoxDecoration(
-          borderRadius: const .all(.circular(16)),
-          color: context.theme.colors.background,
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            clipBehavior: .none,
-            child: Stack(
-              children: [
-                // Assuming the informational widget has a centered icon,
-                // we can align the cancel button to the top right corner.
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const .all(16),
-                    child: FButton.icon(
-                      onPress: () => _onCancel(context),
-                      style: FButtonStyle.ghost(),
-                      child: const Icon(FIcons.x),
-                    ),
-                  ),
-                ),
-                WInformationalLayoutWidget(
-                  icon: FIcons.externalLink,
-                  title: context.l10n.open_in_browser,
-                  subtitle: context
-                      .l10n
-                      .you_are_about_to_open_this_link_in_your_default_browser,
-                  actions: [
-                    WUrlPreviewer(url: url),
-                    FButton(
-                      onPress: () => _onConfirm(context),
-                      child: Text(context.l10n.continue_text),
-                    ),
-                    FButton(
-                      onPress: () => _onCancel(context),
-                      style: FButtonStyle.ghost(),
-                      child: Text(context.l10n.cancel),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => WConfirmBottomSheet(
+    icon: FIcons.externalLink,
+    title: context.l10n.open_in_browser,
+    subtitle:
+        context.l10n.you_are_about_to_open_this_link_in_your_default_browser,
+    body: WUrlPreviewer(url: url),
+    onConfirm: _onConfirm,
+    onCancel: _onCancel,
+  );
 }

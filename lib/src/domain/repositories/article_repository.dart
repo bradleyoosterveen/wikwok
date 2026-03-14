@@ -20,11 +20,13 @@ class ArticleRepository {
     this._preferences,
     this._settingsRepository,
     this._wikipediaService,
+    this._libraryConstants,
   );
 
   final SharedPreferencesAsync _preferences;
   final SettingsRepository _settingsRepository;
   final WikipediaService _wikipediaService;
+  final LibraryConstants _libraryConstants;
 
   static ArticleRepositoryError _toError(dynamic e) => switch (e) {
     ArticleRepositoryError e => e,
@@ -47,6 +49,23 @@ class ArticleRepository {
   static const _key = 'saved';
 
   final _articlePageMap = <int, Article>{};
+
+  Timer? _libraryNotificationTimer;
+
+  final _libraryStreamController = StreamController<void>.broadcast();
+
+  Stream<void> get libraryStream => _libraryStreamController.stream;
+
+  void _scheduleLibraryNotification() {
+    _libraryNotificationTimer?.cancel();
+    _libraryNotificationTimer = Timer(
+      const Duration(milliseconds: 50),
+      () {
+        _libraryNotificationTimer = null;
+        _libraryStreamController.add(null);
+      },
+    );
+  }
 
   TaskEither<ArticleRepositoryError, Article> fetch(int currentIndex) =>
       TaskEither.Do(
@@ -132,12 +151,16 @@ class ArticleRepository {
     final savedResult = await getSavedArticles().run();
 
     return savedResult.fold((e) => false, (list) async {
+      if (list.length >= _libraryConstants.libraryLimit) return false;
+
       list.add(title);
 
       await _preferences.setStringList(
         _key,
         list.map((e) => e.toString()).toList(),
       );
+
+      _scheduleLibraryNotification();
 
       return true;
     });
@@ -155,6 +178,8 @@ class ArticleRepository {
         _key,
         list.map((e) => e.toString()).toList(),
       );
+
+      _scheduleLibraryNotification();
 
       return true;
     });
@@ -201,4 +226,10 @@ class ArticleRepository {
       ),
     );
   });
+
+  @disposeMethod
+  void dispose() {
+    unawaited(_libraryStreamController.close());
+    _libraryNotificationTimer?.cancel();
+  }
 }

@@ -46,5 +46,14 @@
   "skip_this_version": "Sla deze versie over",
   "update_to": "Update naar {version}",
   "open_in_browser": "Open in browser",
-  "you_are_about_to_open_this_link_in_your_default_browser": "Je staat op het punt deze link in je standaardbrowser te openen. Wil je doorgaan?"
+  "you_are_about_to_open_this_link_in_your_default_browser": "Je staat op het punt deze link in je standaardbrowser te openen. Wil je doorgaan?",
+  "no_articles_found": "Geen artikelen gevonden",
+  "try_searching_for_something_else": "Probeer iets anders te zoeken.",
+  "remove_from_library": "Verwijder uit bibliotheek",
+  "you_are_about_to_remove_this_article_from_your_library": "Je staat op het punt dit artikel uit je bibliotheek te verwijderen. Weet je het zeker? Deze actie kan niet ongedaan worden gemaakt.",
+  "remove": "Verwijderen",
+  "library_updated": "Bibliotheek bijgewerkt",
+  "article_has_been_added_to_your_library": "Artikel {title} is toegevoegd aan je bibliotheek.",
+  "article_has_been_removed_from_your_library": "Artikel {title} is verwijderd uit je bibliotheek.",
+  "all_articles_have_been_removed_from_your_library": "Alle artikelen zijn verwijderd uit je bibliotheek."
 }

@@ -166,4 +166,38 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get you_are_about_to_open_this_link_in_your_default_browser =>
       'Je staat op het punt deze link in je standaardbrowser te openen. Wil je doorgaan?';
+
+  @override
+  String get no_articles_found => 'Geen artikelen gevonden';
+
+  @override
+  String get try_searching_for_something_else =>
+      'Probeer iets anders te zoeken.';
+
+  @override
+  String get remove_from_library => 'Verwijder uit bibliotheek';
+
+  @override
+  String get you_are_about_to_remove_this_article_from_your_library =>
+      'Je staat op het punt dit artikel uit je bibliotheek te verwijderen. Weet je het zeker? Deze actie kan niet ongedaan worden gemaakt.';
+
+  @override
+  String get remove => 'Verwijderen';
+
+  @override
+  String get library_updated => 'Bibliotheek bijgewerkt';
+
+  @override
+  String article_has_been_added_to_your_library(Object title) {
+    return 'Artikel $title is toegevoegd aan je bibliotheek.';
+  }
+
+  @override
+  String article_has_been_removed_from_your_library(Object title) {
+    return 'Artikel $title is verwijderd uit je bibliotheek.';
+  }
+
+  @override
+  String get all_articles_have_been_removed_from_your_library =>
+      'Alle artikelen zijn verwijderd uit je bibliotheek.';
 }
