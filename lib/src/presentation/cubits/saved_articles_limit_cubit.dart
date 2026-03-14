@@ -28,8 +28,9 @@ class SavedArticlesLimitCubit extends WCubit<SavedArticlesLimitState> {
   }
 
   Future<void> listen() async {
-    _librarySubscription ??=
-        _articleRepository.libraryStream.listen((_) => get());
+    _librarySubscription ??= _articleRepository.libraryStream.listen(
+      (_) => get(),
+    );
   }
 
   @override

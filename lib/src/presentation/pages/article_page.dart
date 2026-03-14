@@ -155,10 +155,11 @@ class _ViewState extends State<_View> with TickerProviderStateMixin {
                   if (!canSave && !isSaved) return;
 
                   final wasSaved = isSaved;
-                  final isNowSaved =
-                      await context.read<SaveArticleCubit>().toggle(
-                    article.title,
-                  );
+                  final isNowSaved = await context
+                      .read<SaveArticleCubit>()
+                      .toggle(
+                        article.title,
+                      );
 
                   // Only animate when the saved state actually changes.
                   if (isNowSaved == wasSaved) {
