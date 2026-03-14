@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:injectable/injectable.dart';
 import 'package:wikwok/domain.dart';
 import 'package:wikwok/presentation.dart';
@@ -12,6 +13,7 @@ class SavedArticlesLimitCubit extends WCubit<SavedArticlesLimitState> {
 
   final LibraryConstants _libraryConstants;
   final ArticleRepository _articleRepository;
+  StreamSubscription? _librarySubscription;
 
   Future<void> get() async {
     emit(const SavedArticlesLimitLoadingState());
@@ -25,8 +27,16 @@ class SavedArticlesLimitCubit extends WCubit<SavedArticlesLimitState> {
     );
   }
 
-  Future<void> listen() async =>
-      _articleRepository.libraryStream.listen((_) => get());
+  Future<void> listen() async {
+    _librarySubscription ??=
+        _articleRepository.libraryStream.listen((_) => get());
+  }
+
+  @override
+  Future<void> close() async {
+    await _librarySubscription?.cancel();
+    await super.close();
+  }
 }
 
 abstract class SavedArticlesLimitState {
