@@ -200,6 +200,12 @@ class _ListState extends State<_List> {
 
   bool _sortAscending = true;
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   List<Article> get _articles {
     var articles = List<Article>.from(widget.state.articles);
 
