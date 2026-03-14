@@ -41,9 +41,6 @@ class AlertCubit extends WCubit<Alert?> {
     emit(null);
   }
 
-  Future<void> add(Alert alert) async =>
-      await _alertRepository.saveAlert(alert);
-
   @override
   Future<void> close() async {
     await _alertSubscription?.cancel();
