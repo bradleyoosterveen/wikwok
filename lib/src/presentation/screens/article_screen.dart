@@ -33,144 +33,132 @@ class _ArticleScreenState extends State<ArticleScreen>
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<SaveArticleCubit, SaveArticleState>(
-          listener: (context, state) => switch (state) {
-            SaveArticleLoadedState _ =>
-              context.read<SavedArticlesListCubit>().get(),
-            _ => {},
-          },
+    return FScaffold(
+      childPad: false,
+      footer: Padding(
+        padding: .only(
+          bottom: MediaQuery.of(context).systemGestureInsets.bottom,
+          left: 24.0,
+          right: 24.0,
+          top: 24.0,
         ),
-      ],
-      child: FScaffold(
-        childPad: false,
-        footer: Padding(
-          padding: .only(
-            bottom: MediaQuery.of(context).systemGestureInsets.bottom,
-            left: 24.0,
-            right: 24.0,
-            top: 24.0,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FButton(
+              onPress: () => WUrlLauncher.show(context, widget.article.url),
+              child: Text(context.l10n.visit),
+            ),
+            const SizedBox(height: 16),
+            FButton(
+              style: FButtonStyle.outline(),
+              onPress: () => widget.article.share(),
+              child: Text(context.l10n.share),
+            ),
+          ],
+        ),
+      ),
+      header: FHeader.nested(
+        prefixes: [
+          FButton.icon(
+            style: FButtonStyle.ghost(),
+            child: const Icon(FIcons.arrowLeft),
+            onPress: () => Navigator.pop(context),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FButton(
-                onPress: () => WUrlLauncher.show(context, widget.article.url),
-                child: Text(context.l10n.visit),
+        ],
+        suffixes: [
+          FPopoverMenu(
+            popoverController: _popoverController,
+            menuAnchor: .topRight,
+            childAnchor: .bottomRight,
+            menu: [
+              FItemGroup(
+                children: [
+                  FItem(
+                    prefix: const Icon(FIcons.x),
+                    title: Text(
+                      context.l10n.remove_from_library_permanent,
+                      overflow: TextOverflow.visible,
+                      softWrap: true,
+                    ),
+                    onPress: () {
+                      context.read<SaveArticleCubit>().toggle(
+                        widget.article.title,
+                      );
+
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              FButton(
-                style: FButtonStyle.outline(),
-                onPress: () => widget.article.share(),
-                child: Text(context.l10n.share),
+            ],
+            child: FButton.icon(
+              style: FButtonStyle.ghost(),
+              child: const Icon(FIcons.ellipsisVertical),
+              onPress: () => _popoverController.show(),
+            ),
+          ),
+        ],
+      ),
+      child: ListView(
+        shrinkWrap: true,
+        padding: .zero,
+        children: [
+          Column(
+            mainAxisSize: .min,
+            crossAxisAlignment: .stretch,
+            children: [
+              SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.3,
+                child: Builder(
+                  builder: (context) {
+                    final shouldDownloadFullSizeImages = context.select(
+                      (SettingsCubit settings) =>
+                          settings.state.shouldDownloadFullSizeImages,
+                    );
+
+                    final hasWifi =
+                        context.select(
+                          (ConnectivityCubit connectivity) => connectivity.state
+                              ?.contains(ConnectivityResult.wifi),
+                        ) ??
+                        false;
+
+                    final urlWifiOnly = hasWifi
+                        ? widget.article.originalImageUrl
+                        : widget.article.thumbnailUrl;
+
+                    return WBanner(
+                      shouldWrapInSafeArea: false,
+                      src: switch (shouldDownloadFullSizeImages) {
+                        ShouldDownloadFullSizeImages.yes =>
+                          widget.article.originalImageUrl,
+                        ShouldDownloadFullSizeImages.no =>
+                          widget.article.thumbnailUrl,
+                        _ => urlWifiOnly,
+                      },
+                    );
+                  },
+                ),
+              ),
+              Flexible(
+                child: Padding(
+                  padding: const .all(8.0),
+                  child: FCard(
+                    style: (style) => style.copyWith(
+                      decoration: style.decoration.copyWith(
+                        border: WBorder.zero,
+                      ),
+                    ),
+                    title: Text(widget.article.title),
+                    subtitle: Text(widget.article.subtitle),
+                    child: Text(widget.article.content),
+                  ),
+                ),
               ),
             ],
           ),
-        ),
-        header: FHeader.nested(
-          prefixes: [
-            FButton.icon(
-              style: FButtonStyle.ghost(),
-              child: const Icon(FIcons.arrowLeft),
-              onPress: () => Navigator.pop(context),
-            ),
-          ],
-          suffixes: [
-            FPopoverMenu(
-              popoverController: _popoverController,
-              menuAnchor: .topRight,
-              childAnchor: .bottomRight,
-              menu: [
-                FItemGroup(
-                  children: [
-                    FItem(
-                      prefix: const Icon(FIcons.x),
-                      title: Text(
-                        context.l10n.remove_from_library_permanent,
-                        overflow: TextOverflow.visible,
-                        softWrap: true,
-                      ),
-                      onPress: () {
-                        context.read<SaveArticleCubit>().toggle(
-                          widget.article.title,
-                        );
-
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
-              ],
-              child: FButton.icon(
-                style: FButtonStyle.ghost(),
-                child: const Icon(FIcons.ellipsisVertical),
-                onPress: () => _popoverController.show(),
-              ),
-            ),
-          ],
-        ),
-        child: ListView(
-          shrinkWrap: true,
-          padding: .zero,
-          children: [
-            Column(
-              mainAxisSize: .min,
-              crossAxisAlignment: .stretch,
-              children: [
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 0.3,
-                  child: Builder(
-                    builder: (context) {
-                      final shouldDownloadFullSizeImages = context.select(
-                        (SettingsCubit settings) =>
-                            settings.state.shouldDownloadFullSizeImages,
-                      );
-
-                      final hasWifi =
-                          context.select(
-                            (ConnectivityCubit connectivity) => connectivity
-                                .state
-                                ?.contains(ConnectivityResult.wifi),
-                          ) ??
-                          false;
-
-                      final urlWifiOnly = hasWifi
-                          ? widget.article.originalImageUrl
-                          : widget.article.thumbnailUrl;
-
-                      return WBanner(
-                        shouldWrapInSafeArea: false,
-                        src: switch (shouldDownloadFullSizeImages) {
-                          ShouldDownloadFullSizeImages.yes =>
-                            widget.article.originalImageUrl,
-                          ShouldDownloadFullSizeImages.no =>
-                            widget.article.thumbnailUrl,
-                          _ => urlWifiOnly,
-                        },
-                      );
-                    },
-                  ),
-                ),
-                Flexible(
-                  child: Padding(
-                    padding: const .all(8.0),
-                    child: FCard(
-                      style: (style) => style.copyWith(
-                        decoration: style.decoration.copyWith(
-                          border: WBorder.zero,
-                        ),
-                      ),
-                      title: Text(widget.article.title),
-                      subtitle: Text(widget.article.subtitle),
-                      child: Text(widget.article.content),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

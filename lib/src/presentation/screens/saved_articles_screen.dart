@@ -23,13 +23,6 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen>
   late final _popoverController = FPopoverController(vsync: this);
 
   @override
-  void initState() {
-    super.initState();
-
-    context.read<SavedArticlesListCubit>().get();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return FScaffold(
       childPad: false,
@@ -311,9 +304,7 @@ class _ListState extends State<_List> {
             ),
           ),
         ] else ...[
-          const Expanded(
-            child: Text("Not found"),
-          ),
+          const Expanded(child: Text("Not found")),
         ],
       ],
     ),
@@ -332,29 +323,80 @@ class _ListItem extends StatelessWidget {
       context,
       article: article,
     ),
-    child: FCard(
-      style: (style) => style.copyWith(
-        contentStyle: style.contentStyle
-            .copyWith(
-              padding: .zero,
-            )
-            .call,
-        decoration: style.decoration.copyWith(
-          border: Border.all(color: Colors.transparent),
-        ),
-      ),
-      image: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.sizeOf(context).height * .2,
-        ),
-        child: WBanner(
-          shouldWrapInSafeArea: false,
-          showGradient: false,
-          src: article.thumbnailUrl,
-        ),
-      ),
-      title: Text(article.title),
-      subtitle: Text(article.subtitle),
+    onLongPress: () => _RemoveFromLibraryBottomSheet.show(
+      context,
+      article,
     ),
+    child: _ArticleCard(article: article),
+  );
+}
+
+class _RemoveFromLibraryBottomSheet extends StatelessWidget {
+  const _RemoveFromLibraryBottomSheet._({required this.article});
+
+  final Article article;
+
+  static show(BuildContext context, Article article) => showModalBottomSheet(
+    enableDrag: false,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    constraints: BoxConstraints(
+      maxHeight: MediaQuery.sizeOf(context).height * 0.8,
+    ),
+    context: context,
+    builder: (context) => _RemoveFromLibraryBottomSheet._(
+      article: article,
+    ),
+  );
+
+  void _onConfirm(BuildContext context) {
+    context.read<SavedArticlesListCubit>().delete(article);
+    Navigator.pop(context);
+  }
+
+  void _onCancel(BuildContext context) => Navigator.pop(context);
+
+  @override
+  Widget build(BuildContext context) => WConfirmBottomSheet(
+    icon: FIcons.trash2,
+    title: 'Remove from library',
+    subtitle:
+        'You are about to remove this article from your library. Are you sure? This action cannot be undone.',
+    body: _ArticleCard(article: article),
+    onConfirm: _onConfirm,
+    onCancel: _onCancel,
+    confirmText: const Text('Remove'),
+  );
+}
+
+class _ArticleCard extends StatelessWidget {
+  const _ArticleCard({required this.article});
+
+  final Article article;
+
+  @override
+  Widget build(BuildContext context) => FCard(
+    style: (style) => style.copyWith(
+      contentStyle: style.contentStyle
+          .copyWith(
+            padding: .zero,
+          )
+          .call,
+      decoration: style.decoration.copyWith(
+        border: Border.all(color: Colors.transparent),
+      ),
+    ),
+    image: ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.sizeOf(context).height * .2,
+      ),
+      child: WBanner(
+        shouldWrapInSafeArea: false,
+        showGradient: false,
+        src: article.thumbnailUrl,
+      ),
+    ),
+    title: Text(article.title),
+    subtitle: Text(article.subtitle),
   );
 }

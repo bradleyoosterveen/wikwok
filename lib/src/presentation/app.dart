@@ -61,7 +61,9 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(
           lazy: false,
-          create: (context) => inject<SavedArticlesListCubit>(),
+          create: (context) => inject<SavedArticlesListCubit>()
+            ..get()
+            ..listen(),
         ),
         BlocProvider(
           lazy: false,

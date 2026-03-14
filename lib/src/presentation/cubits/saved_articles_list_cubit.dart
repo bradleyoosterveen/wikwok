@@ -16,6 +16,7 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
 
   final ArticleRepository _articleRepository;
   final AlertRepository _alertRepository;
+  StreamSubscription? _librarySubscription;
 
   Future<void> get() async {
     final savedResult = await _articleRepository.getSavedArticles().run();
@@ -55,6 +56,23 @@ class SavedArticlesListCubit extends WCubit<SavedArticlesListState> {
           },
         );
       },
+    );
+  }
+
+  Future<void> listen() async {
+    _librarySubscription ??= _articleRepository.libraryStream.listen(
+      (_) => get(),
+    );
+  }
+
+  Future<void> delete(Article article) async {
+    await _articleRepository.unsaveArticle(article.title);
+
+    await _alertRepository.saveAlert(
+      Alert.info(
+        'Library updated',
+        '${article.title} has been removed from your library.',
+      ),
     );
   }
 
