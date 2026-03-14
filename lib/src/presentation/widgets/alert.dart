@@ -20,21 +20,32 @@ class WAlert extends StatelessWidget {
       AlertType.error => FIcons.bug,
     };
 
-    FAlertStyle styleBuilder(FAlertStyle style) => switch (alert.type) {
-      AlertType.error => style.copyWith(
-        titleTextStyle: style.titleTextStyle.copyWith(
-          color: context.theme.colors.foreground,
-        ),
-        subtitleTextStyle: style.subtitleTextStyle.copyWith(
-          color: context.theme.colors.foreground,
-        ),
-        decoration: style.decoration.copyWith(
-          border: Border.all(color: context.theme.colors.error),
-          color: context.theme.colors.error.withValues(alpha: .08),
-        ),
-      ),
-      _ => style,
-    };
+    FAlertStyle styleBuilder(FAlertStyle style) =>
+        switch (alert.type) {
+          AlertType.error => style.copyWith(
+            titleTextStyle: style.titleTextStyle.copyWith(
+              color: context.theme.colors.foreground,
+            ),
+            subtitleTextStyle: style.subtitleTextStyle.copyWith(
+              color: context.theme.colors.foreground,
+            ),
+            decoration: style.decoration.copyWith(
+              border: Border.all(color: context.theme.colors.error),
+              color: context.theme.colors.error.withValues(alpha: .08),
+            ),
+          ),
+          _ => style,
+        }.copyWith(
+          decoration: style.decoration.copyWith(
+            boxShadow: [
+              BoxShadow(
+                color: context.theme.colors.background.withValues(alpha: 1),
+                blurRadius: 32,
+                spreadRadius: 8,
+              ),
+            ],
+          ),
+        );
 
     final content = alert.content;
 
