@@ -385,6 +385,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You are about to open this link in your default browser. Do you want to continue?'**
   String get you_are_about_to_open_this_link_in_your_default_browser;
+
+  /// No description provided for @no_articles_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No articles found'**
+  String get no_articles_found;
+
+  /// No description provided for @try_searching_for_something_else.
+  ///
+  /// In en, this message translates to:
+  /// **'Try searching for something else.'**
+  String get try_searching_for_something_else;
+
+  /// No description provided for @remove_from_library.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from library'**
+  String get remove_from_library;
+
+  /// No description provided for @you_are_about_to_remove_this_article_from_your_library.
+  ///
+  /// In en, this message translates to:
+  /// **'You are about to remove this article from your library. Are you sure? This action cannot be undone.'**
+  String get you_are_about_to_remove_this_article_from_your_library;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
 }
 
 class _AppLocalizationsDelegate

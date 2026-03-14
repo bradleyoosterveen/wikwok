@@ -40,24 +40,29 @@ class WInformationalLayoutWidget extends StatelessWidget {
                       color: context.theme.colors.foreground,
                     ),
                   ],
-                  Text(
-                    title,
-                    textAlign: .center,
-                    style: context.theme.typography.xl2.copyWith(
-                      color: context.theme.colors.foreground,
-                      fontWeight: .w600,
-                      height: 1.5,
-                    ),
-                  ),
-                  if (subtitle != null && subtitle.isNotEmpty) ...[
-                    Text(
-                      subtitle,
-                      textAlign: .center,
-                      style: context.theme.typography.sm.copyWith(
-                        color: context.theme.colors.mutedForeground,
+                  WFlex.column(
+                    divider: const SizedBox(height: 8),
+                    children: [
+                      Text(
+                        title,
+                        textAlign: .center,
+                        style: context.theme.typography.xl2.copyWith(
+                          color: context.theme.colors.foreground,
+                          fontWeight: .w600,
+                          height: 1.5,
+                        ),
                       ),
-                    ),
-                  ],
+                      if (subtitle != null && subtitle.isNotEmpty) ...[
+                        Text(
+                          subtitle,
+                          textAlign: .center,
+                          style: context.theme.typography.sm.copyWith(
+                            color: context.theme.colors.mutedForeground,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ],
               ),
             ),

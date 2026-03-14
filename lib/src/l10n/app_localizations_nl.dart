@@ -166,4 +166,21 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get you_are_about_to_open_this_link_in_your_default_browser =>
       'Je staat op het punt deze link in je standaardbrowser te openen. Wil je doorgaan?';
+
+  @override
+  String get no_articles_found => 'No articles found';
+
+  @override
+  String get try_searching_for_something_else =>
+      'Try searching for something else.';
+
+  @override
+  String get remove_from_library => 'Remove from library';
+
+  @override
+  String get you_are_about_to_remove_this_article_from_your_library =>
+      'You are about to remove this article from your library. Are you sure? This action cannot be undone.';
+
+  @override
+  String get remove => 'Remove';
 }

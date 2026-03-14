@@ -304,7 +304,11 @@ class _ListState extends State<_List> {
             ),
           ),
         ] else ...[
-          const Expanded(child: Text("Not found")),
+          WInformationalLayoutWidget(
+            title: context.l10n.no_articles_found,
+            subtitle: context.l10n.try_searching_for_something_else,
+            icon: FIcons.searchSlash,
+          ),
         ],
       ],
     ),
@@ -359,13 +363,13 @@ class _RemoveFromLibraryBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) => WConfirmBottomSheet(
     icon: FIcons.trash2,
-    title: 'Remove from library',
+    title: context.l10n.remove_from_library,
     subtitle:
-        'You are about to remove this article from your library. Are you sure? This action cannot be undone.',
+        context.l10n.you_are_about_to_remove_this_article_from_your_library,
     body: _ArticleCard(article: article),
     onConfirm: _onConfirm,
     onCancel: _onCancel,
-    confirmText: const Text('Remove'),
+    confirmText: Text(context.l10n.remove),
   );
 }
 
