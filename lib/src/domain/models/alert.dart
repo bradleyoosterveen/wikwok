@@ -45,28 +45,10 @@ class Alert {
     title: title,
     content: content,
   );
-
-  factory Alert.fromJson(Map<String, dynamic> json) => Alert(
-    timestamp: DateTime.parse(json['timestamp'] as String),
-    type: AlertType.fromString(json['type'] as String),
-    title: json['title'] as String,
-    content: json['content'] as String?,
-  );
-
-  Map<String, dynamic> toJson() => {
-    'timestamp': timestamp.toIso8601String(),
-    'type': type.name,
-    'title': title,
-    'content': content,
-  };
 }
 
 enum AlertType {
   info,
   warning,
-  error
-  ;
-
-  static AlertType fromString(String value) =>
-      AlertType.values.firstWhere((e) => e.name == value);
+  error,
 }
