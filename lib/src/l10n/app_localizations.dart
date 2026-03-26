@@ -439,6 +439,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All articles have been removed from your library.'**
   String get all_articles_have_been_removed_from_your_library;
+
+  /// No description provided for @update_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Update notifications'**
+  String get update_notifications;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @new_features.
+  ///
+  /// In en, this message translates to:
+  /// **'New features'**
+  String get new_features;
+
+  /// No description provided for @major_releases.
+  ///
+  /// In en, this message translates to:
+  /// **'Major releases'**
+  String get major_releases;
 }
 
 class _AppLocalizationsDelegate

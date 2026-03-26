@@ -198,4 +198,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get all_articles_have_been_removed_from_your_library =>
       'All articles have been removed from your library.';
+
+  @override
+  String get update_notifications => 'Update notifications';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get new_features => 'New features';
+
+  @override
+  String get major_releases => 'Major releases';
 }

@@ -3,18 +3,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class Settings {
-  static const _themeModeKey = 'themeMode';
-  static const _articlePrefetchRangeKey = 'articlePrefetchRange';
-  static const _shouldDownloadFullSizeImagesKey =
-      'shouldDownloadFullSizeImages';
-  static const _doomScrollDirectionKey = 'doomScrollDirection';
-  static const _localeKey = 'locale';
+  static const themeModeKey = 'themeMode';
+  static const articlePrefetchRangeKey = 'articlePrefetchRange';
+  static const shouldDownloadFullSizeImagesKey = 'shouldDownloadFullSizeImages';
+  static const doomScrollDirectionKey = 'doomScrollDirection';
+  static const localeKey = 'locale';
+  static const versionUpdateLevelKey = 'versionUpdateLevel';
 
   final WThemeMode themeMode;
   final ArticlePrefetchRange articlePrefetchRange;
   final ShouldDownloadFullSizeImages shouldDownloadFullSizeImages;
   final Axis doomScrollDirection;
   final WLocale locale;
+  final VersionUpdateLevel versionUpdateLevel;
 
   Settings._({
     required this.themeMode,
@@ -22,6 +23,7 @@ class Settings {
     required this.shouldDownloadFullSizeImages,
     required this.doomScrollDirection,
     required this.locale,
+    required this.versionUpdateLevel,
   });
 
   factory Settings.asDefault() => Settings._(
@@ -30,6 +32,7 @@ class Settings {
     shouldDownloadFullSizeImages: ShouldDownloadFullSizeImages.no,
     doomScrollDirection: Axis.vertical,
     locale: WLocale.system,
+    versionUpdateLevel: VersionUpdateLevel.patch,
   );
 
   Settings copyWith({
@@ -38,6 +41,7 @@ class Settings {
     ShouldDownloadFullSizeImages? shouldDownloadFullSizeImages,
     Axis? doomScrollDirection,
     WLocale? locale,
+    VersionUpdateLevel? versionUpdateLevel,
   }) => Settings._(
     themeMode: themeMode ?? this.themeMode,
     articlePrefetchRange: articlePrefetchRange ?? this.articlePrefetchRange,
@@ -45,14 +49,16 @@ class Settings {
         shouldDownloadFullSizeImages ?? this.shouldDownloadFullSizeImages,
     doomScrollDirection: doomScrollDirection ?? this.doomScrollDirection,
     locale: locale ?? this.locale,
+    versionUpdateLevel: versionUpdateLevel ?? this.versionUpdateLevel,
   );
 
   Map<String, dynamic> toMap() => {
-    _themeModeKey: themeMode.index,
-    _articlePrefetchRangeKey: articlePrefetchRange.index,
-    _shouldDownloadFullSizeImagesKey: shouldDownloadFullSizeImages.index,
-    _doomScrollDirectionKey: doomScrollDirection.index,
-    _localeKey: locale.index,
+    themeModeKey: themeMode.index,
+    articlePrefetchRangeKey: articlePrefetchRange.index,
+    shouldDownloadFullSizeImagesKey: shouldDownloadFullSizeImages.index,
+    doomScrollDirectionKey: doomScrollDirection.index,
+    localeKey: locale.index,
+    versionUpdateLevelKey: versionUpdateLevel.index,
   };
 
   String toJson() => json.encode(toMap());
@@ -60,14 +66,16 @@ class Settings {
   factory Settings.fromMap(Map<String, dynamic> map) {
     try {
       return Settings._(
-        themeMode: WThemeMode.values[map.getOrDefault<int>(_themeModeKey)],
+        themeMode: WThemeMode.values[map.getOrDefault<int>(themeModeKey)],
         articlePrefetchRange: ArticlePrefetchRange
-            .values[map.getOrDefault<int>(_articlePrefetchRangeKey)],
+            .values[map.getOrDefault<int>(articlePrefetchRangeKey)],
         shouldDownloadFullSizeImages: ShouldDownloadFullSizeImages
-            .values[map.getOrDefault<int>(_shouldDownloadFullSizeImagesKey)],
+            .values[map.getOrDefault<int>(shouldDownloadFullSizeImagesKey)],
         doomScrollDirection:
-            Axis.values[map.getOrDefault<int>(_doomScrollDirectionKey)],
-        locale: WLocale.values[map.getOrDefault<int>(_localeKey)],
+            Axis.values[map.getOrDefault<int>(doomScrollDirectionKey)],
+        locale: WLocale.values[map.getOrDefault<int>(localeKey)],
+        versionUpdateLevel: VersionUpdateLevel
+            .values[map.getOrDefault<int>(versionUpdateLevelKey)],
       );
     } catch (e) {
       return Settings.asDefault();
@@ -85,6 +93,8 @@ enum ArticlePrefetchRange { none, short, medium, large }
 enum ShouldDownloadFullSizeImages { yes, no, wifiOnly }
 
 enum WLocale { system, en, nl }
+
+enum VersionUpdateLevel { major, minor, patch }
 
 extension on Map<String, dynamic> {
   T getOrDefault<T>(String key) {

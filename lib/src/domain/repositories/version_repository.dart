@@ -20,11 +20,13 @@ class VersionRepository {
     this._preferences,
     this._githubService,
     this._packageInfo,
+    this._settingsRepository,
   );
 
   final SharedPreferencesAsync _preferences;
   final GithubService _githubService;
   final PackageInfo _packageInfo;
+  final SettingsRepository _settingsRepository;
 
   static VersionRepositoryError _toError(dynamic e) => switch (e) {
     VersionRepositoryError e => e,
@@ -44,9 +46,10 @@ class VersionRepository {
   static const latestSkippedVersionKey = 'latest_skipped_version';
 
   TaskEither<VersionRepositoryError, Version> getCurrentVersion() =>
-      TaskEither.tryCatch(() async {
-        return Version.parse(_packageInfo.version);
-      }, (e, _) => _toError(e));
+      TaskEither.tryCatch(
+        () async => Version.parse(_packageInfo.version),
+        (e, _) => _toError(e),
+      );
 
   TaskEither<VersionRepositoryError, Version> getLatestVersion() =>
       TaskEither.Do(
@@ -114,6 +117,19 @@ class VersionRepository {
 
   TaskEither<VersionRepositoryError, bool> shouldSkipUpdate() =>
       TaskEither.Do(($) async {
+        final currentVersion = await $(getCurrentVersion());
+        final latestVersion = await $(getLatestVersion());
+
+        final settings = await _settingsRepository.get();
+
+        final shouldNotify = shouldNotifyForUpdate(
+          currentVersion,
+          latestVersion,
+          settings.versionUpdateLevel,
+        );
+
+        if (!shouldNotify) return true;
+
         final latestSkippedVersionPure = await _preferences.getString(
           latestSkippedVersionKey,
         );
@@ -126,8 +142,6 @@ class VersionRepository {
             (e, _) => _toError(e),
           ),
         );
-
-        final latestVersion = await $(getLatestVersion());
 
         if (latestVersion.isNewerThan(latestSkippedVersion)) {
           return false;
@@ -149,4 +163,17 @@ class VersionRepository {
       );
     },
   );
+
+  @visibleForTesting
+  bool shouldNotifyForUpdate(
+    Version currentVersion,
+    Version latestVersion,
+    VersionUpdateLevel updateLevel,
+  ) => switch (updateLevel) {
+    VersionUpdateLevel.major => latestVersion.major > currentVersion.major,
+    VersionUpdateLevel.minor =>
+      latestVersion.major > currentVersion.major ||
+          latestVersion.minor > currentVersion.minor,
+    VersionUpdateLevel.patch => latestVersion.isNewerThan(currentVersion),
+  };
 }

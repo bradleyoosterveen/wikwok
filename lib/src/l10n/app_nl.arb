@@ -55,5 +55,9 @@
   "library_updated": "Bibliotheek bijgewerkt",
   "article_has_been_added_to_your_library": "Artikel {title} is toegevoegd aan je bibliotheek.",
   "article_has_been_removed_from_your_library": "Artikel {title} is verwijderd uit je bibliotheek.",
-  "all_articles_have_been_removed_from_your_library": "Alle artikelen zijn verwijderd uit je bibliotheek."
+  "all_articles_have_been_removed_from_your_library": "Alle artikelen zijn verwijderd uit je bibliotheek.",
+  "update_notifications": "Update meldingen",
+  "all": "Alle",
+  "new_features": "Nieuwe functies",
+  "major_releases": "Hoofdversies"
 }
