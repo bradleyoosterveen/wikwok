@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -248,14 +249,12 @@ class _ListState extends State<_List> {
   }
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 12.0,
-    ),
-    child: WFlex.column(
-      divider: const SizedBox(height: 16),
-      children: [
-        WFlex.row(
+  Widget build(BuildContext context) => WFlex.column(
+    divider: const SizedBox(height: 16),
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        child: WFlex.row(
           mainAxisAlignment: .end,
           divider: const SizedBox(width: 12),
           children: [
@@ -299,8 +298,11 @@ class _ListState extends State<_List> {
             ),
           ],
         ),
-        if (_articles.isNotEmpty) ...[
-          Expanded(
+      ),
+      if (_articles.isNotEmpty) ...[
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: ListView.separated(
               padding: EdgeInsets.zero,
               itemCount: _articles.length,
@@ -310,15 +312,15 @@ class _ListState extends State<_List> {
                   const SizedBox(height: 32),
             ),
           ),
-        ] else ...[
-          WInformationalLayoutWidget(
-            title: context.l10n.no_articles_found,
-            subtitle: context.l10n.try_searching_for_something_else,
-            icon: FIcons.searchSlash,
-          ),
-        ],
+        ),
+      ] else ...[
+        WInformationalLayoutWidget(
+          title: context.l10n.no_articles_found,
+          subtitle: context.l10n.try_searching_for_something_else,
+          icon: FIcons.searchSlash,
+        ),
       ],
-    ),
+    ],
   );
 }
 
