@@ -169,11 +169,16 @@ class VersionRepository {
     Version currentVersion,
     Version latestVersion,
     VersionUpdateLevel updateLevel,
-  ) => switch (updateLevel) {
-    VersionUpdateLevel.major => latestVersion.major > currentVersion.major,
-    VersionUpdateLevel.minor =>
-      latestVersion.major > currentVersion.major ||
-          latestVersion.minor > currentVersion.minor,
-    VersionUpdateLevel.patch => latestVersion.isNewerThan(currentVersion),
-  };
+  ) => latestVersion.isNewerThan(currentVersion)
+      ? switch (updateLevel) {
+          VersionUpdateLevel.major =>
+            latestVersion.major > currentVersion.major,
+          VersionUpdateLevel.minor =>
+            latestVersion.major > currentVersion.major ||
+                latestVersion.minor > currentVersion.minor,
+          VersionUpdateLevel.patch => latestVersion.isNewerThan(
+            currentVersion,
+          ),
+        }
+      : false;
 }
