@@ -70,8 +70,31 @@ class VersionRepository {
         },
       );
 
+  TaskEither<VersionRepositoryError, bool> latestVersionHasArtifact() =>
+      TaskEither.Do(
+        ($) async {
+          final data = await $(
+            _githubService.fetchLatestRelease().mapLeft(_toError),
+          );
+
+          final assets = await $(
+            TaskEither<VersionRepositoryError, List<dynamic>>.fromEither(
+              data.get<List<dynamic>>('assets').mapLeft(_toError),
+            ),
+          );
+
+          if (assets.isEmpty) return false;
+
+          return true;
+        },
+      );
+
   TaskEither<VersionRepositoryError, bool> isUpdateAvailable() => TaskEither.Do(
     ($) async {
+      final hasArtifact = await $(latestVersionHasArtifact());
+
+      if (!hasArtifact) return false;
+
       final currentVersion = await $(getCurrentVersion());
       final latestVersion = await $(getLatestVersion());
 
