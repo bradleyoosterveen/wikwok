@@ -10,6 +10,7 @@ void main() async {
   late final MockSharedPreferencesAsync mockSharedPreferencesAsync;
   late final MockGithubService mockGithubService;
   late final MockPackageInfo mockPackageInfo;
+  late final MockSettingsRepository mockSettingsRepository;
 
   late final VersionRepository versionRepository;
 
@@ -17,11 +18,13 @@ void main() async {
     mockSharedPreferencesAsync = MockSharedPreferencesAsync();
     mockGithubService = MockGithubService();
     mockPackageInfo = MockPackageInfo();
+    mockSettingsRepository = MockSettingsRepository();
 
     versionRepository = VersionRepository(
       mockSharedPreferencesAsync,
       mockGithubService,
       mockPackageInfo,
+      mockSettingsRepository,
     );
   });
 
@@ -33,51 +36,20 @@ void main() async {
   );
 
   group('VersionRepository', () {
-    group('skipUpdate()', () {
-      test(
-        'should update the latest skipped version when latest version is known',
-        () async {
-          when(mockGithubService.fetchLatestRelease()).thenAnswer(
-            (_) => TaskEither.right({
-              'tag_name': 'v1.0.0',
-              'html_url': 'https://github.com/',
-            }),
-          );
-
-          final skipUpdateResult = await versionRepository.skipUpdate().run();
-
-          expect(skipUpdateResult.isRight(), true);
-          verify(
-            mockSharedPreferencesAsync.setString(
-              VersionRepository.latestSkippedVersionKey,
-              '1.0.0',
-            ),
-          );
-        },
-      );
-      test(
-        'should not update the latest skipped version when latest version is not known',
-        () async {
-          when(mockGithubService.fetchLatestRelease()).thenAnswer(
-            (_) => TaskEither.left(GithubServiceError.connectionError),
-          );
-
-          final skipUpdateResult = await versionRepository.skipUpdate().run();
-
-          expect(skipUpdateResult.isLeft(), true);
-          verifyNever(
-            mockSharedPreferencesAsync.setString(
-              VersionRepository.latestSkippedVersionKey,
-              any,
-            ),
-          );
-        },
-      );
-    });
     group('shouldSkipUpdate()', () {
+      setUp(() {
+        when(mockSettingsRepository.get()).thenAnswer(
+          (_) async => Settings.fromMap({
+            Settings.versionUpdateLevelKey: VersionUpdateLevel.patch.index,
+          }),
+        );
+      });
+
       test(
         'should return false when latest version is newer than latest skipped version',
         () async {
+          when(mockPackageInfo.version).thenReturn('0.0.1');
+
           when(
             mockSharedPreferencesAsync.getString(
               VersionRepository.latestSkippedVersionKey,
@@ -105,6 +77,8 @@ void main() async {
       test(
         'should return false when latest skipped version is not set',
         () async {
+          when(mockPackageInfo.version).thenReturn('0.0.1');
+
           when(
             mockSharedPreferencesAsync.getString(
               VersionRepository.latestSkippedVersionKey,
@@ -132,6 +106,8 @@ void main() async {
       test(
         'should return true when latest version is older than or equal to the latest skipped version',
         () async {
+          when(mockPackageInfo.version).thenReturn('0.0.1');
+
           when(
             mockSharedPreferencesAsync.getString(
               VersionRepository.latestSkippedVersionKey,
@@ -159,6 +135,8 @@ void main() async {
       test(
         'should return an error when the stored latest skipped version is invalid',
         () async {
+          when(mockPackageInfo.version).thenReturn('0.0.1');
+
           when(
             mockSharedPreferencesAsync.getString(
               VersionRepository.latestSkippedVersionKey,

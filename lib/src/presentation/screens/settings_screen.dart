@@ -170,6 +170,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           },
                       options: ShouldDownloadFullSizeImages.values,
                     ),
+                    _OptionTile<VersionUpdateLevel>(
+                      prefix: FIcons.rocket,
+                      title: context.l10n.update_notifications,
+                      initialValue: settings.versionUpdateLevel,
+                      onChange: (VersionUpdateLevel value) => settings.copyWith(
+                        versionUpdateLevel: value,
+                      ),
+                      labelBuilder: (VersionUpdateLevel value) =>
+                          switch (value) {
+                            .patch => context.l10n.all,
+                            .minor => context.l10n.new_features,
+                            .major => context.l10n.major_releases,
+                          },
+                      options: const [.patch, .minor],
+                    ),
                   ],
                 );
               },
@@ -303,24 +318,22 @@ class _OptionTileState<T> extends State<_OptionTile<T>> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FSelectMenuTile<T>(
-      enabled: widget.enabled,
-      selectController: _controller,
-      autoHide: true,
-      prefix: Icon(widget.prefix),
-      title: Text(widget.title),
-      detailsBuilder: (context, selected, _) => Text(
-        widget.labelBuilder.call(selected.firstOrNull ?? widget.initialValue),
-      ),
-      menu: widget.options
-          .map(
-            (mode) => FSelectTile<T>(
-              title: Text(widget.labelBuilder(mode)),
-              value: mode,
-            ),
-          )
-          .toList(),
-    );
-  }
+  Widget build(BuildContext context) => FSelectMenuTile<T>(
+    enabled: widget.enabled,
+    selectController: _controller,
+    autoHide: true,
+    prefix: Icon(widget.prefix),
+    title: Text(widget.title),
+    detailsBuilder: (context, selected, _) => Text(
+      widget.labelBuilder.call(selected.firstOrNull ?? widget.initialValue),
+    ),
+    menu: widget.options
+        .map(
+          (mode) => FSelectTile<T>(
+            title: Text(widget.labelBuilder(mode)),
+            value: mode,
+          ),
+        )
+        .toList(),
+  );
 }

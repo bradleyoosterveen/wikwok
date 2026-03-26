@@ -200,4 +200,16 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get all_articles_have_been_removed_from_your_library =>
       'Alle artikelen zijn verwijderd uit je bibliotheek.';
+
+  @override
+  String get update_notifications => 'Update meldingen';
+
+  @override
+  String get all => 'Alle';
+
+  @override
+  String get new_features => 'Nieuwe functies';
+
+  @override
+  String get major_releases => 'Hoofdversies';
 }

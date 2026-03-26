@@ -55,5 +55,9 @@
   "library_updated": "Library updated",
   "article_has_been_added_to_your_library": "Article {title} has been added to your library.",
   "article_has_been_removed_from_your_library": "Article {title} has been removed from your library.",
-  "all_articles_have_been_removed_from_your_library": "All articles have been removed from your library."
+  "all_articles_have_been_removed_from_your_library": "All articles have been removed from your library.",
+  "update_notifications": "Update notifications",
+  "all": "All",
+  "new_features": "New features",
+  "major_releases": "Major releases"
 }
