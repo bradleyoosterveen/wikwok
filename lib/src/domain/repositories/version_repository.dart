@@ -120,7 +120,12 @@ class VersionRepository {
         final currentVersion = await $(getCurrentVersion());
         final latestVersion = await $(getLatestVersion());
 
-        final settings = await _settingsRepository.get();
+        final settings = await $(
+          TaskEither.tryCatch(
+            () async => await _settingsRepository.get(),
+            (e, _) => _toError(e),
+          ),
+        );
 
         final shouldNotify = shouldNotifyForUpdate(
           currentVersion,
