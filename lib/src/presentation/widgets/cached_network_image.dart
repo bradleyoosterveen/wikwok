@@ -9,18 +9,20 @@ class WCachedNetworkImage extends StatelessWidget {
     required this.src,
     this.fit = .contain,
     this.opacity = 1,
+    this.backgroundColor,
     super.key,
   });
 
   final String src;
   final BoxFit fit;
   final double opacity;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) => Opacity(
     opacity: opacity,
     child: CachedNetworkImage(
-      color: Colors.white,
+      color: backgroundColor,
       colorBlendMode: BlendMode.dstATop,
       fadeInDuration: 300.milliseconds,
       fadeOutDuration: 300.milliseconds,

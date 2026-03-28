@@ -40,6 +40,7 @@ class WBanner extends StatelessWidget {
                 src: src,
                 fit: .cover,
                 opacity: _opacity,
+                backgroundColor: Colors.white,
               ),
             ),
           ],
@@ -68,7 +69,11 @@ class WBanner extends StatelessWidget {
               top: shouldWrapInSafeArea,
               child: Padding(
                 padding: _padding,
-                child: WCachedNetworkImage(src: src, fit: .contain),
+                child: WCachedNetworkImage(
+                  src: src,
+                  fit: .contain,
+                  backgroundColor: Colors.white,
+                ),
               ),
             ),
           ),
