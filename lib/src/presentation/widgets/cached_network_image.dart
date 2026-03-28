@@ -20,6 +20,8 @@ class WCachedNetworkImage extends StatelessWidget {
   Widget build(BuildContext context) => Opacity(
     opacity: opacity,
     child: CachedNetworkImage(
+      color: Colors.white,
+      colorBlendMode: BlendMode.dstATop,
       fadeInDuration: 300.milliseconds,
       fadeOutDuration: 300.milliseconds,
       fadeInCurve: Curves.easeInOut,
