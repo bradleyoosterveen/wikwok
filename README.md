@@ -1,3 +1,5 @@
+ARCHIVED, MOVED TO [https://codeberg.org/bradleyoosterveen/wikwok](https://codeberg.org/bradleyoosterveen/wikwok)
+
 # WikWok
 
 Doomscroll your way to endless knowledge.
